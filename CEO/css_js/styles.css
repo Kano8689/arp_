@@ -1,0 +1,54 @@
+/* add_program.php */
+form {
+    /* background: #f9fbff; */
+    padding: 2.5rem 2rem;
+    border-radius: 1rem;
+    /* box-shadow: 0 8px 24px rgba(21, 66, 138, 0.15); */
+    max-width: 900px;
+    margin: 2rem auto;
+  }
+  .form-floating > input,
+  .form-floating > select {
+    border-radius: 0.75rem;
+    border: 2px solid #d0d7e5;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .form-floating > input:focus,
+  .form-floating > select:focus {
+    border-color: #15428a;
+    box-shadow: 0 0 8px rgba(21, 66, 138, 0.5);
+  }
+  .form-floating > label {
+    color: #656d85;
+    font-weight: 600;
+  }
+  .input-group-text {
+    background: #e1e7f9;
+    color: #15428a;
+    border-radius: 0.75rem 0 0 0.75rem;
+    border: 2px solid #d0d7e5;
+    border-right: none;
+  }
+  .form-floating > input,
+  .form-floating > select {
+    border-left: none;
+  }
+  .btn-gradient {
+    background: linear-gradient(45deg, #15428a, #1e7be4);
+    color: #fff;
+    border: none;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 15px rgba(21, 66, 138, 0.4);
+  }
+  .btn-gradient:hover {
+    background: linear-gradient(45deg, #1e7be4, #15428a);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(21, 66, 138, 0.6);
+  }
+.course-card .small-muted {
+  font-size: 13px;
+  color: #666;
+}
+
+
+/* ====================================================================================================================================================== */

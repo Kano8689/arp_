@@ -1,0 +1,91 @@
+/* --------------------------
+   Grid (Semester Cards)
+   -------------------------- */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.sem-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+}
+.sem-card h4 { color: #004a99; margin-bottom: 8px; }
+.stat { font-size: 14px; color: #666; margin: 4px 0; }
+
+.card-right-details {
+   background: #fff;
+   border-radius: 10px;
+   padding: 18px;
+   margin-bottom: 20px;
+   margin-top: 20px;
+   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+   min-width: 330px;
+   max-width: 33%;
+}
+
+/* ----------------------------------------------------------------------------------- */
+.sem-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding: 8px;
+}
+
+.sem-card-form {
+  width: 100%;
+  margin: 0;
+}
+
+.sem-card-btn {
+  width: 100%;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  border: none;
+  padding: 22px 16px;
+  text-align: left;
+  /* cursor: pointer; */
+  color: #212121;
+  cursor: default;
+  /* display: block;
+  transition: box-shadow 0.2s, background 0.2s;
+  margin-bottom: 0; */
+}
+
+/* .sem-card-btn:hover,
+.sem-card-btn:focus {
+  box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+  background: #f1f4ff;
+} */
+
+.sem-card-btn:disabled,
+.sem-card-btn[disabled] {
+  cursor: default !important;
+  opacity: 1;
+  background: #fff;
+  color: #212121;
+}
+
+.sem-card-btn h4 {
+  font-size: 1.2em;
+  /* margin-bottom: 8px; */
+  color: #154ea1;
+  font-weight: bold;
+}
+
+.sem-card-btn .stat {
+  font-size: 1em;
+  color: #212121;
+  /* margin-bottom: 3px; */
+}
+
+@media (max-width: 600px) {
+  .sem-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+
+
+/* ----------------------------------------------------------------------------------- */
