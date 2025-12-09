@@ -95,7 +95,7 @@ if (isset($_POST['editStudent'])) {
 
   $studentPrgNo = GetProgramNameId($studentPrgNo, false);
 
-  $where = "$_studentCode='$studentEnrlNo'";
+  $where = "$_studentCode='$studentEnrlNo' AND $_studentName = '$studentName' AND $_studentProgram = '$studentPrgNo' AND $_studentAdmitYear = '$studentAdtYr'";
   if (isUniqueOrNot($conn, $_studentTable, $where)) {
     $UpdateStudent = "UPDATE $_studentTable  SET $_studentCode = '$studentEnrlNo', $_studentName = '$studentName', $_studentProgram = '$studentPrgNo', $_studentAdmitYear = '$studentAdtYr' WHERE $_studentId = '$studentId'";
 
@@ -118,12 +118,6 @@ if (isset($_POST['editStudent'])) {
     exit;
   } else {
     $uniqError = "Record is not upated due to student enrollment number already exists..";
-    // echo "<br>";
-    // echo "$uniqError";
-    // echo "<br>";
-    // echo "$where";
-    // echo "<br>";
-    // exit;
   }
 }
 
@@ -154,12 +148,6 @@ if (isset($_POST['addStudent'])) {
       exit;
     } else {
       $uniqError = "Record is not insetred due to student enrollment number already exists..";
-      // echo "<br>";
-      // echo "$uniqError";
-      // echo "<br>";
-      // echo "$where";
-      // echo "<br>";
-      // exit;
     }
   } else {
     $error = "Password and confirm PASSword doesnot match!";
@@ -251,9 +239,9 @@ function GetAndSaveDataFromFile($ary)
 // Select Department Name
 function GetDepartmentNameId($_value, $_isGetName = true)
 {
-  global $conn, $_deptTable, $_deptName, $_deptId;
-  $field = $_isGetName ? $_deptId : $_deptName;
-  $select = "SELECT * FROM $_deptTable WHERE $field = '$_value'";
+  global $conn, $_departmentTable, $_departmentName, $_departmentId;
+  $field = $_isGetName ? $_departmentId : $_departmentName;
+  $select = "SELECT * FROM $_departmentTable WHERE $field = '$_value'";
   $res = mysqli_query($conn, $select);
   $row = mysqli_fetch_assoc($res);
 
@@ -261,19 +249,19 @@ function GetDepartmentNameId($_value, $_isGetName = true)
   // exit;
 
   if ($_isGetName)
-    return $row[$_deptName] ?? null;
+    return $row[$_departmentName] ?? null;
   else
-    return $row[$_deptId] ?? null;
+    return $row[$_departmentId] ?? null;
 }
 
 // Select Program Name
 function GetProgramNameId($_value, $_isGetName = true)
 {
-  global $conn, $_programTable;
-  global $_programId, $_programName, $_programSem, $_programDept;
+  global $conn, $_programTableName;
+  global $_programId, $_programNameField, $_programSemField, $_programDeptField;
 
-  $field = $_isGetName ? $_programId : $_programName;
-  $select = "SELECT * FROM $_programTable WHERE $field = '$_value'";
+  $field = $_isGetName ? $_programId : $_programNameField;
+  $select = "SELECT * FROM $_programTableName WHERE $field = '$_value'";
   $res = mysqli_query($conn, $select);
   $row = mysqli_fetch_assoc($res);
 
@@ -281,12 +269,12 @@ function GetProgramNameId($_value, $_isGetName = true)
   // exit;
 
   if ($_isGetName)
-    return $row[$_programName] ?? null;
+    return $row[$_programNameField] ?? null;
   else
     return $row[$_programId] ?? null;
 }
 
-$prgRes = mysqli_query($conn, "SELECT * FROM $_programTable");
+$prgRes = mysqli_query($conn, "SELECT * FROM $_programTableName");
 
 
 include_once("../header.php");
@@ -345,8 +333,8 @@ $totalRows = mysqli_num_rows($response1);
             <option value="">-- Select Program --</option>
             <?php mysqli_data_seek($prgRes, 0);
             while ($row = mysqli_fetch_assoc($prgRes)) {
-              $selected = ($filterProgram == $row[$_programName]) ? 'selected' : '';
-              echo "<option value='{$row[$_programName]}' $selected>{$row[$_programName]}</option>";
+              $selected = ($filterProgram == $row[$_programNameField]) ? 'selected' : '';
+              echo "<option value='{$row[$_programNameField]}' $selected>{$row[$_programNameField]}</option>";
             }
             ?>
           </select>
@@ -467,7 +455,7 @@ $totalRows = mysqli_num_rows($response1);
         <option value="">-- Select Department --</option>
         <?php mysqli_data_seek($prgRes, 0);
         while ($row = mysqli_fetch_assoc($prgRes)) { ?>
-          <option value="<?php echo $row[$_programName]; ?>"><?php echo $row[$_programName]; ?></option>
+          <option value="<?php echo $row[$_programNameField]; ?>"><?php echo $row[$_programNameField]; ?></option>
         <?php } ?>
       </select>
 
@@ -517,7 +505,7 @@ $totalRows = mysqli_num_rows($response1);
         <option value="">-- Select Department --</option>
         <?php mysqli_data_seek($prgRes, 0);
         while ($row = mysqli_fetch_assoc($prgRes)) { ?>
-          <option value="<?php echo $row[$_programName]; ?>"><?php echo $row[$_programName]; ?></option>
+          <option value="<?php echo $row[$_programNameField]; ?>"><?php echo $row[$_programNameField]; ?></option>
         <?php } ?>
       </select>
 
