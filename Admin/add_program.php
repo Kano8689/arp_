@@ -24,18 +24,18 @@ $filterGrad = isset($_GET['filterGrad']) ? mysqli_real_escape_string($conn, $_GE
 // ✅ Build WHERE clause
 $whereClause = [];
 if ($filterName !== '') {
-  $whereClause[] = "$programNameField LIKE '%$filterName%'";
+  $whereClause[] = "$_programNameField LIKE '%$filterName%'";
 }
 if ($filterSem !== '') {
-  $whereClause[] = "$programSemField = $filterSem";
+  $whereClause[] = "$_programSemField = $filterSem";
 }
 if ($filterDep !== '') {
   $deptId = GetDepartmentNameId($filterDep, false);
-  $whereClause[] = "$programDeptField = '$deptId'";
+  $whereClause[] = "$_programDeptField = '$deptId'";
 }
 if ($filterGrad !== '') {
   $filterGrad = ($filterGrad == 'UG' ? '1' : ($filterGrad == 'PG' ? '2' : '0'));
-  $whereClause[] = "$graduationTypeField = '$filterGrad'";
+  $whereClause[] = "$_graduationTypeField = '$filterGrad'";
 }
 
 $whereSQL = '';
@@ -59,14 +59,14 @@ if ($filterGrad !== '')
 if (isset($_GET['del_id'])) {
   $del_id = $_GET['del_id'];
   // Check if any student exists with this program
-  $checkSql = "SELECT COUNT(*) AS cnt FROM students_details WHERE program_id = $del_id";
+  $checkSql = "SELECT COUNT(*) AS cnt FROM $_studentTable WHERE $_studentProgram = $del_id";
   $checkRes = mysqli_query($conn, $checkSql);
   $count = mysqli_fetch_assoc($checkRes)['cnt'];
 
   if ($count > 0) {
     echo "<script>alert('Cannot delete program. It is assigned to $count student(s).');</script>";
   } else {
-    $deleteProgram = "DELETE FROM $programTableName WHERE $_id = $del_id";
+    $deleteProgram = "DELETE FROM $_programTableName WHERE $_programId = $del_id";
     mysqli_query($conn, $deleteProgram);
   }
   header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
@@ -86,36 +86,20 @@ if (isset($_POST['updateProgram'])) {
 
   $graduationType = $graduationType == "UG" ? 1 : ($graduationType == "PG" ? 2 : 0);
 
-  $where = "$programNameField = '$programName' AND $programSemField = '$programSem' AND $graduationTypeField = '$graduationType' AND $programDeptField = '$programDept'";
-  if (isUniqueOrNot($conn, $programTableName, $where)) {
-    $updateQuery = "UPDATE $programTableName
-                    SET $programNameField='$programName',$graduationTypeField='$graduationType', $programSemField='$programSem', $programDeptField='$programDept'
-                    WHERE $_id=$edt_id";
+  $where = "$_programNameField = '$programName' AND $_programSemField = '$programSem' AND $_graduationTypeField = '$_graduationType' AND $_programDeptField = '$programDept'";
+  if (isUniqueOrNot($conn, $_programTableName, $where)) {
+    $updateQuery = "UPDATE $_programTableName
+                    SET $_programNameField='$programName',$_graduationTypeField='$graduationType', $_programSemField='$programSem', $_programDeptField='$programDept'
+                    WHERE $_programId=$edt_id";
     mysqli_query($conn, $updateQuery);
 
     $page = isset($_POST['page']) ? intval($_POST['page']) : $currentPage;
     $limit = isset($_POST['limit']) ? intval($_POST['limit']) : $currentLimit;
 
-    $filterQuery = '';
-    if (!empty($_POST['filterName']))
-      $filterQuery .= '&filterName=' . urlencode($_POST['filterName']);
-    if (!empty($_POST['filterSem']))
-      $filterQuery .= '&filterSem=' . urlencode($_POST['filterSem']);
-    if (!empty($_POST['filterDep']))
-      $filterQuery .= '&filterDep=' . urlencode($_POST['filterDep']);
-    if (!empty($_POST['filterGrad']))
-      $filterQuery .= '&filterGrad=' . urlencode($_POST['filterGrad']);
-
     header("Location: add_program.php?page=$page&limit=$limit$filterQuery"); // ✅ use POST filters
     exit;
   } else {
     $uniqError = "Record is not updated due to already exists..";
-    // echo "<br>";
-    // echo "$uniqError";
-    // echo "<br>";
-    // echo "$where";
-    // echo "<br>";
-    // exit;
   }
 }
 
@@ -129,9 +113,9 @@ if (isset($_POST['addProgram'])) {
 
   $graduationType = $graduationType == "UG" ? 1 : ($graduationType == "PG" ? 2 : 0);
 
-  $where = "$programNameField = '$programName' AND $programSemField = '$programSem' AND $graduationTypeField = '$graduationType' AND $programDeptField = '$programDept'";
-  if (isUniqueOrNot($conn, $programTableName, $where)) {
-    $insertProgram = "INSERT INTO $programTableName ($programNameField, $programSemField, $graduationTypeField, $programDeptField) VALUES ('$programName', '$programSem', '$graduationType', '$programDept')";
+  $where = "$_programNameField = '$programName' AND $_programSemField = '$programSem' AND $_graduationTypeField = '$graduationType' AND $_programDeptField = '$programDept'";
+  if (isUniqueOrNot($conn, $_programTableName, $where)) {
+    $insertProgram = "INSERT INTO $_programTableName ($_programNameField, $_programSemField, $_graduationTypeField, $_programDeptField) VALUES ('$programName', '$programSem', '$graduationType', '$programDept')";
     // echo "$insertProgram";
     // exit;
     mysqli_query($conn, $insertProgram);
@@ -139,12 +123,6 @@ if (isset($_POST['addProgram'])) {
     exit;
   } else {
     $uniqError = "Record is not insetred due to already exists..";
-    // echo "<br>";
-    // echo "$uniqError";
-    // echo "<br>";
-    // echo "$where";
-    // echo "<br>";
-    // exit;
   }
 }
 
@@ -263,7 +241,7 @@ if (isset($_POST['addFile'])) {
     // Insert or Update
     $result = insertOrUpdateProgram(
       $conn,
-      $programTableName,
+      $_programTableName,
       $fields,
       [$programName, $programSem, $programDeptId, $graduationType],
       $programNameField
@@ -312,10 +290,10 @@ $currentLimit = (int) $currentLimit;
 $offset = ($currentPage - 1) * $currentLimit;
 
 // ✅ Final query with filter, order, and pagination
-$selectPrograms = "SELECT * FROM $programTableName $whereSQL ORDER BY created_at DESC LIMIT $offset, $currentLimit";
+$selectPrograms = "SELECT * FROM $_programTableName $whereSQL ORDER BY created_at DESC LIMIT $offset, $currentLimit";
 $response = mysqli_query($conn, $selectPrograms);
 
-$selectPrograms1 = "SELECT * FROM $programTableName";
+$selectPrograms1 = "SELECT * FROM $_programTableName";
 $response1 = mysqli_query($conn, $selectPrograms1);
 $totalRows = mysqli_num_rows($response1);
 
@@ -323,20 +301,20 @@ $totalRows = mysqli_num_rows($response1);
 // Select Department Name
 function GetDepartmentNameId($_value, $_isGetName = true)
 {
-  global $conn, $_deptTable, $_deptName, $_deptId;
-  $field = $_isGetName ? $_deptId : $_deptName;
-  $select = "SELECT * FROM $_deptTable WHERE $field = '$_value'";
+  global $conn, $_departmentTable, $_departmentName, $_departmentId;
+  $field = $_isGetName ? $_departmentId : $_departmentName;
+  $select = "SELECT * FROM $_departmentTable WHERE $field = '$_value'";
   $res = mysqli_query($conn, $select);
   $row = mysqli_fetch_assoc($res);
 
   if ($_isGetName)
-    return $row[$_deptName] ?? null;
+    return $row[$_departmentName] ?? null;
   else
-    return $row[$_deptId] ?? null;
+    return $row[$_departmentId] ?? null;
 }
 
 
-$deptRes = mysqli_query($conn, "SELECT * FROM $_deptTable");
+$deptRes = mysqli_query($conn, "SELECT * FROM $_departmentTable");
 
 $display = "none";
 
@@ -410,10 +388,10 @@ $display = "none";
               <option value="">-- Select Department --</option>
               <?php
               // Generate options dynamically
-              $deptQuery = "SELECT * FROM $_deptTable";
+              $deptQuery = "SELECT * FROM $_departmentTable";
               $deptOptions = mysqli_query($conn, $deptQuery);
               while ($dRow = mysqli_fetch_assoc($deptOptions)) {
-                $deptName = $dRow[$_deptName];
+                $deptName = $dRow[$_departmentName];
                 $selected = ($filterDep == $deptName) ? 'selected' : '';
                 echo "<option value='$deptName' $selected>$deptName</option>";
               }
@@ -458,44 +436,44 @@ $display = "none";
             $num = 1;
             while ($row = mysqli_fetch_assoc($response)) { ?>
               <tr style="cursor: pointer;" ondblclick="editProgram(
-                            '<?php echo $row[$_id]; ?>',
-                            '<?php echo $row[$programNameField]; ?>',
-                            '<?php echo $row[$programSemField]; ?>',
-                            '<?php echo GetDepartmentNameId($row[$programDeptField]); ?>',
-                            '<?php echo ($row[$graduationTypeField] == '1' ? 'UG' : ($row[$graduationTypeField] == 2 ? 'PG' : 'None')); ?>',
+                            '<?php echo $row[$_programId]; ?>',
+                            '<?php echo $row[$_programNameField]; ?>',
+                            '<?php echo $row[$_programSemField]; ?>',
+                            '<?php echo GetDepartmentNameId($row[$_programDeptField]); ?>',
+                            '<?php echo ($row[$_graduationTypeField] == '1' ? 'UG' : ($row[$_graduationTypeField] == 2 ? 'PG' : 'None')); ?>',
                             '<?php echo $currentPage; ?>',
                             '<?php echo $currentLimit; ?>',
                             '<?php echo htmlspecialchars($filterName); ?>',
                             '<?php echo htmlspecialchars($filterSem); ?>',
                             '<?php echo htmlspecialchars($filterDep); ?>',
-                            '<?php echo ($row[$graduationTypeField] == '1' ? 'UG' : ($row[$graduationTypeField] == 2 ? 'PG' : 'None')); ?>'
+                            '<?php echo ($row[$_graduationTypeField] == '1' ? 'UG' : ($row[$_graduationTypeField] == 2 ? 'PG' : 'None')); ?>'
                         )">
                 <td style="text-align: center; padding: 5px 0;"><?php echo $num++; ?></td>
-                <td style="padding: 5px 0;"><?php echo $row[$programNameField]; ?></td>
-                <td style="text-align: center; padding: 5px 0;"><?php echo $row[$programSemField]; ?></td>
-                <td style="text-align: center; padding: 5px 0;"><?php echo ($row[$graduationTypeField] == '1' ? 'UG' : ($row[$graduationTypeField] == 2 ? 'PG' : 'None')); ?></td>
-                <td style="text-align: center; padding: 5px 0;"><?php echo GetDepartmentNameId($row[$programDeptField]); ?>
+                <td style="padding: 5px 0;"><?php echo $row[$_programNameField]; ?></td>
+                <td style="text-align: center; padding: 5px 0;"><?php echo $row[$_programSemField]; ?></td>
+                <td style="text-align: center; padding: 5px 0;"><?php echo ($row[$_graduationTypeField] == '1' ? 'UG' : ($row[$_graduationTypeField] == 2 ? 'PG' : 'None')); ?></td>
+                <td style="text-align: center; padding: 5px 0;"><?php echo GetDepartmentNameId($row[$_programDeptField]); ?>
                 </td>
                 <td style="text-align: center; padding: 5px 0;">
                   <form method="POST">
                     <!-- Update button -->
                     <a onclick="editProgram(
-                            '<?php echo $row[$_id]; ?>',
-                            '<?php echo $row[$programNameField]; ?>',
-                            '<?php echo $row[$programSemField]; ?>',
-                            '<?php echo GetDepartmentNameId($row[$programDeptField]); ?>',
-                            '<?php echo ($row[$graduationTypeField] == '1' ? 'UG' : ($row[$graduationTypeField] == 2 ? 'PG' : 'None')); ?>',
+                            '<?php echo $row[$_programId]; ?>',
+                            '<?php echo $row[$_programNameField]; ?>',
+                            '<?php echo $row[$_programSemField]; ?>',
+                            '<?php echo GetDepartmentNameId($row[$_programDeptField]); ?>',
+                            '<?php echo ($row[$_graduationTypeField] == '1' ? 'UG' : ($row[$_graduationTypeField] == 2 ? 'PG' : 'None')); ?>',
                             '<?php echo $currentPage; ?>',
                             '<?php echo $currentLimit; ?>',
                             '<?php echo htmlspecialchars($filterName); ?>',
                             '<?php echo htmlspecialchars($filterSem); ?>',
                             '<?php echo htmlspecialchars($filterDep); ?>',
-                            '<?php echo ($row[$graduationTypeField] == '1' ? 'UG' : ($row[$graduationTypeField] == 2 ? 'PG' : 'None')); ?>'
+                            '<?php echo ($row[$_graduationTypeField] == '1' ? 'UG' : ($row[$_graduationTypeField] == 2 ? 'PG' : 'None')); ?>'
                         )" class="btn btn-light" style="display:inline-block; margin-right:5px;">
                       ✏️ Edit
                     </a>
                     <!-- Delete button -->
-                    <a href="add_program.php?del_id=<?php echo $row[$_id]; ?>&page=<?php echo $currentPage; ?>&limit=<?php echo $currentLimit; ?><?php echo $filterQuery; ?>"
+                    <a href="add_program.php?del_id=<?php echo $row[$_programId]; ?>&page=<?php echo $currentPage; ?>&limit=<?php echo $currentLimit; ?><?php echo $filterQuery; ?>"
                       class="btn btn-danger" style="text-decoration: none;">
                       🗑 Delete
                     </a>
@@ -516,7 +494,7 @@ $display = "none";
 
     <!-- ✅ pagination UI -->
     <?php
-    $totalRecords = paginationUI($conn, $programTableName, $currentPage, $currentLimit, $whereSQL, $filterQuery);
+    $totalRecords = paginationUI($conn, $_programTableName, $currentPage, $currentLimit, $whereSQL, $filterQuery);
 
     // Show record count under table
     if ($totalRecords > 0) {
@@ -560,7 +538,7 @@ $display = "none";
         <option value="">-- Select Department --</option>
         <?php mysqli_data_seek($deptRes, 0);
         while ($row = mysqli_fetch_assoc($deptRes)) { ?>
-          <option value="<?php echo $row[$_deptName]; ?>"><?php echo $row[$_deptName]; ?></option>
+          <option value="<?php echo $row[$_departmentName]; ?>"><?php echo $row[$_departmentName]; ?></option>
         <?php } ?>
       </select>
       <div class="modal-actions">
@@ -606,7 +584,7 @@ $display = "none";
         <option value="">-- Select Department --</option>
         <?php mysqli_data_seek($deptRes, 0);
         while ($row = mysqli_fetch_assoc($deptRes)) { ?>
-          <option value="<?php echo $row[$_deptName]; ?>"><?php echo $row[$_deptName]; ?></option>
+          <option value="<?php echo $row[$_departmentName]; ?>"><?php echo $row[$_departmentName  ]; ?></option>
         <?php } ?>
       </select>
 
