@@ -13,7 +13,7 @@ $currentPage = 0;
 $currentLimit = 0;
 
 
-$mappingRes = mysqli_query($conn, "SELECT * FROM $_mappingTable");
+$mappingRes = mysqli_query($conn, "SELECT * FROM $_mappingFacultyTable");
 // print("<pre>");
 // print_r($mappingRes);
 // exit;
@@ -41,12 +41,12 @@ $whereClauses = [];
 
 // Filter Academic Year
 if ($filterAcademicYear !== '') {
-    $whereClauses[] = "$_slotYear = '$filterAcademicYear'";
+    $whereClauses[] = "$_mappingFacultySemesterYear = '$filterAcademicYear'";
 }
 
 // Filter Semester Type
 if ($filterSemesterType > 0) {
-    $whereClauses[] = "$_semesterType = $filterSemesterType";
+    $whereClauses[] = "$_mappingFacultySemesterType = $filterSemesterType";
 }
 
 // Filter Program - need to get program ID from program name, then filter students enrolled in that program, then filter mapping by those student IDs
@@ -86,7 +86,7 @@ if ($filterCourse !== '') {
     $resCourse = mysqli_query($conn, $courseIdQuery);
     $courseRow = mysqli_fetch_assoc($resCourse);
     if ($courseRow) {
-        $whereClauses[] = $_crseId . " = '" . $courseRow[$_courseId] . "'";
+        $whereClauses[] = $_mappingFacultyCourseId . " = '" . $courseRow[$_courseId] . "'";
     } else {
         $whereClauses[] = "0";
     }
@@ -98,7 +98,7 @@ if ($filterFaculty !== '') {
     $resFac = mysqli_query($conn, $facultyIdQuery);
     $facRow = mysqli_fetch_assoc($resFac);
     if ($facRow) {
-        $whereClauses[] = $_facId . " = '" . $facRow[$_facultyId] . "'";
+        $whereClauses[] = $_mappingFacultyId . " = '" . $facRow[$_facultyId] . "'";
     } else {
         $whereClauses[] = "0";
     }
@@ -110,7 +110,7 @@ if ($filterSlot !== '') {
     $resSlot = mysqli_query($conn, $slotIdQuery);
     $slotRow = mysqli_fetch_assoc($resSlot);
     if ($slotRow) {
-        $whereClauses[] = $_sltId . " = '" . $slotRow[$_slotId] . "'";
+        $whereClauses[] = $_mappingFacultySlotId . " = '" . $slotRow[$_slotId] . "'";
     } else {
         $whereClauses[] = "0";
     }
@@ -132,14 +132,14 @@ foreach (['filter_academic_year', 'filter_semester_type', 'filter_program', 'fil
 // Delete Mapping
 if (isset($_GET['del_id'])) {
     $del_id = $_GET['del_id'];
-    $deleteProgram = "DELETE FROM $_mappingTable WHERE $_mapId = $del_id";
+    $deleteProgram = "DELETE FROM $_mappingFacultyTable WHERE $_mappingFacultyTblId = $del_id";
 
     mysqli_query($conn, $deleteProgram);
     header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
     exit;
 }
 
-if (isset($_POST['editMapping'])) {
+if (isset($_POST['editFacMapping'])) {
     $edit_map_id = $_POST['edit_map_id'];
 
     $academicYear = $_POST['academic_year'];
@@ -157,64 +157,40 @@ if (isset($_POST['editMapping'])) {
     $sltId = GetSlotNameId($slot, false);
     $semesterType = $semesterType == "Fall" ? 1 : (($semesterType == "Summer") ? 2 : 0);
 
-
-    // $where = "$_stuId='$stuId' AND $_facId='$facId' AND $_crseId='$crseId' AND $_sltId='$sltId' AND $_slotYear='$slotYear' AND $_semesterType='$semesterType'";
-
-    $where = "$_stuId='$stuId' AND $_sltId='$sltId' AND $_slotYear='$slotYear' AND $_semesterType='$semesterType'";
-    if (isUniqueOrNot($conn, $_mappingTable, $where)) {
-        $updateMapping = "UPDATE $_mappingTable SET $_stuId='$stuId', $_facId='$facId', $_crseId='$crseId', $_sltId='$sltId', $_slotYear='$slotYear', $_semesterType='$semesterType' WHERE $_mapId='$edit_map_id'";
-
-        // echo "$insertMapping"."<br>";
-        // echo "$course"."<br>";
-        // exit;
+    $where = "$_stuId='$stuId' AND $_mappingFacultySlotId='$sltId' AND $_mappingFacultySemesterYear='$slotYear' AND $_mappingFacultySemesterType='$semesterType'";
+    if (isUniqueOrNot($conn, $_mappingFacultyTable, $where)) {
+        $updateMapping = "UPDATE $_mappingFacultyTable SET $_stuId='$stuId', $_mappingFacultyId='$facId', $_mappingFacultyCourseId='$crseId', $_mappingFacultySlotId='$sltId', $_mappingFacultySemesterYear='$slotYear', $_mappingFacultySemesterType='$semesterType' WHERE $_mappingFacultyTblId='$edit_map_id'";
 
         $abc = mysqli_query($conn, $updateMapping);
         header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
     } else {
         $uniqError = "Record is not updated due to mapping already exists..";
-        // echo "<br>";
-        // echo "$uniqError";
-        // echo "<br>";
-        // echo "$where";
-        // echo "<br>";
-        // exit;
     }
 }
 
 if (isset($_POST['addMapping'])) {
     $academicYear = $_POST['academic_year'];
     $semesterType = $_POST['semester_type'];
-    // $program = $_POST['program'];
-    $student = $_POST['student'];
     $course = $_POST['course'];
     $slot = $_POST['slot'];
     $faculty = $_POST['faculty'];
     $slotYear = $_POST['semester_year'];
 
-    $stuId = GetStudentNameId($student, false);
     $facId = GetFacultyNameId($faculty, false);
     $crseId = GetCourseNameId($course, false);
     $sltId = GetSlotNameId($slot, false);
     $semesterType = $semesterType == "Fall" ? 1 : (($semesterType == "Summer") ? 2 : 0);
 
-    // $where = "$_stuId='$stuId' AND $_facId='$facId' AND $_crseId='$crseId' AND $_sltId='$sltId' AND $_slotYear='$slotYear' AND $_semesterType='$semesterType'";
-
     FacultyUniqueForFreeze($facId, $crseId, $slotYear, $semesterType);
 
-    $where = "$_stuId='$stuId' AND $_sltId='$sltId' AND $_slotYear='$slotYear' AND $_semesterType='$semesterType'";
-    if (isUniqueOrNot($conn, $_mappingTable, $where)) {
-        $insertMapping = "INSERT INTO $_mappingTable ($_stuId, $_facId, $_crseId, $_sltId, $_slotYear, $_semesterType) VALUES ('$stuId', '$facId', '$crseId', '$sltId', '$slotYear', '$semesterType')";
+    $where = "$_mappingFacultySlotId='$sltId' AND $_mappingFacultySemesterYear='$slotYear' AND $_mappingFacultySemesterType='$semesterType'";
+    if (isUniqueOrNot($conn, $_mappingFacultyTable, $where)) {
+        $insertMapping = "INSERT INTO $_mappingFacultyTable ($_mappingFacultyId, $_mappingFacultyCourseId, $_mappingFacultySlotId, $_mappingFacultySemesterYear, $_mappingFacultySemesterType) VALUES ('$facId', '$crseId', '$sltId', '$slotYear', '$semesterType')";
 
         $abc = mysqli_query($conn, $insertMapping);
         header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
     } else {
         $uniqError = "Record is not insetred due to mapping already exists..";
-        // echo "<br>";
-        // echo "$uniqError";
-        // echo "<br>";
-        // echo "$where";
-        // echo "<br>";
-        // exit;
     }
 }
 
@@ -262,11 +238,11 @@ if (isset($_POST['addFile'])) {
 
 function GetAndSaveDataFromFile($ary)
 {
-    global $conn, $_mappingTable, $defaultLoginExtension;
-    global $_stuId, $_facId, $_crseId, $_sltId, $_slotYear, $_semesterType;
+    global $conn, $_mappingFacultyTable, $defaultLoginExtension;
+    global $_stuId, $_mappingFacultyId, $_mappingFacultyCourseId, $_mappingFacultySlotId, $_mappingFacultySemesterYear, $_mappingFacultySemesterType;
     global $_loginTable, $_loginUsername, $_loginPassword, $_loginUserType;
 
-    $fields = [$_stuId, $_facId, $_crseId, $_sltId, $_slotYear, $_semesterType];
+    $fields = [$_stuId, $_mappingFacultyId, $_mappingFacultyCourseId, $_mappingFacultySlotId, $_mappingFacultySemesterYear, $_mappingFacultySemesterType];
 
     // From student table
     $mappingStuEnNo = mysqli_real_escape_string($conn, $ary[1] ?? '');
@@ -305,7 +281,7 @@ function GetAndSaveDataFromFile($ary)
     // echo $crseId."<br>";
     // echo $mappingCourseName."<br>";
     // exit;
-    $whereData = $_stuId . " = '" . $stuId . "' and " . $_sltId . " = '" . $sltId . "' and " . $_slotYear . " = '" . $mappingSlotYear . "' and " . $_semesterType . " = '" . $semesterType . "'";
+    $whereData = $_stuId . " = '" . $stuId . "' and " . $_mappingFacultySlotId . " = '" . $sltId . "' and " . $_mappingFacultySemesterYear . " = '" . $mappingSlotYear . "' and " . $_mappingFacultySemesterType . " = '" . $semesterType . "'";
 
     // echo $semesterType."<br>";
     // echo $whereData."<br>";
@@ -313,7 +289,7 @@ function GetAndSaveDataFromFile($ary)
 
     FacultyUniqueForFreeze($facId, $crseId, $mappingSlotYear, $semesterType);
 
-    FieldStringSetter($conn, $_mappingTable, $fields, $data, $whereData);
+    FieldStringSetter($conn, $_mappingFacultyTable, $fields, $data, $whereData);
 }
 
 function FacultyUniqueForFreeze($fac, $crse, $year, $sem)
@@ -372,11 +348,6 @@ function GetFacultyCodeField($field, $id)
     $res = mysqli_query($conn, $sql);
     $row = mysqli_fetch_assoc($res);
 
-    // print("<pre>");
-    // print_r($row);
-    // echo "$field";
-    // exit;
-
     return $row[$field] ?? null;
 }
 
@@ -389,11 +360,7 @@ function GetCourseNameId($val, $isGetName = true)
     $slct = "SELECT * FROM $_coursesTable WHERE $field = '$val'";
     $res = mysqli_query($conn, $slct);
     $row = mysqli_fetch_assoc($res);
-    // print("<pre>");
-    // echo "$slct";
-    // print_r($row);
-    // exit;
-    // exit;
+
     if ($isGetName)
         return $row[$_courseNameField] ?? null;
     else
@@ -426,11 +393,7 @@ function GetProgramNameId($val, $isGetName = true)
     $slct = "SELECT * FROM $_programTableName WHERE $field = '$val'";
     $res = mysqli_query($conn, $slct);
     $row = mysqli_fetch_assoc($res);
-    // print("<pre>");
-    // print_r($res);
-    // echo "";
-    // exit;
-
+    
     if ($isGetName)
         return $row[$_programNameField] ?? null;
     else
@@ -492,18 +455,18 @@ $currentLimit = (int) $currentLimit;
 
 $offset = ($currentPage - 1) * $currentLimit;
 
-$deptRes = mysqli_query($conn, "SELECT * FROM $_deptTable");
+$deptRes = mysqli_query($conn, "SELECT * FROM $_departmentTable");
 $courseRes = mysqli_query($conn, "SELECT * FROM $_coursesTable");
 $programRes = mysqli_query($conn, "SELECT * FROM $_programTableName");
 $slotRes = mysqli_query($conn, "SELECT * FROM $_slotTable");
 $facultiesRes = mysqli_query($conn, "SELECT * FROM $_facultyTable ORDER BY $_facultyId DESC");
 $studentsRes = mysqli_query($conn, "SELECT * FROM $_studentTable ORDER BY $_studentId DESC");
 
-$mappingStudentRes = mysqli_query($conn, "SELECT * FROM $_mappingTable");
-$mappingRes = mysqli_query($conn, "SELECT * FROM $_mappingTable $whereSQL ORDER BY created_at DESC LIMIT $offset, $currentLimit");
+$mappingStudentRes = mysqli_query($conn, "SELECT * FROM $_mappingFacultyTable");
+$mappingRes = mysqli_query($conn, "SELECT * FROM $_mappingFacultyTable $whereSQL ORDER BY created_at DESC LIMIT $offset, $currentLimit");
 
-$mappingStudentRes1 = mysqli_query($conn, "SELECT * FROM $_mappingTable");
-$mappingRes1 = mysqli_query($conn, "SELECT * FROM $_mappingTable");
+$mappingStudentRes1 = mysqli_query($conn, "SELECT * FROM $_mappingFacultyTable");
+$mappingRes1 = mysqli_query($conn, "SELECT * FROM $_mappingFacultyTable");
 $totalRows = mysqli_num_rows($mappingRes1);
 
 
@@ -531,7 +494,7 @@ $totalRows = mysqli_num_rows($mappingRes1);
 
         <div style="margin-top:10px;">
             <button class="btn" type="button" onclick="toggleFilter()">🔍 Filter</button>
-            <button class="btn" id="addMappingBtn" onclick="openmapping('mappingModal')">+ Add Mapping</button>
+            <button class="btn" id="addMappingBtn" onclick="openmapping('facMappingModal')">+ Add Mapping</button>
             <button class="btn" onclick="open3Modal('uploadModal')">+ Add File (csv/xlsx/sql)</button>
         </div>
 
@@ -618,27 +581,26 @@ $totalRows = mysqli_num_rows($mappingRes1);
                 while ($row = mysqli_fetch_assoc($mappingRes)) { ?>
                     <tr>
                         <?php
-                        $sem_typ = $row[$_semesterType] == 1 ? "FALL" : ($row[$_semesterType] == 2 ? "SUMMER" : "NONE");
-                        $type = GetCourseDetails($_courseTypeField, $row[$_crseId]);
+                        $sem_typ = $row[$_mappingFacultySemesterType] == 1 ? "FALL" : ($row[$_mappingFacultySemesterType] == 2 ? "SUMMER" : "NONE");
+                        $type = GetCourseDetails($_courseTypeField, $row[$_mappingFacultyCourseId]);
                         $course_typ = $type == 1 ? "T" : ($type == 2 ? "P" : ($type == 3 ? "TEL" : "None"));
                         ?>
                         <td style="text-align: center;"><?php echo $num++; ?></td>
-                        <td style="text-align: start;"><?php echo GetFacultyCodeField($_facultyCode, $row[$_facId])." - ".GetFacultyNameId($row[$_facId]); ?></td>
-                        <td style="text-align: center;"><?php echo GetSlotNameId($row[$_sltId]); ?></td>
-                        <td style="text-align: center;"><?php echo $row[$_slotYear]; ?></td>
+                        <td style="text-align: start;"><?php echo GetFacultyCodeField($_facultyCode, $row[$_mappingFacultyId])." - ".GetFacultyNameId($row[$_mappingFacultyId]); ?></td>
+                        <td style="text-align: center;"><?php echo GetSlotNameId($row[$_mappingFacultySlotId]); ?></td>
+                        <td style="text-align: center;"><?php echo $row[$_mappingFacultySemesterYear]; ?></td>
                         <td style="text-align: center;"><?php echo $sem_typ; ?></td>
-                        <td style="text-align: start;"><?php echo GetCourseDetails($_courseCodeField, $row[$_crseId])." - ".GetCourseDetails($_courseNameField, $row[$_crseId]); ?>
+                        <td style="text-align: start;"><?php echo GetCourseDetails($_courseCodeField, $row[$_mappingFacultyCourseId])." - ".GetCourseDetails($_courseNameField, $row[$_mappingFacultyCourseId]); ?>
                         </td>
                         <td style="text-align: center; padding: 5px 0;">
                             <form method="POST">
                                 <!-- Update button -->
-                                <a onclick="editMapping('<?php echo $row[$_mapId]; ?>',
-                                                '<?php echo GetStudentDetails($_studentName, $row[$_stuId]); ?>',
-                                                '<?php echo GetFacultyNameId($row[$_facId]); ?>',
-                                                '<?php echo GetCourseDetails($_courseNameField, $row[$_crseId]); ?>',
-                                                '<?php echo GetSlotNameId($row[$_sltId]); ?>',
-                                                '<?php echo $row[$_semesterType]; ?>',
-                                                '<?php echo $row[$_slotYear]; ?>',
+                                <a onclick="editFacMapping('<?php echo $row[$_mappingFacultyTblId]; ?>',
+                                                '<?php echo GetFacultyNameId($row[$_mappingFacultyId]); ?>',
+                                                '<?php echo GetCourseDetails($_courseNameField, $row[$_mappingFacultyCourseId]); ?>',
+                                                '<?php echo GetSlotNameId($row[$_mappingFacultySlotId]); ?>',
+                                                '<?php echo $row[$_mappingFacultySemesterType]; ?>',
+                                                '<?php echo $row[$_mappingFacultySemesterYear]; ?>',
                                                 '<?php echo $currentPage; ?>',
                                                 '<?php echo $currentLimit; ?>',
                                                 '<?php echo htmlspecialchars($filterAcademicYear); ?>',
@@ -653,7 +615,7 @@ $totalRows = mysqli_num_rows($mappingRes1);
                                 </a>
 
                                 <!-- Delete button -->
-                                <a href="mapping_faculty.php?del_id=<?php echo $row[$_mapId]; ?>&page=<?php echo $currentPage; ?>&limit=<?php echo $currentLimit; ?><?php echo $filterQuery; ?>"
+                                <a href="mapping_faculty.php?del_id=<?php echo $row[$_mappingFacultyTblId]; ?>&page=<?php echo $currentPage; ?>&limit=<?php echo $currentLimit; ?><?php echo $filterQuery; ?>"
                                     class="btn btn-danger" style="text-decoration: none;">
                                     🗑 Delete
                                 </a>
@@ -665,7 +627,7 @@ $totalRows = mysqli_num_rows($mappingRes1);
         </div>
         <!-- ✅ pagination UI -->
         <?php
-        $totalRecords = paginationUI($conn, $_mappingTable, $currentPage, $currentLimit, $whereSQL, $filterQuery);
+        $totalRecords = paginationUI($conn, $_mappingFacultyTable, $currentPage, $currentLimit, $whereSQL, $filterQuery);
 
         // Show record count under table
         if ($totalRecords > 0) {
@@ -680,9 +642,9 @@ $totalRows = mysqli_num_rows($mappingRes1);
 </div>
 
 <!-- Mapping Add Modal -->
-<div class="modal-overlay" id="mappingModal">
+<div class="modal-overlay" id="facMappingModal">
     <div class="modal">
-        <span class="close-btn" onclick="closeMapping('mappingModal')">&times;</span>
+        <span class="close-btn" onclick="closeMapping('facMappingModal')">&times;</span>
 
         <h3 id="modalTitle">Add Mapping</h3>
         <hr><br>
@@ -757,32 +719,19 @@ $totalRows = mysqli_num_rows($mappingRes1);
 
             <div class="row">
                 <div>
-                    <label class="fw-bold">Student</label>
-                    <select name="student" id="student" required>
-                        <option value="">Select Student</option>
-                        <?php mysqli_data_seek($studentsRes, 0);
-                        while ($row = mysqli_fetch_assoc($studentsRes)) { ?>
-                            <option value="<?php echo $row[$_studentName]; ?>"><?php echo $row[$_studentName]; ?></option>
-                        <?php } ?>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row">
-                <div>
                     <label class="fw-bold">Faculty</label>
                     <select name="faculty" id="faculty" required>
                         <option value="">Select Faculty</option>
                         <?php mysqli_data_seek($facultiesRes, 0);
                         while ($row = mysqli_fetch_assoc($facultiesRes)) { ?>
-                            <option value="<?php echo $row[$_facultyName]; ?>"><?php echo $row[$_facultyName]; ?></option>
+                            <option value="<?php echo $row[$_facultyName]; ?>"><?php echo $row[$_facultyCode]." - ".$row[$_facultyName]; ?></option>
                         <?php } ?>
                     </select>
                 </div>
             </div>
 
             <div class="actions">
-                <button type="button" class="btn btn-secondary" onclick="closeMapping('mappingModal')">Cancel</button>
+                <button type="button" class="btn btn-secondary" onclick="closeMapping('facMappingModal')">Cancel</button>
                 <button type="submit" name="addMapping" class="btn">Mapping</button>
             </div>
 
@@ -792,9 +741,9 @@ $totalRows = mysqli_num_rows($mappingRes1);
 </div>
 
 <!-- Mapping Edit Modal -->
-<div class="modal-overlay" id="editmappingModal">
+<div class="modal-overlay" id="editFacMappingModal">
     <div class="modal">
-        <span class="close-btn" onclick="closeMapping('editmappingModal')">&times;</span>
+        <span class="close-btn" onclick="closeMapping('editFacMappingModal')">&times;</span>
 
         <h3 id="modalTitle">Edit Mapping</h3>
         <hr><br>
@@ -883,19 +832,6 @@ $totalRows = mysqli_num_rows($mappingRes1);
 
             <div class="row">
                 <div>
-                    <label class="fw-bold">Student</label>
-                    <select name="student" id="edit_student" required>
-                        <option value="">Select Student</option>
-                        <?php mysqli_data_seek($studentsRes, 0);
-                        while ($row = mysqli_fetch_assoc($studentsRes)) { ?>
-                            <option value="<?php echo $row[$_studentName]; ?>"><?php echo $row[$_studentName]; ?></option>
-                        <?php } ?>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row">
-                <div>
                     <label class="fw-bold">Faculty</label>
                     <select name="faculty" id="edit_faculty" required>
                         <option value="">Select Faculty</option>
@@ -909,8 +845,8 @@ $totalRows = mysqli_num_rows($mappingRes1);
 
             <div class="actions">
                 <button type="button" class="btn btn-secondary"
-                    onclick="closeMapping('editmappingModal')">Cancel</button>
-                <button type="submit" name="editMapping" class="btn">Edit Mapping</button>
+                    onclick="closeMapping('editFacMappingModal')">Cancel</button>
+                <button type="submit" name="editFacMapping" class="btn">Edit Mapping</button>
             </div>
 
             <input type="hidden" id="editIndex" name="edit_index">

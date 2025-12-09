@@ -334,8 +334,8 @@ function closeMapping(id) {
 }
 
 
-function editMapping(mapid, student_name, faculty_name, course_name, slot, sem_type, slotyear, page, limit, filterAcademicYear, filterSemesterType, filterProgram, filterStudent, filterCourse, filterFaculty, filterSlot) {
-    openModal('editmappingModal');
+function editFacMapping(mapid, /*student_name,*/ faculty_name, course_name, slot, sem_type, slotyear, page, limit, filterAcademicYear, filterSemesterType, filterProgram, filterStudent, filterCourse, filterFaculty, filterSlot) {
+    openModal('editFacMappingModal');
 
 console.log("cmslkcvnjkasjcksjvk");
 console.log(slotyear);
@@ -352,7 +352,7 @@ console.log(slotyear);
     document.getElementById('edit_semesterName').value = sem_val;
     document.getElementById('edit_slot').value = slot;
     document.getElementById('edit_course').value = course_name;
-    document.getElementById('edit_student').value = student_name;
+    // document.getElementById('edit_student').value = student_name;
     document.getElementById('edit_faculty').value = faculty_name;
 
 
