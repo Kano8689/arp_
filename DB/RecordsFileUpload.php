@@ -94,6 +94,7 @@ function LoginTableInsert($conn, $tableName, $field, $data)
 {
       $loginAdd = "INSERT INTO $tableName ($field[0],$field[1],$field[2]) VALUES ('$data[0]','$data[1]','$data[2]')";
       // echo "Miira... ".$loginAdd."<br>";
+
       //     echo "Miira... ".$un;
       $q = mysqli_query($conn, $loginAdd);
       // echo "Miira... ".$q."<br>";
@@ -104,6 +105,8 @@ function LoginTableUpdate($conn, $tableName, $field, $data)
 {
       // $loginEdit = "UPDATE $tableName SET $_facultyPassword = '$encPass' WHERE $_facultyCode = '$enNoFld'";
       $loginEdit = "UPDATE $tableName SET $field[1] = '$data[1]' WHERE $field[0] = '$data[0]'";
+      // echo "$loginEdit";
+      // exit;
       mysqli_query($conn, $loginEdit);
 }
 

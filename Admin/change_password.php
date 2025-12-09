@@ -5,12 +5,6 @@ if (!isset($_SESSION[$_session_login_type]) || $_SESSION[$_session_login_type] !
   exit;
 }
 
-// admin_details field variable
-// ceo_details field variable
-
-
-
-
 if (isset($_POST['updatePassword'])) {
   $userType = $_POST['userType'];
   $loginId = $_POST['loginId'];
@@ -23,10 +17,9 @@ if (isset($_POST['updatePassword'])) {
 
   if ($newPassword == $confirmPassword) {
     $encPas = Encrypt($newPassword);
-    // echo $newPassword."<br>";
-    // echo $encPas."<br>";
+    $updatePassword = "UPDATE $_loginTable SET $_loginPassword='$encPas' WHERE $_loginUsername='$loginFullId' and $_loginUserType='$userType'";
+    // echo "$updatePassword";  
     // exit;
-    $updatePassword = "UPDATE $_loginTable SET $_loginPassword = '$encPas' WHERE $_loginUsername='$loginFullId' and $_loginUserType='$userType'";
     $ret = mysqli_query($conn, $updatePassword);
 
     $table;
@@ -57,13 +50,6 @@ if (isset($_POST['updatePassword'])) {
       $UpdateDetailsPassword = "UPDATE $table SET $passwordField='$encPas' WHERE $userNameField='$loginId'";
       mysqli_query($conn, $UpdateDetailsPassword);
     }
-
-
-
-    // echo $updatePassword."<br>";
-    // echo "<br><br><br>";
-    // echo $ret."<br>";
-    // exit;
 
     header("Location: change_password.php");
 

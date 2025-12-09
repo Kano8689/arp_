@@ -217,6 +217,7 @@ function GetAndSaveDataFromFile($ary)
 
     $un = $facultyCode . $defaultLoginExtension;
     LoginTableUpdate($conn, $_loginTable, [$_loginUsername, $_loginPassword, $_loginUserType], [$un, $encPass, 3]);
+    
   } else {
     $un = $facultyCode . $defaultLoginExtension;
     LoginTableInsert($conn, $_loginTable, [$_loginUsername, $_loginPassword, $_loginUserType], [$un, $encPass, 3]);
