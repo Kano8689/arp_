@@ -40,7 +40,7 @@ function editProgram(id, name, sem, dept, graduation, page, limit, filterName, f
 
     // console.log("graduation");
     // console.log(graduation);
-    
+
 
 
     document.getElementById('edit_page').value = page;
@@ -334,13 +334,11 @@ function closeMapping(id) {
 }
 
 
-function editFacMapping(mapid, /*student_name,*/ faculty_name, course_name, slot, sem_type, slotyear, page, limit, filterAcademicYear, filterSemesterType, filterProgram, filterStudent, filterCourse, filterFaculty, filterSlot) {
-    openModal('editFacMappingModal');
+function editMapping(mapid, student_name, faculty_name, course_name, slot, sem_type, slotyear, page, limit, filterAcademicYear, filterSemesterType, filterProgram, filterStudent, filterCourse, filterFaculty, filterSlot) {
+    openModal('editmappingModal');
 
-console.log("cmslkcvnjkasjcksjvk");
-console.log(slotyear);
-    
-    
+
+
     if (sem_type == 1) {
         sem_val = "Fall"
     } else {
@@ -352,8 +350,12 @@ console.log(slotyear);
     document.getElementById('edit_semesterName').value = sem_val;
     document.getElementById('edit_slot').value = slot;
     document.getElementById('edit_course').value = course_name;
-    // document.getElementById('edit_student').value = student_name;
-    document.getElementById('edit_faculty').value = faculty_name;
+
+    if (student_name != "N/A")
+        document.getElementById('edit_field_name').value = student_name;
+
+    if (faculty_name != "N/A")
+        document.getElementById('edit_field_name').value = faculty_name;
 
 
     document.getElementById('edit_page').value = page;

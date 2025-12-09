@@ -595,7 +595,9 @@ $totalRows = mysqli_num_rows($mappingRes1);
                         <td style="text-align: center; padding: 5px 0;">
                             <form method="POST">
                                 <!-- Update button -->
-                                <a onclick="editFacMapping('<?php echo $row[$_mappingFacultyTblId]; ?>',
+                                 <?php $nq = "N/A"; ?>
+                                <a onclick="editMapping('<?php echo $row[$_mappingFacultyTblId]; ?>',
+                                                '<?php echo $nq; ?>',
                                                 '<?php echo GetFacultyNameId($row[$_mappingFacultyId]); ?>',
                                                 '<?php echo GetCourseDetails($_courseNameField, $row[$_mappingFacultyCourseId]); ?>',
                                                 '<?php echo GetSlotNameId($row[$_mappingFacultySlotId]); ?>',
@@ -741,9 +743,9 @@ $totalRows = mysqli_num_rows($mappingRes1);
 </div>
 
 <!-- Mapping Edit Modal -->
-<div class="modal-overlay" id="editFacMappingModal">
+<div class="modal-overlay" id="editmappingModal">
     <div class="modal">
-        <span class="close-btn" onclick="closeMapping('editFacMappingModal')">&times;</span>
+        <span class="close-btn" onclick="closeMapping('editmappingModal')">&times;</span>
 
         <h3 id="modalTitle">Edit Mapping</h3>
         <hr><br>
@@ -833,11 +835,11 @@ $totalRows = mysqli_num_rows($mappingRes1);
             <div class="row">
                 <div>
                     <label class="fw-bold">Faculty</label>
-                    <select name="faculty" id="edit_faculty" required>
+                    <select name="faculty" id="edit_field_name" required>
                         <option value="">Select Faculty</option>
                         <?php mysqli_data_seek($facultiesRes, 0);
                         while ($row = mysqli_fetch_assoc($facultiesRes)) { ?>
-                            <option value="<?php echo $row[$_facultyName]; ?>"><?php echo $row[$_facultyName]; ?></option>
+                            <option value="<?php echo $row[$_facultyName]; ?>"><?php echo $row[$_facultyCode]." - ".$row[$_facultyName]; ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -845,8 +847,8 @@ $totalRows = mysqli_num_rows($mappingRes1);
 
             <div class="actions">
                 <button type="button" class="btn btn-secondary"
-                    onclick="closeMapping('editFacMappingModal')">Cancel</button>
-                <button type="submit" name="editFacMapping" class="btn">Edit Mapping</button>
+                    onclick="closeMapping('editmappingModal')">Cancel</button>
+                <button type="submit" name="editMapping" class="btn">Edit Mapping</button>
             </div>
 
             <input type="hidden" id="editIndex" name="edit_index">
