@@ -86,7 +86,7 @@ if (isset($_POST['editFaculty'])) {
 
   $facultyDept = GetDepartmentNameId($facultyDept, false);
 
-  $where = "$_facultyCode='$facultyCode'";
+  $where = "$_facultyName = '$facultyName' AND $_facultyEmail='$facultyEmail' AND $_facultyDepartment = '$facultyDept' AND $_facultyJoinDate = '$facultyJoinDate'";
   if (isUniqueOrNot($conn, $_facultyTable, $where)) {
     $UpdateFaculty = "UPDATE $_facultyTable  SET $_facultyCode = '$facultyCode', $_facultyName = '$facultyName', $_facultyDepartment = '$facultyDept', $_facultyEmail = '$facultyEmail', $_facultyJoinDate = '$facultyJoinDate' WHERE $_facultyId = '$facultyId'";
     mysqli_query($conn, $UpdateFaculty);
@@ -94,26 +94,10 @@ if (isset($_POST['editFaculty'])) {
     $page = isset($_POST['page']) ? intval($_POST['page']) : $currentPage;
     $limit = isset($_POST['limit']) ? intval($_POST['limit']) : $currentLimit;
 
-    $filterQuery = '';
-    if (!empty($_POST['filterDept_faculty']))
-      $filterQuery .= '&filterDept_faculty=' . urlencode($_POST['filterDept_faculty']);
-    if (!empty($_POST['filterCode_faculty']))
-      $filterQuery .= '&filterCode_faculty=' . urlencode($_POST['filterCode_faculty']);
-    if (!empty($_POST['filterName_faculty']))
-      $filterQuery .= '&filterName_faculty=' . urlencode($_POST['filterName_faculty']);
-    if (!empty($_POST['filterEmail_faculty']))
-      $filterQuery .= '&filterEmail_faculty=' . urlencode($_POST['filterEmail_faculty']);
-
     header("Location: add_faculty.php?page=$page&limit=$limit$filterQuery"); // ✅ use POST filters
     exit;
   } else {
     $uniqError = "Record is not updated due to faculty enrollment number already exists..";
-    // echo "<br>";
-    // echo "$uniqError";
-    // echo "<br>";
-    // echo "$where";
-    // echo "<br>";
-    // exit;
   }
 }
 
@@ -245,9 +229,9 @@ function GetAndSaveDataFromFile($ary)
 // Select Department Name
 function GetDepartmentNameId($_value, $_isGetName = true)
 {
-  global $conn, $_deptTable, $_deptName, $_deptId;
-  $field = $_isGetName ? $_deptId : $_deptName;
-  $select = "SELECT * FROM $_deptTable WHERE $field = '$_value'";
+  global $conn, $_departmentTable, $_departmentName, $_departmentId;
+  $field = $_isGetName ? $_departmentId : $_departmentName;
+  $select = "SELECT * FROM $_departmentTable WHERE $field = '$_value'";
   $res = mysqli_query($conn, $select);
   $row = mysqli_fetch_assoc($res);
 
@@ -255,12 +239,12 @@ function GetDepartmentNameId($_value, $_isGetName = true)
   // exit;
 
   if ($_isGetName)
-    return $row[$_deptName] ?? null;
+    return $row[$_departmentName] ?? null;
   else
-    return $row[$_deptId] ?? null;
+    return $row[$_departmentId] ?? null;
 }
 
-$deptRes = mysqli_query($conn, "SELECT * FROM $_deptTable");
+$deptRes = mysqli_query($conn, "SELECT * FROM $_departmentTable");
 
 include_once("../header.php");
 
@@ -317,8 +301,8 @@ $totalRows = mysqli_num_rows($response1);
             <?php
             mysqli_data_seek($deptRes, 0);
             while ($row = mysqli_fetch_assoc($deptRes)) {
-              $selected = ($filterDept == $row[$_deptName]) ? 'selected' : '';
-              echo "<option value='{$row[$_deptName]}' $selected>{$row[$_deptName]}</option>";
+              $selected = ($filterDept == $row[$_departmentName]) ? 'selected' : '';
+              echo "<option value='{$row[$_departmentName]}' $selected>{$row[$_departmentName]}</option>";
             }
             ?>
           </select>
@@ -443,7 +427,7 @@ $totalRows = mysqli_num_rows($response1);
         <option value="">-- Select Department --</option>
         <?php mysqli_data_seek($deptRes, 0);
         while ($row = mysqli_fetch_assoc($deptRes)) { ?>
-          <option value="<?php echo $row[$_deptName]; ?>"><?php echo $row[$_deptName]; ?></option>
+          <option value="<?php echo $row[$_departmentName]; ?>"><?php echo $row[$_departmentName]; ?></option>
         <?php } ?>
       </select>
 
@@ -495,7 +479,7 @@ $totalRows = mysqli_num_rows($response1);
         <option value="">-- Select Department --</option>
         <?php mysqli_data_seek($deptRes, 0);
         while ($row = mysqli_fetch_assoc($deptRes)) { ?>
-          <option value="<?php echo $row[$_deptName]; ?>"><?php echo $row[$_deptName]; ?></option>
+          <option value="<?php echo $row[$_departmentName]; ?>"><?php echo $row[$_departmentName]; ?></option>
         <?php } ?>
       </select>
 
