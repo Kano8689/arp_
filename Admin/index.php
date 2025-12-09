@@ -4,10 +4,9 @@ if (!isset($_SESSION[$_session_login_type]) || $_SESSION[$_session_login_type] !
     header("Location: ../");
     exit;
 }
-include_once("../header.php");
 
 #Total Program count fetch
-$sql = "SELECT COUNT(*) as total_programs FROM program_table";
+$sql = "SELECT COUNT(*) as total_programs FROM $_programTableName";
 $result = $conn->query($sql);
 
 $total_programs = 0;
@@ -17,7 +16,7 @@ if ($result && $result->num_rows > 0) {
 }
 
 #Total Course count fetch
-$coursesql = "SELECT COUNT(*) as total_course FROM courses_table";
+$coursesql = "SELECT COUNT(*) as total_course FROM $_coursesTable";
 $result = $conn->query($coursesql);
 
 $total_course = 0;
@@ -27,7 +26,7 @@ if ($result && $result->num_rows > 0) {
 }
 
 #Total Student count fetch
-$studentsql = "SELECT COUNT(*) as total_student FROM students_details";
+$studentsql = "SELECT COUNT(*) as total_student FROM $_studentTable";
 $result = $conn->query($studentsql);
 
 $total_student = 0;
@@ -37,7 +36,7 @@ if ($result && $result->num_rows > 0) {
 }
 
 #Total Facult count fetch
-$facultysql = "SELECT COUNT(*) as total_faculty FROM faculties_details";
+$facultysql = "SELECT COUNT(*) as total_faculty FROM $_facultyTable";
 $result = $conn->query($facultysql);
 
 $total_faculty = 0;
@@ -46,7 +45,17 @@ if ($result && $result->num_rows > 0) {
     $total_faculty = $row['total_faculty'];
 }
 
+#Total department count fetch
+$deptSql = "SELECT COUNT(*) as total_department FROM $_departmentTable";
+$result = $conn->query($deptSql);
 
+$total_department = 0;
+if ($result && $result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $total_department = $row['total_department'];
+}
+
+include_once("../header.php");
 ?>
 
 
@@ -117,6 +126,10 @@ if ($result && $result->num_rows > 0) {
             <h3>Total Faculty</h3><br>
             <p style="font-size: 25px;"><b id="total_faculty"><?php echo $total_faculty; ?></b></p>
         </div>
+        <div class="dash-tile">
+            <h3>Total Department</h3><br>
+            <p style="font-size: 25px;"><b id="total_department"><?php echo $total_department; ?></b></p>
+        </div>
     </div>  
 
     <!-- Admin info card -->
@@ -142,11 +155,14 @@ function animateCount(id, end, duration) {
     }, stepTime);
 }
 
+
+let animationTime = 500;
 // Animate all counts for 5 seconds
-animateCount("total_programs", <?php echo $total_programs; ?>, 1000);
-animateCount("total_course", <?php echo $total_course; ?>, 1000);
-animateCount("total_student", <?php echo $total_student; ?>, 1000);
-animateCount("total_faculty", <?php echo $total_faculty; ?>, 1000);
+animateCount("total_programs", <?php echo $total_programs; ?>, animationTime);
+animateCount("total_course", <?php echo $total_course; ?>, animationTime);
+animateCount("total_student", <?php echo $total_student; ?>, animationTime);
+animateCount("total_faculty", <?php echo $total_faculty; ?>, animationTime);
+animateCount("total_department", <?php echo $total_department; ?>, animationTime);
 // repeat for other tiles
 </script>
 <?php include_once("../footer.php"); ?>

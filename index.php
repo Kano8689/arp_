@@ -37,12 +37,12 @@ if (isset($_POST['loginBtn'])) {
   $password = mysqli_real_escape_string($conn, $_POST['password']);
 
 
-  $selectUserName = "SELECT * FROM $table WHERE $usernameField='$username'";
+  $selectUserName = "SELECT * FROM $_loginTable WHERE $_loginUsername='$username'";
   $response = mysqli_query($conn, $selectUserName);
 
    if ($response && mysqli_num_rows($response) > 0) {
     $row = mysqli_fetch_assoc($response);
-    $dbEncPassword = $row[$_loginPa];
+    $dbEncPassword = $row[$_loginPassword];
     
     // echo $dbEncPassword."<br>";
     $dbPassword = Decrypt($dbEncPassword);

@@ -44,7 +44,7 @@ $currentPage = basename($_SERVER['PHP_SELF']); // gets current file name
             <?php
             $userRole = ($loginType == 1) ? "Admin Portal" : (($loginType == 2) ? "CEO Portal" : (($loginType == 3) ? "Faculty Portal" : (($loginType == 4) ? "Student Portal" : "Unknown")));
             echo $userRole;
-            ?>`
+            ?>
         </div>
 
         <!-- Dashboard -->

@@ -24,9 +24,9 @@ $filterType = isset($_GET['filterType']) ? mysqli_real_escape_string($conn, $_GE
 
 
 // Base query
-$selectCourseSQL = "SELECT c.*, o.$courseOwnerNameField AS course_owner_name
-                    FROM $coursesTable c
-                    JOIN $courseOwnerTable o ON c.$courseOwnerField = o.$courseOwnerIdField";
+$selectCourseSQL = "SELECT c.*, o.$_courseOwnerNameField AS course_owner_name
+                    FROM $_coursesTable c
+                    JOIN $_courseOwnerTable o ON c.$_courseOwnerField = o.$_courseOwnerIdField";
 
 $whereClause = [];
 
@@ -67,7 +67,7 @@ if ($filterType !== '')
 // Delete Course
 if (isset($_GET['del_id'])) {
   $del_id = $_GET['del_id'];
-  $deleteProgram = "DELETE FROM $coursesTable WHERE $_id = $del_id";
+  $deleteProgram = "DELETE FROM $_coursesTable WHERE $_courseId = $del_id";
   // exit;
   mysqli_query($conn, $deleteProgram);
   header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
@@ -86,9 +86,10 @@ if (isset($_POST['editCourse'])) {
 
   $courseType = $_POST['cType'] == "Theory" ? 1 : ($_POST['cType'] == "Practical" ? 2 : ($_POST['cType'] == "Theory & Practical" ? 3 : 0));
 
-    $where = "$courseOwnerField='$courseOwner' AND $courseCodeField='$courseCode' AND $courseNameField='$courseName' AND $courseTypeField='$courseType' AND $theoryMarksField = '$theoryMarks' AND $practicalMarksField='$practicalMarks' AND $creditMarksField = '$creditMarks'";
-  if (isUniqueOrNot($conn, $coursesTable, $where)) {
-    $updateCourse = "UPDATE $coursesTable SET $courseOwnerField = '$courseOwner', $courseCodeField = '$courseCode', $courseNameField = '$courseName', $courseTypeField = '$courseType', $theoryMarksField = '$theoryMarks', $practicalMarksField = '$practicalMarks', $creditMarksField = '$creditMarks' WHERE $_id = $update_id";
+    $where = "$_courseOwnerField='$courseOwner' AND $_courseCodeField='$courseCode' AND $_courseNameField='$courseName' AND $_courseTypeField='$courseType' AND $_courseTheoryMarksField = '$theoryMarks' AND $_coursePracticalMarksField='$practicalMarks' AND $_courseCreditMarksField = '$creditMarks'";
+
+  if (isUniqueOrNot($conn, $_coursesTable, $where)) {
+    $updateCourse = "UPDATE $_coursesTable SET $_courseOwnerField = '$courseOwner', $_courseCodeField = '$courseCode', $_courseNameField = '$courseName', $_courseTypeField = '$courseType', $_courseTheoryMarksField = '$theoryMarks', $_coursePracticalMarksField = '$practicalMarks', $_courseCreditMarksField = '$creditMarks' WHERE $_courseId = $update_id";
 
 
     mysqli_query($conn, $updateCourse);
@@ -110,12 +111,6 @@ if (isset($_POST['editCourse'])) {
     exit;
   } else {
     $uniqError = "Record is not updated due to already exists..";
-    // echo "<br>";
-    // echo "$uniqError";
-    // echo "<br>";
-    // echo "$where";
-    // echo "<br>";
-    // exit;
   }
 }
 
@@ -129,20 +124,16 @@ if (isset($_POST['addCourse'])) {
   $creditMarks = $_POST['cTEP'] ?? 0;
   $courseType = $_POST['cType'] == "Theory" ? 1 : ($_POST['cType'] == "Practical" ? 2 : ($_POST['cType'] == "Theory & Practical" ? 3 : 0));
 
-  $where = "$courseOwnerField='$courseOwner' AND $courseCodeField='$courseCode' AND $courseNameField='$courseName' AND $courseTypeField='$courseType' AND $theoryMarksField = '$theoryMarks' AND $practicalMarksField='$practicalMarks' AND $creditMarksField = '$creditMarks'";
-  if (isUniqueOrNot($conn, $coursesTable, $where)) {
-    $insertCourse = "INSERT INTO $coursesTable ($courseOwnerField, $courseCodeField, $courseNameField, $courseTypeField, $theoryMarksField, $practicalMarksField, $creditMarksField) VALUES ('$courseOwner', '$courseCode', '$courseName', '$courseType', '$theoryMarks', '$practicalMarks', '$creditMarks')";
+  $where = "$_courseOwnerField='$courseOwner' AND $_courseCodeField='$courseCode' AND $_courseNameField='$courseName' AND $_courseTypeField='$courseType' AND $_courseTheoryMarksField = '$theoryMarks' AND $_coursePracticalMarksField='$practicalMarks' AND $_courseCreditMarksField = '$creditMarks'";
+
+  if (isUniqueOrNot($conn, $_coursesTable, $where)) {
+    $insertCourse = "INSERT INTO $_coursesTable ($_courseOwnerField, $_courseCodeField, $_courseNameField, $_courseTypeField, $_courseTheoryMarksField, $_coursePracticalMarksField, $_courseCreditMarksField) VALUES ('$courseOwner', '$courseCode', '$courseName', '$courseType', '$theoryMarks', '$practicalMarks', '$creditMarks')";
+
     mysqli_query($conn, $insertCourse);
-    header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
+    header("Location: $redirectUrl$filterQuery");
     exit;
   } else {
     $uniqError = "Record is not insetred due to already exists..";
-    // echo "<br>";
-    // echo "$uniqError";
-    // echo "<br>";
-    // echo "$where";
-    // echo "<br>";
-    // exit;
   }
 }
 
@@ -253,7 +244,7 @@ function fetchCourseOwners($conn, $courseOwnerTable, $_id, $nameField, $id)
 // exit;
 
 
-$responseOwners = mysqli_query($conn, "SELECT * FROM $courseOwnerTable");
+$responseOwners = mysqli_query($conn, "SELECT * FROM $_courseOwnerTable");
 include_once("../header.php");
 
 
@@ -267,12 +258,12 @@ $offset = ($currentPage - 1) * $currentLimit;
 
 // ✅ Final query with filter, order, and pagination
 $selectCourseSQL .= "$whereSQL ORDER BY created_at DESC LIMIT $offset, $currentLimit";
-$selectCourseSQL1 = "SELECT c.*, o.$courseOwnerNameField AS course_owner_name
-                    FROM $coursesTable c
-                    JOIN $courseOwnerTable o ON c.$courseOwnerField = o.$courseOwnerIdField $whereSQL ORDER BY created_at DESC";
+$selectCourseSQL1 = "SELECT c.*, o.$_courseOwnerNameField AS course_owner_name
+                    FROM $_coursesTable c
+                    JOIN $_courseOwnerTable o ON c.$_courseOwnerField = o.$_courseOwnerIdField $whereSQL ORDER BY created_at DESC";
 $response = mysqli_query($conn, $selectCourseSQL);
 
-$selectCourse1 = "SELECT * FROM $coursesTable";
+$selectCourse1 = "SELECT * FROM $_coursesTable";
 $response1 = mysqli_query($conn, $selectCourse1);
 $totalRows = mysqli_num_rows($response1);
 
@@ -372,32 +363,58 @@ $totalRows = mysqli_num_rows($response1);
             $num = 1;
             while ($row = mysqli_fetch_assoc($response)) { ?>
               <tr style="cursor:pointer;"
-                ondblclick="editCourse('<?php echo $row[$_id]; ?>', '<?php echo $row[$courseNameField]; ?>', '<?php echo $row[$courseCodeField]; ?>', '<?php echo $row[$courseOwnerField]; ?>', '<?php echo $row[$courseTypeField]; ?>', '<?php echo $row[$theoryMarksField]; ?>', '<?php echo $row[$practicalMarksField]; ?>', '<?php echo $row[$creditMarksField]; ?>', '<?php echo $currentPage; ?>', '<?php echo $currentLimit; ?>', '<?php echo htmlspecialchars($filterOwner); ?>','<?php echo htmlspecialchars($filterCode); ?>','<?php echo htmlspecialchars($filterName); ?>','<?php echo htmlspecialchars($filterType); ?>')">
+                ondblclick="editCourse('<?php echo $row[$_courseId]; ?>',
+                  '<?php echo $row[$_courseNameField]; ?>',
+                  '<?php echo $row[$_courseCodeField]; ?>',
+                  '<?php echo $row[$_courseOwnerField]; ?>',
+                  '<?php echo $row[$_courseTypeField]; ?>',
+                  '<?php echo $row[$_courseTheoryMarksField]; ?>',
+                  '<?php echo $row[$_coursePracticalMarksField]; ?>',
+                  '<?php echo $row[$_courseCreditMarksField]; ?>',
+                  '<?php echo $currentPage; ?>',
+                  '<?php echo $currentLimit; ?>',
+                  '<?php echo htmlspecialchars($filterOwner); ?>',
+                  '<?php echo htmlspecialchars($filterCode); ?>',
+                  '<?php echo htmlspecialchars($filterName); ?>',
+                  '<?php echo htmlspecialchars($filterType); ?>')">
                 <td style="text-align: center; padding:5px 0px;"><?php echo $num++; ?></td>
                 <td style="text-align: center; padding:5px 0px;">
-                  <?php echo fetchCourseOwners($conn, $courseOwnerTable, $courseOwnerIdField, $courseOwnerNameField, $row[$courseOwnerField]); ?>
+                  <?php echo fetchCourseOwners($conn, $_courseOwnerTable, $_courseOwnerIdField, $_courseOwnerNameField, $row[$_courseOwnerField]); ?>
                 </td>
-                <td style="text-align: center; padding:5px 0px;"><?php echo $row[$courseCodeField]; ?></td>
-                <td style="text-align: center; padding:5px 0px;"><?php echo $row[$courseNameField]; ?></td>
+                <td style="text-align: center; padding:5px 0px;"><?php echo $row[$_courseCodeField]; ?></td>
+                <td style="text-align: center; padding:5px 0px;"><?php echo $row[$_courseNameField]; ?></td>
                 <td style="text-align: center; padding:5px 0px;">
                   <?php
-                  $type = ($row[$courseTypeField] == 1) ? "T" : (($row[$courseTypeField] == 2) ? "P" : (($row[$courseTypeField] == 3) ? "TEL" : "None"));
+                  $type = ($row[$_courseTypeField] == 1) ? "T" : (($row[$_courseTypeField] == 2) ? "P" : (($row[$_courseTypeField] == 3) ? "TEL" : "None"));
                   echo $type;
                   ?>
                 </td>
-                <td style="text-align: center; padding:5px 0px;"><?php echo $row[$theoryMarksField]; ?></td>
-                <td style="text-align: center; padding:5px 0px;"><?php echo $row[$practicalMarksField]; ?></td>
-                <td style="text-align: center; padding:5px 0px;"><?php echo $row[$creditMarksField]; ?></td>
+                <td style="text-align: center; padding:5px 0px;"><?php echo $row[$_courseTheoryMarksField]; ?></td>
+                <td style="text-align: center; padding:5px 0px;"><?php echo $row[$_coursePracticalMarksField]; ?></td>
+                <td style="text-align: center; padding:5px 0px;"><?php echo $row[$_courseCreditMarksField]; ?></td>
                 <td style="text-align: center; padding:5px 0px;">
                   <form method="POST">
                     <!-- Update button -->
-                    <a onclick="editCourse('<?php echo $row[$_id]; ?>', '<?php echo $row[$courseNameField]; ?>', '<?php echo $row[$courseCodeField]; ?>', '<?php echo $row[$courseOwnerField]; ?>', '<?php echo $row[$courseTypeField]; ?>', '<?php echo $row[$theoryMarksField]; ?>', '<?php echo $row[$practicalMarksField]; ?>', '<?php echo $row[$creditMarksField]; ?>', '<?php echo $currentPage; ?>', '<?php echo $currentLimit; ?>', '<?php echo htmlspecialchars($filterOwner); ?>','<?php echo htmlspecialchars($filterCode); ?>','<?php echo htmlspecialchars($filterName); ?>','<?php echo htmlspecialchars($filterType); ?>')"
+                    <a onclick="editCourse('<?php echo $row[$_courseId]; ?>',
+                      '<?php echo $row[$_courseNameField]; ?>',
+                      '<?php echo $row[$_courseCodeField]; ?>',
+                      '<?php echo $row[$_courseOwnerField]; ?>',
+                      '<?php echo $row[$_courseTypeField]; ?>',
+                      '<?php echo $row[$_courseTheoryMarksField]; ?>',
+                      '<?php echo $row[$_coursePracticalMarksField]; ?>',
+                      '<?php echo $row[$_courseCreditMarksField]; ?>',
+                      '<?php echo $currentPage; ?>',
+                      '<?php echo $currentLimit; ?>',
+                      '<?php echo htmlspecialchars($filterOwner); ?>',
+                      '<?php echo htmlspecialchars($filterCode); ?>',
+                      '<?php echo htmlspecialchars($filterName); ?>',
+                      '<?php echo htmlspecialchars($filterType); ?>')"
                       class="btn btn-light" style="display:inline-block; margin-right:5px;">
                       ✏️ Edit
                     </a>
 
                     <!-- Delete button -->
-                    <a href="add_course.php?del_id=<?php echo $row[$_id]; ?>&page=<?php echo $currentPage; ?>&limit=<?php echo $currentLimit; ?> <?php echo $filterQuery; ?>"
+                    <a href="add_course.php?del_id=<?php echo $row[$_courseId]; ?>&page=<?php echo $currentPage; ?>&limit=<?php echo $currentLimit; ?> <?php echo $filterQuery; ?>"
                       style="text-decoration: none;" class="btn btn-danger">
                       🗑 Delete
                     </a>
@@ -448,7 +465,7 @@ $totalRows = mysqli_num_rows($response1);
         <option value="">Select Course Owner</option>
         <?php mysqli_data_seek($responseOwners, 0);
         while ($row = mysqli_fetch_assoc($responseOwners)) { ?>
-          <option value="<?php echo $row[$courseOwnerIdField] ?>"><?php echo $row[$courseOwnerNameField]; ?></option>
+          <option value="<?php echo $row[$_courseOwnerIdField] ?>"><?php echo $row[$_courseOwnerNameField]; ?></option>
         <?php } ?>
       </select>
 
@@ -512,7 +529,7 @@ $totalRows = mysqli_num_rows($response1);
         <option value="">Select Course Owner</option>
         <?php mysqli_data_seek($responseOwners, 0);
         while ($row = mysqli_fetch_assoc($responseOwners)) { ?>
-          <option value="<?php echo $row[$courseOwnerIdField] ?>"><?php echo $row[$courseOwnerNameField]; ?></option>
+          <option value="<?php echo $row[$_courseOwnerIdField] ?>"><?php echo $row[$_courseOwnerNameField]; ?></option>
         <?php } ?>
       </select>
 

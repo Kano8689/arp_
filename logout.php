@@ -5,5 +5,5 @@
       session_destroy();
 
       // header("location: ../");
-      header("location: ../ARP/");
+      header("location: ../$_main_directory/");
 ?>
