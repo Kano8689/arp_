@@ -157,7 +157,10 @@ if (isset($_POST['editFacMapping'])) {
     $sltId = GetSlotNameId($slot, false);
     $semesterType = $semesterType == "Fall" ? 1 : (($semesterType == "Summer") ? 2 : 0);
 
+    FacultyUniqueForFreeze($facId, $crseId, $slotYear, $semesterType);
+    
     $where = "$_stuId='$stuId' AND $_mappingFacultySlotId='$sltId' AND $_mappingFacultySemesterYear='$slotYear' AND $_mappingFacultySemesterType='$semesterType'";
+
     if (isUniqueOrNot($conn, $_mappingFacultyTable, $where)) {
         $updateMapping = "UPDATE $_mappingFacultyTable SET $_stuId='$stuId', $_mappingFacultyId='$facId', $_mappingFacultyCourseId='$crseId', $_mappingFacultySlotId='$sltId', $_mappingFacultySemesterYear='$slotYear', $_mappingFacultySemesterType='$semesterType' WHERE $_mappingFacultyTblId='$edit_map_id'";
 
