@@ -9,192 +9,258 @@ include_once("../DB/pagination.php");   // ✅ added pagination functions
 
 
 
-$freezeEntityArray = [$freezePushPermissionFreezeCa1, $freezePushPermissionFreezeCa2, $freezePushPermissionFreezeCa3, $freezePushPermissionFreezeInternal, $freezePushPermissionFreezeLab];
+$freezeEntityArray = [$_freezePushPermissionFreezeCa1, $_freezePushPermissionFreezeCa2, $_freezePushPermissionFreezeCa3, $_freezePushPermissionFreezeInternal, $_freezePushPermissionFreezeLab];
 
-$pushEntityArray = [$freezePushPermissionPushCa1, $freezePushPermissionPushCa2, $freezePushPermissionPushCa3, $freezePushPermissionPushInternal, $freezePushPermissionPushLab];
+$pushEntityArray = [$_freezePushPermissionPushCa1, $_freezePushPermissionPushCa2, $_freezePushPermissionPushCa3, $_freezePushPermissionPushInternal, $_freezePushPermissionPushLab];
 
-
+//Freeze/Unfreeze perticular course of perticular faculty
 if (isset($_POST[$freezeEntityArray[0]])) {
   $field = $freezeEntityArray[0];
   $fppId = $_POST['ent_id'];
-  $sql = "SELECT $field from $freezePushPermissionTable WHERE $freezePushPermissionId='$fppId'";
+  $sql = "SELECT $field from $_freezePushPermissionTable WHERE $_freezePushPermissionId='$fppId'";
   $res = mysqli_query($conn, $sql);
   $res = mysqli_fetch_assoc($res);
 
   $ca1 = $res[$field];
   $ca1 = $ca1 == 0 ? 1 : 0;
 
-  $sql = "UPDATE $freezePushPermissionTable SET $field='$ca1' WHERE $freezePushPermissionId='$fppId'";
+  $sql = "UPDATE $_freezePushPermissionTable SET $field='$ca1' WHERE $_freezePushPermissionId='$fppId'";
   mysqli_query($conn, $sql);
 }
 if (isset($_POST[$freezeEntityArray[1]])) {
   $field = $freezeEntityArray[1];
   $fppId = $_POST['ent_id'];
-  $sql = "SELECT $field from $freezePushPermissionTable WHERE $freezePushPermissionId='$fppId'";
+  $sql = "SELECT $field from $_freezePushPermissionTable WHERE $_freezePushPermissionId='$fppId'";
   $res = mysqli_query($conn, $sql);
   $res = mysqli_fetch_assoc($res);
 
   $ca1 = $res[$field];
   $ca1 = $ca1 == 0 ? 1 : 0;
 
-  $sql = "UPDATE $freezePushPermissionTable SET $field='$ca1' WHERE $freezePushPermissionId='$fppId'";
+  $sql = "UPDATE $_freezePushPermissionTable SET $field='$ca1' WHERE $_freezePushPermissionId='$fppId'";
   mysqli_query($conn, $sql);
 }
 if (isset($_POST[$freezeEntityArray[2]])) {
   $field = $freezeEntityArray[2];
   $fppId = $_POST['ent_id'];
-  $sql = "SELECT $field from $freezePushPermissionTable WHERE $freezePushPermissionId='$fppId'";
+  $sql = "SELECT $field from $_freezePushPermissionTable WHERE $_freezePushPermissionId='$fppId'";
   $res = mysqli_query($conn, $sql);
   $res = mysqli_fetch_assoc($res);
 
   $ca1 = $res[$field];
   $ca1 = $ca1 == 0 ? 1 : 0;
 
-  $sql = "UPDATE $freezePushPermissionTable SET $field='$ca1' WHERE $freezePushPermissionId='$fppId'";
+  $sql = "UPDATE $_freezePushPermissionTable SET $field='$ca1' WHERE $_freezePushPermissionId='$fppId'";
   mysqli_query($conn, $sql);
 }
 if (isset($_POST[$freezeEntityArray[3]])) {
   $field = $freezeEntityArray[3];
   $fppId = $_POST['ent_id'];
-  $sql = "SELECT $field from $freezePushPermissionTable WHERE $freezePushPermissionId='$fppId'";
+  $sql = "SELECT $field from $_freezePushPermissionTable WHERE $_freezePushPermissionId='$fppId'";
   $res = mysqli_query($conn, $sql);
   $res = mysqli_fetch_assoc($res);
 
   $ca1 = $res[$field];
   $ca1 = $ca1 == 0 ? 1 : 0;
 
-  $sql = "UPDATE $freezePushPermissionTable SET $field='$ca1' WHERE $freezePushPermissionId='$fppId'";
+  $sql = "UPDATE $_freezePushPermissionTable SET $field='$ca1' WHERE $_freezePushPermissionId='$fppId'";
   mysqli_query($conn, $sql);
 }
 if (isset($_POST[$freezeEntityArray[4]])) {
   $field = $freezeEntityArray[4];
   $fppId = $_POST['ent_id'];
-  $sql = "SELECT $field from $freezePushPermissionTable WHERE $freezePushPermissionId='$fppId'";
+  $sql = "SELECT $field from $_freezePushPermissionTable WHERE $_freezePushPermissionId='$fppId'";
   $res = mysqli_query($conn, $sql);
   $res = mysqli_fetch_assoc($res);
 
   $ca1 = $res[$field];
   $ca1 = $ca1 == 0 ? 1 : 0;
 
-  $sql = "UPDATE $freezePushPermissionTable SET $field='$ca1' WHERE $freezePushPermissionId='$fppId'";
+  $sql = "UPDATE $_freezePushPermissionTable SET $field='$ca1' WHERE $_freezePushPermissionId='$fppId'";
   mysqli_query($conn, $sql);
 }
 
-
+//Push/Unpush perticular course of perticular faculty
 if (isset($_POST[$pushEntityArray[0]])) {
   $field = $pushEntityArray[0];
   $fppId = $_POST['ent_id'];
-  $sql = "SELECT $field from $freezePushPermissionTable WHERE $freezePushPermissionId='$fppId'";
+  $sql = "SELECT $field from $_freezePushPermissionTable WHERE $_freezePushPermissionId='$fppId'";
   $res = mysqli_query($conn, $sql);
   $res = mysqli_fetch_assoc($res);
 
   $ca1 = $res[$field];
   $ca1 = $ca1 == 0 ? 1 : 0;
 
-  $sql = "UPDATE $freezePushPermissionTable SET $field='$ca1' WHERE $freezePushPermissionId='$fppId'";
+  $sql = "UPDATE $_freezePushPermissionTable SET $field='$ca1' WHERE $_freezePushPermissionId='$fppId'";
   mysqli_query($conn, $sql);
 }
 if (isset($_POST[$pushEntityArray[1]])) {
   $field = $pushEntityArray[1];
   $fppId = $_POST['ent_id'];
-  $sql = "SELECT $field from $freezePushPermissionTable WHERE $freezePushPermissionId='$fppId'";
+  $sql = "SELECT $field from $_freezePushPermissionTable WHERE $_freezePushPermissionId='$fppId'";
   $res = mysqli_query($conn, $sql);
   $res = mysqli_fetch_assoc($res);
 
   $ca1 = $res[$field];
   $ca1 = $ca1 == 0 ? 1 : 0;
 
-  $sql = "UPDATE $freezePushPermissionTable SET $field='$ca1' WHERE $freezePushPermissionId='$fppId'";
+  $sql = "UPDATE $_freezePushPermissionTable SET $field='$ca1' WHERE $_freezePushPermissionId='$fppId'";
   mysqli_query($conn, $sql);
 }
 if (isset($_POST[$pushEntityArray[2]])) {
   $field = $pushEntityArray[2];
   $fppId = $_POST['ent_id'];
-  $sql = "SELECT $field from $freezePushPermissionTable WHERE $freezePushPermissionId='$fppId'";
+  $sql = "SELECT $field from $_freezePushPermissionTable WHERE $_freezePushPermissionId='$fppId'";
   $res = mysqli_query($conn, $sql);
   $res = mysqli_fetch_assoc($res);
 
   $ca1 = $res[$field];
   $ca1 = $ca1 == 0 ? 1 : 0;
 
-  $sql = "UPDATE $freezePushPermissionTable SET $field='$ca1' WHERE $freezePushPermissionId='$fppId'";
+  $sql = "UPDATE $_freezePushPermissionTable SET $field='$ca1' WHERE $_freezePushPermissionId='$fppId'";
   mysqli_query($conn, $sql);
 }
 if (isset($_POST[$pushEntityArray[3]])) {
   $field = $pushEntityArray[3];
   $fppId = $_POST['ent_id'];
-  $sql = "SELECT $field from $freezePushPermissionTable WHERE $freezePushPermissionId='$fppId'";
+  $sql = "SELECT $field from $_freezePushPermissionTable WHERE $_freezePushPermissionId='$fppId'";
   $res = mysqli_query($conn, $sql);
   $res = mysqli_fetch_assoc($res);
 
   $ca1 = $res[$field];
   $ca1 = $ca1 == 0 ? 1 : 0;
 
-  $sql = "UPDATE $freezePushPermissionTable SET $field='$ca1' WHERE $freezePushPermissionId='$fppId'";
+  $sql = "UPDATE $_freezePushPermissionTable SET $field='$ca1' WHERE $_freezePushPermissionId='$fppId'";
   mysqli_query($conn, $sql);
 }
 if (isset($_POST[$pushEntityArray[4]])) {
   $field = $pushEntityArray[4];
   $fppId = $_POST['ent_id'];
-  $sql = "SELECT $field from $freezePushPermissionTable WHERE $freezePushPermissionId='$fppId'";
+  $sql = "SELECT $field from $_freezePushPermissionTable WHERE $_freezePushPermissionId='$fppId'";
   $res = mysqli_query($conn, $sql);
   $res = mysqli_fetch_assoc($res);
 
   $ca1 = $res[$field];
   $ca1 = $ca1 == 0 ? 1 : 0;
 
-  $sql = "UPDATE $freezePushPermissionTable SET $field='$ca1' WHERE $freezePushPermissionId='$fppId'";
+  $sql = "UPDATE $_freezePushPermissionTable SET $field='$ca1' WHERE $_freezePushPermissionId='$fppId'";
   mysqli_query($conn, $sql);
 }
 
-if(isset($_POST["Freeze"])){
+//Freeze perticular course of perticular faculty for all exam
+if (isset($_POST["Freeze"])) {
   $fppId = $_POST['ent_id'];
-  $value=0;
-  $sql = "UPDATE $freezePushPermissionTable SET 
-    $freezePushPermissionFreezeCa1='$value', 
-    $freezePushPermissionFreezeCa2='$value', 
-    $freezePushPermissionFreezeCa3='$value', 
-    $freezePushPermissionFreezeLab='$value',
-    $freezePushPermissionFreezeInternal='$value'
-    WHERE $freezePushPermissionId='$fppId'";
+  $value = 0;
+  $sql = "UPDATE $_freezePushPermissionTable SET 
+    $_freezePushPermissionFreezeCa1='$value', 
+    $_freezePushPermissionFreezeCa2='$value', 
+    $_freezePushPermissionFreezeCa3='$value', 
+    $_freezePushPermissionFreezeLab='$value',
+    $_freezePushPermissionFreezeInternal='$value'
+    WHERE $_freezePushPermissionId='$fppId'";
   mysqli_query($conn, $sql);
 }
-if(isset($_POST["Unfreeze"])){
+//Unfreeze perticular course of perticular faculty for all exam
+if (isset($_POST["Unfreeze"])) {
   $fppId = $_POST['ent_id'];
-  $value=1;
-  $sql = "UPDATE $freezePushPermissionTable SET 
-    $freezePushPermissionFreezeCa1='$value', 
-    $freezePushPermissionFreezeCa2='$value', 
-    $freezePushPermissionFreezeCa3='$value', 
-    $freezePushPermissionFreezeLab='$value',
-    $freezePushPermissionFreezeInternal='$value'
-    WHERE $freezePushPermissionId='$fppId'";
+  $value = 1;
+  $sql = "UPDATE $_freezePushPermissionTable SET 
+    $_freezePushPermissionFreezeCa1='$value', 
+    $_freezePushPermissionFreezeCa2='$value', 
+    $_freezePushPermissionFreezeCa3='$value', 
+    $_freezePushPermissionFreezeLab='$value',
+    $_freezePushPermissionFreezeInternal='$value'
+    WHERE $_freezePushPermissionId='$fppId'";
   mysqli_query($conn, $sql);
 }
-if(isset($_POST["Push"])){
+//Push perticular course of perticular faculty for all exam
+if (isset($_POST["Push"])) {
   $fppId = $_POST['ent_id'];
-  $value=1;
-  $sql = "UPDATE $freezePushPermissionTable SET 
-    $freezePushPermissionPushCa1='$value', 
-    $freezePushPermissionPushCa2='$value', 
-    $freezePushPermissionPushCa3='$value', 
-    $freezePushPermissionPushLab='$value',
-    $freezePushPermissionPushInternal='$value'
-    WHERE $freezePushPermissionId='$fppId'";
+  $value = 1;
+  $sql = "UPDATE $_freezePushPermissionTable SET 
+    $_freezePushPermissionPushCa1='$value', 
+    $_freezePushPermissionPushCa2='$value', 
+    $_freezePushPermissionPushCa3='$value', 
+    $_freezePushPermissionPushLab='$value',
+    $_freezePushPermissionPushInternal='$value'
+    WHERE $_freezePushPermissionId='$fppId'";
   mysqli_query($conn, $sql);
 }
-if(isset($_POST["Unpush"])){
+//Unpush perticular course of perticular faculty for all exam
+if (isset($_POST["Unpush"])) {
   $fppId = $_POST['ent_id'];
-  $value=0;
-  $sql = "UPDATE $freezePushPermissionTable SET 
-    $freezePushPermissionPushCa1='$value', 
-    $freezePushPermissionPushCa2='$value', 
-    $freezePushPermissionPushCa3='$value', 
-    $freezePushPermissionPushLab='$value',
-    $freezePushPermissionPushInternal='$value'
-    WHERE $freezePushPermissionId='$fppId'";
+  $value = 0;
+  $sql = "UPDATE $_freezePushPermissionTable SET 
+    $_freezePushPermissionPushCa1='$value', 
+    $_freezePushPermissionPushCa2='$value', 
+    $_freezePushPermissionPushCa3='$value', 
+    $_freezePushPermissionPushLab='$value',
+    $_freezePushPermissionPushInternal='$value'
+    WHERE $_freezePushPermissionId='$fppId'";
   mysqli_query($conn, $sql);
 }
+
+//Freeze all course of all faculty for all exam
+if (isset($_POST["freeze_all"])) {
+  $value = 0;
+  $sql = "UPDATE $_freezePushPermissionTable SET 
+    $_freezePushPermissionFreezeCa1='$value', 
+    $_freezePushPermissionFreezeCa2='$value', 
+    $_freezePushPermissionFreezeCa3='$value', 
+    $_freezePushPermissionFreezeLab='$value',
+    $_freezePushPermissionFreezeInternal='$value'";
+  mysqli_query($conn, $sql);
+
+  header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
+
+  exit;
+}
+//Unfreeze all course of all faculty for all exam
+if (isset($_POST["unfreeze_all"])) {
+  $value = 1;
+  $sql = "UPDATE $_freezePushPermissionTable SET 
+    $_freezePushPermissionFreezeCa1='$value', 
+    $_freezePushPermissionFreezeCa2='$value', 
+    $_freezePushPermissionFreezeCa3='$value', 
+    $_freezePushPermissionFreezeLab='$value',
+    $_freezePushPermissionFreezeInternal='$value'";
+  mysqli_query($conn, $sql);
+
+  header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
+
+  exit;
+}
+//Push all course of all faculty for all exam
+if (isset($_POST["push_all"])) {
+  $value = 1;
+  $sql = "UPDATE $_freezePushPermissionTable SET 
+    $_freezePushPermissionPushCa1='$value', 
+    $_freezePushPermissionPushCa2='$value', 
+    $_freezePushPermissionPushCa3='$value', 
+    $_freezePushPermissionPushLab='$value',
+    $_freezePushPermissionPushInternal='$value'";
+  mysqli_query($conn, $sql);
+
+  header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
+
+  exit;
+}
+//Unpush all course of all faculty for all exam
+if (isset($_POST["unpush_all"])) {
+  $value = 0;
+  $sql = "UPDATE $_freezePushPermissionTable SET 
+    $_freezePushPermissionPushCa1='$value', 
+    $_freezePushPermissionPushCa2='$value', 
+    $_freezePushPermissionPushCa3='$value', 
+    $_freezePushPermissionPushLab='$value',
+    $_freezePushPermissionPushInternal='$value'";
+  mysqli_query($conn, $sql);
+
+  header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
+
+  exit;
+}
+
 
 // ✅ get page & limit
 list($currentPage, $currentLimit) = getPaginationParams();
@@ -213,7 +279,7 @@ if ($filterfaculty !== '') {
   $resFac = mysqli_query($conn, $facultyIdQuery);
   $facRow = mysqli_fetch_assoc($resFac);
   if ($facRow) {
-    $whereClauses[] = $_facId . " = '" . $facRow[$_facultyId] . "'";
+    $whereClauses[] = $_mappingFacultyId . " = '" . $facRow[$_facultyId] . "'";
   } else {
     $whereClauses[] = "0";
   }
@@ -224,7 +290,7 @@ if ($filtercoursename !== '') {
   $resCourse = mysqli_query($conn, $courseIdQuery);
   $courseRow = mysqli_fetch_assoc($resCourse);
   if ($courseRow) {
-    $whereClauses[] = $_crseId . " = '" . $courseRow[$_courseId] . "'";
+    $whereClauses[] = $_mappingFacultyCourseId . " = '" . $courseRow[$_courseId] . "'";
   } else {
     $whereClauses[] = "0";
   }
@@ -235,7 +301,7 @@ if ($filtercoursecode !== '') {
   $resCourse = mysqli_query($conn, $courseIdQuery);
   $courseRow = mysqli_fetch_assoc($resCourse);
   if ($courseRow) {
-    $whereClauses[] = $_crseId . " = '" . $courseRow[$_courseId] . "'";
+    $whereClauses[] = $_mappingFacultyCourseId . " = '" . $courseRow[$_courseId] . "'";
   } else {
     $whereClauses[] = "0";
   }
@@ -300,10 +366,10 @@ $sort_order = isset($_GET['sort_order']) ? $_GET['sort_order'] : 'DESC';      //
 
 // Validate sort field and order to avoid SQL injection
 $allowed_sort_fields = [
-  'fac_id' => 'm.fac_id',
-  'course_id' => 'm.course_id',
-  'slot_year' => 'm.slot_year',
-  'semester_type' => 'm.semester_type',
+  '$_mappingFacultyId' => 'm.$_mappingFacultyId',
+  '$_mappingFacultyCourseId' => 'm.$_mappingFacultyCourseId',
+  '$_mappingFacultySemesterYear' => 'm.$_mappingFacultySemesterYear',
+  '$_mappingFacultySemesterType' => 'm.$_mappingFacultySemesterType',
   'created_at' => 'm.created_at', // make sure to specify table alias here
   // add more columns as needed with aliases
 ];
@@ -343,22 +409,22 @@ function sortLink($field, $label, $currentField, $currentOrder, $baseUrl)
 $sql = "
 SELECT 
   m._id,
-    m.fac_id, 
-    m.course_id, 
-    m.slot_year, 
-    m.semester_type,
+    m.$_mappingFacultyId, 
+    m.$_mappingFacultyCourseId, 
+    m.$_mappingFacultySemesterYear, 
+    m.$_mappingFacultySemesterType,
     f.$_facultyName AS faculty_name, 
     c.$_courseCodeField AS course_code, 
     c.$_courseNameField AS course_name
 FROM 
-    $_mappingTable m
+    $_mappingFacultyTable m
 LEFT JOIN 
-    $_facultyTable f ON m.$_facId = f.$_facultyId
+    $_facultyTable f ON m.$_mappingFacultyId = f.$_facultyId
 LEFT JOIN 
-    $_coursesTable c ON m.$_crseId = c.$_courseId
+    $_coursesTable c ON m.$_mappingFacultyCourseId = c.$_courseId
 $whereSQL
 GROUP BY 
-    m.fac_id, m.course_id, m.slot_year, m.semester_type
+    m.$_mappingFacultyId, m.$_mappingFacultyCourseId, m.$_mappingFacultySemesterYear, m.$_mappingFacultySemesterType
 ORDER BY 
     " . $allowed_sort_fields[$sort_field] . " $sort_order
 LIMIT 
@@ -376,10 +442,10 @@ while ($row = mysqli_fetch_assoc($mappingRes)) {
   // Store all fields needed, including _id
   $filteredRow = [
     '_id' => $row['_id'],
-    'fac_id' => $row['fac_id'],
-    'course_id' => $row['course_id'],
-    'slot_year' => $row['slot_year'],
-    'semester_type' => $row['semester_type']
+    '$_mappingFacultyId' => $row[$_mappingFacultyId],
+    '$_mappingFacultyCourseId' => $row[$_mappingFacultyCourseId],
+    '$_mappingFacultySemesterYear' => $row[$_mappingFacultySemesterYear],
+    '$_mappingFacultySemesterType' => $row[$_mappingFacultySemesterType]
   ];
   $resultArray[] = $filteredRow;
 }
@@ -390,7 +456,7 @@ $uniqueKeys = [];
 $RsltUniqIds = array();
 // $RsltUniqIds = [];
 foreach ($resultArray as $item) {
-  $key = $item['_id'] . '|' . $item['fac_id'] . '|' . $item['course_id'] . '|' . $item['slot_year'] . '|' . $item['semester_type'];
+  $key = $item['_id'] . '|' . $item['$_mappingFacultyId'] . '|' . $item['$_mappingFacultyCourseId'] . '|' . $item['$_mappingFacultySemesterYear'] . '|' . $item['$_mappingFacultySemesterType'];
   if (!in_array($key, $uniqueKeys)) {
     $RsltUniqIds[] = $item['_id'];
     $uniqueKeys[] = $key;
@@ -411,22 +477,22 @@ if (!empty($RsltUniqIds)) {
 $sql = "
 SELECT 
   m._id,
-    m.fac_id, 
-    m.course_id, 
-    m.slot_year, 
-    m.semester_type,
+    m.$_mappingFacultyId, 
+    m.$_mappingFacultyCourseId, 
+    m.$_mappingFacultySemesterYear, 
+    m.$_mappingFacultySemesterType,
     f.$_facultyName AS faculty_name, 
     c.$_courseCodeField AS course_code, 
     c.$_courseNameField AS course_name
 FROM 
-    $_mappingTable m
+    $_mappingFacultyTable m
 LEFT JOIN 
-    $_facultyTable f ON m.$_facId = f.$_facultyId
+    $_facultyTable f ON m.$_mappingFacultyId = f.$_facultyId
 LEFT JOIN 
-    $_coursesTable c ON m.$_crseId = c.$_courseId
+    $_coursesTable c ON m.$_mappingFacultyCourseId = c.$_courseId
 $whereSQL
 GROUP BY 
-    m.fac_id, m.course_id, m.slot_year, m.semester_type
+    m.$_mappingFacultyId, m.$_mappingFacultyCourseId, m.$_mappingFacultySemesterYear, m.$_mappingFacultySemesterType
 ORDER BY 
     " . $allowed_sort_fields[$sort_field] . " $sort_order
 LIMIT 
@@ -435,126 +501,65 @@ LIMIT
 
 $mappingRes = mysqli_query($conn, $sql);
 
-if (isset($_POST["permission"])) {
-  $facultyId = $_POST["faculty_id"];
-  $courseId = $_POST["course_id"];
+// if (isset($_POST["permission"])) {
+//   $facultyId = $_POST["faculty_id"];
+//   $courseId = $_POST["$_mappingFacultyCourseId"];
 
-  $select_permission = mysqli_query($conn, "SELECT * FROM $freezePushPermissionTable WHERE $freezePushPermissionFacId = '$facultyId' AND $freezePushPermissionCourseId = '$courseId'");
-  $permissionExists = mysqli_num_rows($select_permission) > 0;
+//   $select_permission = mysqli_query($conn, "SELECT * FROM $_freezePushPermissionTable WHERE $_freezePushPermissionFacId = '$facultyId' AND $_freezePushPermissionCourseId = '$courseId'");
+//   $permissionExists = mysqli_num_rows($select_permission) > 0;
 
-  while ($row = mysqli_fetch_assoc($select_permission)) {
-    $currentPermission = $row[$freezePushPermission];
-  }
+//   while ($row = mysqli_fetch_assoc($select_permission)) {
+//     $currentPermission = $row[$_freezePushPermission];
+//   }
 
-  if ($permissionExists && $currentPermission == "0") {
-    // If permission exists, you might want to update it
-    $update_query = "UPDATE $freezePushPermissionTable SET $freezePushPermission = 1 WHERE $freezePushPermissionFacId = '$facultyId' AND $freezePushPermissionCourseId = '$courseId'";
-    $update_result = mysqli_query($conn, $update_query);
-  } else if ($permissionExists && $currentPermission == "1") {
-    // If permission exists, you might want to update it
-    $update_query = "UPDATE $freezePushPermissionTable SET $freezePushPermission = 0 WHERE $freezePushPermissionFacId = '$facultyId' AND $freezePushPermissionCourseId = '$courseId'";
-    $update_result = mysqli_query($conn, $update_query);
-  } else {
-    // If permission does not exist, insert a new record
-    $insert_query = "INSERT INTO $freezePushPermissionTable ($freezePushPermissionFacId, $freezePushPermissionCourseId, $freezePushPermission) 
-        VALUES ('$facultyId', '$courseId', 1)";
-    $insert_result = mysqli_query($conn, $insert_query);
-  }
-  header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
-  exit;
-}
-
-if (isset($_POST["freeze_all"])) {
-  $value=0;
-  $sql = "UPDATE $freezePushPermissionTable SET 
-    $freezePushPermissionFreezeCa1='$value', 
-    $freezePushPermissionFreezeCa2='$value', 
-    $freezePushPermissionFreezeCa3='$value', 
-    $freezePushPermissionFreezeLab='$value',
-    $freezePushPermissionFreezeInternal='$value'";
-  mysqli_query($conn, $sql);
-
-  header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
-
-  exit;
-}
-
-if (isset($_POST["unfreeze_all"])) {
-  $value=1;
-  $sql = "UPDATE $freezePushPermissionTable SET 
-    $freezePushPermissionFreezeCa1='$value', 
-    $freezePushPermissionFreezeCa2='$value', 
-    $freezePushPermissionFreezeCa3='$value', 
-    $freezePushPermissionFreezeLab='$value',
-    $freezePushPermissionFreezeInternal='$value'";
-  mysqli_query($conn, $sql);
-
-  header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
-
-  exit;
-}
-
-if (isset($_POST["unpush_all"])) {
-  $value=0;
-  $sql = "UPDATE $freezePushPermissionTable SET 
-    $freezePushPermissionPushCa1='$value', 
-    $freezePushPermissionPushCa2='$value', 
-    $freezePushPermissionPushCa3='$value', 
-    $freezePushPermissionPushLab='$value',
-    $freezePushPermissionPushInternal='$value'";
-  mysqli_query($conn, $sql);
-
-  header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
-
-  exit;
-}
-
-if (isset($_POST["push_all"])) {
-  $value=1;
-  $sql = "UPDATE $freezePushPermissionTable SET 
-    $freezePushPermissionPushCa1='$value', 
-    $freezePushPermissionPushCa2='$value', 
-    $freezePushPermissionPushCa3='$value', 
-    $freezePushPermissionPushLab='$value',
-    $freezePushPermissionPushInternal='$value'";
-  mysqli_query($conn, $sql);
-
-  header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
-
-  exit;
-}
+//   if ($permissionExists && $currentPermission == "0") {
+//     // If permission exists, you might want to update it
+//     $update_query = "UPDATE $_freezePushPermissionTable SET $_freezePushPermission = 1 WHERE $_freezePushPermissionFacId = '$facultyId' AND $_freezePushPermissionCourseId = '$courseId'";
+//     $update_result = mysqli_query($conn, $update_query);
+//   } else if ($permissionExists && $currentPermission == "1") {
+//     // If permission exists, you might want to update it
+//     $update_query = "UPDATE $_freezePushPermissionTable SET $_freezePushPermission = 0 WHERE $_freezePushPermissionFacId = '$facultyId' AND $_freezePushPermissionCourseId = '$courseId'";
+//     $update_result = mysqli_query($conn, $update_query);
+//   } else {
+//     // If permission does not exist, insert a new record
+//     $insert_query = "INSERT INTO $_freezePushPermissionTable ($_freezePushPermissionFacId, $_freezePushPermissionCourseId, $_freezePushPermission) 
+//         VALUES ('$facultyId', '$courseId', 1)";
+//     $insert_result = mysqli_query($conn, $insert_query);
+//   }
+//   header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
+//   exit;
+// }
 
 if (isset($_POST["push"])) {
-  $facultyId = $_POST["faculty_id"];
-  $courseId = $_POST["course_id"];
+  // $facultyId = $_POST["faculty_id"];
+  // $courseId = $_POST["$_mappingFacultyCourseId"];
 
-  $select_push = mysqli_query($conn, "SELECT * FROM $freezePushPermissionTable WHERE $freezePushPermissionFacId = '$facultyId' AND $freezePushPermissionCourseId = '$courseId'");
-  $pushExists = mysqli_num_rows($select_push) > 0;
+  // $select_push = mysqli_query($conn, "SELECT * FROM $_freezePushPermissionTable WHERE $_freezePushPermissionFacId = '$facultyId' AND $_freezePushPermissionCourseId = '$courseId'");
+  // $pushExists = mysqli_num_rows($select_push) > 0;
 
-  while ($row = mysqli_fetch_assoc($select_push)) {
-    $currentPush = $row[$freezePushPermissionPush];
-  }
+  // while ($row = mysqli_fetch_assoc($select_push)) {
+  //   $currentPush = $row[$_freezePushPermissionPush];
+  // }
 
-  if ($pushExists && $currentPush == "0") {
-    // If permission exists, you might want to update it
-    $update_query = "UPDATE $freezePushPermissionTable SET $freezePushPermissionPush = 1 WHERE $freezePushPermissionFacId = '$facultyId' AND $freezePushPermissionCourseId = '$courseId'";
-    $update_result = mysqli_query($conn, $update_query);
-  } else if ($pushExists && $currentPush == "1") {
-    // If permission exists, you might want to update it
-    $update_query = "UPDATE $freezePushPermissionTable SET $freezePushPermissionPush = 0 WHERE $freezePushPermissionFacId = '$facultyId' AND $freezePushPermissionCourseId = '$courseId'";
-    $update_result = mysqli_query($conn, $update_query);
-  } else {
-    // If permission does not exist, insert a new record
-    $insert_query = "INSERT INTO $freezePushPermissionTable ($freezePushPermissionFacId, $freezePushPermissionCourseId, $freezePushPermissionPush) 
-        VALUES ('$facultyId', '$courseId', 1)";
-    $insert_result = mysqli_query($conn, $insert_query);
-  }
+  // if ($pushExists && $currentPush == "0") {
+  //   // If permission exists, you might want to update it
+  //   $update_query = "UPDATE $_freezePushPermissionTable SET $_freezePushPermissionPush = 1 WHERE $_freezePushPermissionFacId = '$facultyId' AND $_freezePushPermissionCourseId = '$courseId'";
+  //   $update_result = mysqli_query($conn, $update_query);
+  // } else if ($pushExists && $currentPush == "1") {
+  //   // If permission exists, you might want to update it
+  //   $update_query = "UPDATE $_freezePushPermissionTable SET $_freezePushPermissionPush = 0 WHERE $_freezePushPermissionFacId = '$facultyId' AND $_freezePushPermissionCourseId = '$courseId'";
+  //   $update_result = mysqli_query($conn, $update_query);
+  // } else {
+  //   // If permission does not exist, insert a new record
+  //   $insert_query = "INSERT INTO $_freezePushPermissionTable ($_freezePushPermissionFacId, $_freezePushPermissionCourseId, $_freezePushPermissionPush) 
+  //       VALUES ('$facultyId', '$courseId', 1)";
+  //   $insert_result = mysqli_query($conn, $insert_query);
+  // }
 
-  header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
+  // header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
 
-  exit;
+  // exit;
 }
-
 
 
 
@@ -655,48 +660,54 @@ if (isset($_POST["push"])) {
           ?>
             <tr>
               <td style="text-align: start;"><?php echo $num++; ?></td>
-              <td style="text-align: start;"><?php echo GetFacultyNameId($row[$_facId]); ?></td>
-              <td style="text-align: center;"><?php echo GetCourseDetails($_courseCodeField, $row[$_crseId]); ?>
+              <td style="text-align: start;"><?php echo GetFacultyNameId($row[$_mappingFacultyId]); ?></td>
+              <td style="text-align: center;"><?php echo GetCourseDetails($_courseCodeField, $row[$_mappingFacultyCourseId]); ?>
               </td>
-              <td style="text-align: center;"><?php echo GetCourseDetails($_courseNameField, $row[$_crseId]); ?>
+              <td style="text-align: center;"><?php echo GetCourseDetails($_courseNameField, $row[$_mappingFacultyCourseId]); ?>
               </td>
               <!-- <td style="text-align: center;"> -->
               <?php
-              $select_permission = mysqli_query($conn, "SELECT * FROM $freezePushPermissionTable WHERE $freezePushPermissionFacId = '$row[$_facId]' AND $freezePushPermissionCourseId = '$row[$_crseId]'");
+              $select_permission_sql = "SELECT * FROM $_freezePushPermissionTable WHERE $_freezePushPermissionFacId = '$row[$_mappingFacultyId]' AND $_freezePushPermissionCourseId = '$row[$_mappingFacultyCourseId]'";
+              $select_permission = mysqli_query($conn, $select_permission_sql);
               $permissionExists = mysqli_num_rows($select_permission) > 0;
+
+              // echo "<br>$select_permission_sql = permissionExists: $permissionExists | ";
+              // echo "<br>$select_permission_sql = permissionExists: $permissionExists | ";
               if ($permissionExists) {
                 $permRow = mysqli_fetch_assoc($select_permission);
-                mysqli_data_seek($select_permission,0);
+                mysqli_data_seek($select_permission, 0);
               ?>
 
                 <form method="post">
-                  <input type="hidden" name="ent_id" value="<?php echo $permRow[$freezePushPermissionId]; ?>">
+                  <input type="hidden" name="ent_id" value="<?php echo $permRow[$_freezePushPermissionId]; ?>">
 
                   <?php while ($permRow = mysqli_fetch_assoc($select_permission)) {
-                      $ctype = GetCourseDetails($_courseTypeField, $permRow[$freezePushPermissionCourseId]);
-                      $ccode = GetCourseDetails($_courseCodeField, $permRow[$freezePushPermissionCourseId]);
-                      // echo "$ctype<br>";
-                      // echo "$ccode<br>";
-                      // exit;
-                      $isUG = (int)$ccode[3] <= 4 ? 1 : 0;
-                      $isCa1 = ($ctype == 1 || $ctype == 3);
-                      $isCa2 = ($ctype == 1 || $ctype == 3);
-                      $isCa3 = (($ctype == 1 || $ctype == 3) && ($isUG));
-                      $isInternal = ($ctype == 1 || $ctype == 3);
-                      $isLab = ($ctype == 2 || $ctype == 3);
+                    $ctype = GetCourseDetails($_courseTypeField, $permRow[$_freezePushPermissionCourseId]);
+                    $ccode = GetCourseDetails($_courseCodeField, $permRow[$_freezePushPermissionCourseId]);
 
+                    $isUG = (int)$ccode[3] <= 4 ? 1 : 0;
+                    $isCa1 = ($ctype == 1 || $ctype == 3);
+                    $isCa2 = ($ctype == 1 || $ctype == 3);
+                    $isCa3 = (($ctype == 1 || $ctype == 3) && ($isUG));
+                    $isInternal = ($ctype == 1 || $ctype == 3);
+                    $isLab = ($ctype == 2 || $ctype == 3);
+
+                    // echo "$ccode<br>";
+                    // echo "$isUG || $isCa1 || $isCa2 || $isCa3 || $isInternal || $isLab<br>";
                     for ($i = 0; $i < count($freezeEntityArray); $i++) {
                       $isFreeze = $permRow[$freezeEntityArray[$i]];
                       $isPush = $permRow[$pushEntityArray[$i]];
 
 
-                      $isShowExam = $i==0 ? $isCa1 : ($i==1 ? $isCa2 : ($i==2 ? $isCa3 : ($i==3 ? $isInternal : ($i==4 ? $isLab : FALSE))));
+                      $isShowExam = $i == 0 ? $isCa1 : ($i == 1 ? $isCa2 : ($i == 2 ? $isCa3 : ($i == 3 ? $isInternal : ($i == 4 ? $isLab : FALSE))));
                   ?>
                       <td style="text-align: center;">
-                        <?php if($isShowExam) { ?>
+                        <?php if ($isShowExam) { ?>
                           <button class="btn btn-danger" type="submit" name="<?php echo $freezeEntityArray[$i]; ?>" style="width: 100px; height: 38px;"> <?php echo $isFreeze == "1" ? "Freeze" : "UnFreeze"; ?> </button>
                           <button class="btn btn-light" type="submit" name="<?php echo $pushEntityArray[$i]; ?>" style="width: 100px; height: 38px;"> <?php echo $isPush == "1" ? "Unpush" : "Push"; ?> </button>
-                        <?php } else { echo "-"; } ?>
+                        <?php } else {
+                          echo "-";
+                        } ?>
                       </td>
                   <?php }
                   } ?>
@@ -726,7 +737,7 @@ if (isset($_POST["push"])) {
     <!-- ✅ pagination UI -->
     <?php
     // echo "####$currentPage####<br>";
-    $totalRecords = paginationUI3($conn, $_mappingTable, $currentPage, $currentLimit, $whereSQL, $filterQuery);
+    $totalRecords = paginationUI3($conn, $_mappingFacultyTable, $currentPage, $currentLimit, $whereSQL, $filterQuery);
     // Show record count under table
     if ($totalRecords > 0) {
       // $startRecord = 1;

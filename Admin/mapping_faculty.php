@@ -183,7 +183,8 @@ if (isset($_POST['addMapping'])) {
 
     FacultyUniqueForFreeze($facId, $crseId, $slotYear, $semesterType);
 
-    $where = "$_mappingFacultySlotId='$sltId' AND $_mappingFacultySemesterYear='$slotYear' AND $_mappingFacultySemesterType='$semesterType'";
+    $where = "$_mappingFacultyId='$facId' AND $_mappingFacultySlotId='$sltId' AND $_mappingFacultySemesterYear='$slotYear' AND $_mappingFacultySemesterType='$semesterType'";
+
     if (isUniqueOrNot($conn, $_mappingFacultyTable, $where)) {
         $insertMapping = "INSERT INTO $_mappingFacultyTable ($_mappingFacultyId, $_mappingFacultyCourseId, $_mappingFacultySlotId, $_mappingFacultySemesterYear, $_mappingFacultySemesterType) VALUES ('$facId', '$crseId', '$sltId', '$slotYear', '$semesterType')";
 
@@ -294,14 +295,14 @@ function GetAndSaveDataFromFile($ary)
 
 function FacultyUniqueForFreeze($fac, $crse, $year, $sem)
 {
-    global $conn, $freezePushPermissionTable, $freezePushPermissionAcademicYear;
-    global $freezePushPermissionFacId, $freezePushPermissionCourseId, $freezePushPermissionAcademicYear, $freezePushPermissionAcademicSem;
+    global $conn, $_freezePushPermissionTable, $_freezePushPermissionAcademicYear;
+    global $_freezePushPermissionFacId, $_freezePushPermissionCourseId, $_freezePushPermissionAcademicYear, $_freezePushPermissionAcademicSem;
 
-    $where = "$freezePushPermissionFacId='$fac' AND $freezePushPermissionCourseId='$crse' AND $freezePushPermissionAcademicYear='$year' AND $freezePushPermissionAcademicSem='$sem'";
+    $where = "$_freezePushPermissionFacId='$fac' AND $_freezePushPermissionCourseId='$crse' AND $_freezePushPermissionAcademicYear='$year' AND $_freezePushPermissionAcademicSem='$sem'";
 
-    if (isUniqueOrNot($conn, $freezePushPermissionTable, $where)) {
+    if (isUniqueOrNot($conn, $_freezePushPermissionTable, $where)) {
         // echo "HEllo...<br>";
-        $InsertingFacPer = "INSERT INTO $freezePushPermissionTable ($freezePushPermissionFacId, $freezePushPermissionCourseId, $freezePushPermissionAcademicYear, $freezePushPermissionAcademicSem) VALUES ('$fac', '$crse', $year, '$sem')";
+        $InsertingFacPer = "INSERT INTO $_freezePushPermissionTable ($_freezePushPermissionFacId, $_freezePushPermissionCourseId, $_freezePushPermissionAcademicYear, $_freezePushPermissionAcademicSem) VALUES ('$fac', '$crse', $year, '$sem')";
         // echo "$InsertingFacPer";
         mysqli_query($conn, $InsertingFacPer);
         // exit;
