@@ -170,15 +170,13 @@ if (isset($_POST['editMapping'])) {
 if (isset($_POST['addMapping'])) {
     $academicYear = $_POST['academic_year'];
     $semesterType = $_POST['semester_type'];
-    // $program = $_POST['program'];
     $student = $_POST['student'];
     $course = $_POST['course'];
+    $registerType = $_POST['registration_type'];
     $slot = $_POST['slot'];
-    // $faculty = $_POST['faculty'];
     $slotYear = $_POST['semester_year'];
 
     $stuId = GetStudentNameId($student, false);
-    // $facId = GetFacultyNameId($faculty, false);
     $crseId = GetCourseNameId($course, false);
     $sltId = GetSlotNameId($slot, false);
     $semesterType = $semesterType == "Fall" ? 1 : (($semesterType == "Summer") ? 2 : 0);
@@ -187,7 +185,7 @@ if (isset($_POST['addMapping'])) {
 
     $where = "$_mappingStudentId='$stuId' AND $_mappingStudentSlotId='$sltId' AND $_mappingStudentSemesterYear='$slotYear' AND $_mappingStudentSemesterType='$semesterType'";
     if (isUniqueOrNot($conn, $_mappingStudentTable, $where)) {
-        $insertMapping = "INSERT INTO $_mappingStudentTable ($_mappingStudentId, $_mappingStudentCourseId, $_mappingStudentSlotId, $_mappingStudentSemesterYear, $_mappingStudentSemesterType) VALUES ('$stuId', '$crseId', '$sltId', '$slotYear', '$semesterType')";
+        $insertMapping = "INSERT INTO $_mappingStudentTable ($_mappingStudentId, $_mappingStudentCourseId, $_mappingStudentSlotId,$_mappingStudentRegistrationType, $_mappingStudentSemesterYear, $_mappingStudentSemesterType) VALUES ('$stuId', '$crseId', '$sltId', '$registerType', '$slotYear', '$semesterType')";
 
         $abc = mysqli_query($conn, $insertMapping);
         header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
@@ -580,6 +578,7 @@ $totalRows = mysqli_num_rows($mappingRes1);
                         <th style="text-align: center;">Slot</th>
                         <th style="text-align: center;">Year</th>
                         <th style="text-align: center;">Semester Type</th>
+                        <th style="text-align: center;">Registration Type</th>
                         <th style="text-align: center;">Program Name</th>
                         <th style="text-align: center;">Course Code-Name</th>
                         <th style="text-align: center;">Action</th>
@@ -600,6 +599,7 @@ $totalRows = mysqli_num_rows($mappingRes1);
                          <td style="text-align: center;"><?php echo GetSlotNameId($row[$_mappingStudentSlotId]); ?></td>
                          <td style="text-align: center;"><?php echo $row[$_mappingStudentSemesterYear]; ?></td>
                          <td style="text-align: center;"><?php echo $sem_typ; ?></td>
+                         <td style="text-align: center;"><?php echo $row[$_mappingStudentRegistrationType]; ?></td>
                         <td style="text-align: center;">
                             <?php echo GetProgramNameId(GetStudentDetails($_studentProgram, $row[$_mappingStudentId])); ?>
                         </td>
@@ -728,7 +728,7 @@ $totalRows = mysqli_num_rows($mappingRes1);
 
                 <div>
                     <label class="fw-bold">Registration Type</label>
-                    <select name="academic_year" id="academicYear" required>
+                    <select name="registration_type" id="registrationType" required>
                         <option value="">Select Registration Type</option>
                         <option value="Fresh">Fresh</option>
                         <option value="Backlog">Backlog</option>

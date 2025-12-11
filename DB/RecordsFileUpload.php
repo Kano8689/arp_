@@ -103,7 +103,6 @@ function LoginTableInsert($conn, $tableName, $field, $data)
 
 function LoginTableUpdate($conn, $tableName, $field, $data)
 {
-      // $loginEdit = "UPDATE $tableName SET $_facultyPassword = '$encPass' WHERE $_facultyCode = '$enNoFld'";
       $loginEdit = "UPDATE $tableName SET $field[1] = '$data[1]' WHERE $field[0] = '$data[0]'";
       // echo "$loginEdit";
       // exit;

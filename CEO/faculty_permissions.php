@@ -211,7 +211,7 @@ if (isset($_POST["freeze_all"])) {
     $_freezePushPermissionFreezeInternal='$value'";
   mysqli_query($conn, $sql);
 
-  header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
+  header("Location: faculty_permissions.php");  // ✅ redirect with page & limit
 
   exit;
 }
@@ -226,7 +226,7 @@ if (isset($_POST["unfreeze_all"])) {
     $_freezePushPermissionFreezeInternal='$value'";
   mysqli_query($conn, $sql);
 
-  header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
+  header("Location: faculty_permissions.php");  // ✅ redirect with page & limit
 
   exit;
 }
@@ -241,7 +241,7 @@ if (isset($_POST["push_all"])) {
     $_freezePushPermissionPushInternal='$value'";
   mysqli_query($conn, $sql);
 
-  header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
+  header("Location: faculty_permissions.php");  // ✅ redirect with page & limit
 
   exit;
 }
@@ -256,7 +256,7 @@ if (isset($_POST["unpush_all"])) {
     $_freezePushPermissionPushInternal='$value'";
   mysqli_query($conn, $sql);
 
-  header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
+  header("Location: faculty_permissions.php");  // ✅ redirect with page & limit
 
   exit;
 }
@@ -526,7 +526,7 @@ $mappingRes = mysqli_query($conn, $sql);
 //         VALUES ('$facultyId', '$courseId', 1)";
 //     $insert_result = mysqli_query($conn, $insert_query);
 //   }
-//   header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
+//   header("Location: faculty_permissions.php");  // ✅ redirect with page & limit
 //   exit;
 // }
 
@@ -556,7 +556,7 @@ if (isset($_POST["push"])) {
   //   $insert_result = mysqli_query($conn, $insert_query);
   // }
 
-  // header("Location: $redirectUrl$filterQuery");  // ✅ redirect with page & limit
+  // header("Location: faculty_permissions.php");  // ✅ redirect with page & limit
 
   // exit;
 }

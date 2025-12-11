@@ -16,10 +16,12 @@ $facLgnId = str_replace($defaultLoginExtension, "", $_SESSION[$_session_login_na
 function GetFacultyDetailCellData($field)
 {
   global $conn, $_facultyTable;
-  global $_facultyId, $_facultyCode, $_facultyName, $_facultyDepartment, $_facultyEmail, $_facultyJoinDate, $_facultyPassword;
+  global $_facultyId, $_facultyCode, $_facultyName, $_facultyDepartment, $_facultyEmail, $_facultyJoinDate;
   global $facLgnId;
 
   $sql = "SELECT * FROM $_facultyTable WHERE $_facultyCode = '$facLgnId'";
+  // echo "$sql";
+  // exit;
   $res = mysqli_query($conn, $sql);
   $row = mysqli_fetch_assoc($res);
   return $row[$field] ?? null;
@@ -27,13 +29,13 @@ function GetFacultyDetailCellData($field)
 
 function GetDepartmentDetailCellData($id)
 {
-  global $conn, $_deptTable;
-  global $_deptId, $_deptName;
+  global $conn, $_departmentTable;
+  global $_departmentId, $_departmentName;
 
-  $sql = "SELECT * FROM $_deptTable WHERE $_deptId = '$id'";
+  $sql = "SELECT * FROM $_departmentTable WHERE $_departmentId = '$id'";
   $res = mysqli_query($conn, $sql);
   $row = mysqli_fetch_assoc($res);
-  return $row[$_deptName] ?? null;
+  return $row[$_departmentName] ?? null;
 }
 
 include_once("../header.php");

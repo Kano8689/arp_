@@ -120,7 +120,7 @@ if (isset($_POST['addFaculty'])) {
 
     $where = "$_facultyCode='$facultyCode'";
     if (isUniqueOrNot($conn, $_facultyTable, $where)) {
-      $AddFaculty = "INSERT INTO $_facultyTable ($_facultyCode,$_facultyName,$_facultyDepartment,$_facultyEmail,$_facultyJoinDate,$_facultyPassword) VALUES ('$facultyCode','$facultyName','$facultyDept','$facultyEmail','$facultyJoinDate','$encPass')";
+      $AddFaculty = "INSERT INTO $_facultyTable ($_facultyCode,$_facultyName,$_facultyDepartment,$_facultyEmail,$_facultyJoinDate) VALUES ('$facultyCode','$facultyName','$facultyDept','$facultyEmail','$facultyJoinDate')";
       mysqli_query($conn, $AddFaculty);
 
       $un = $facultyCode . $defaultLoginExtension;
@@ -187,10 +187,10 @@ if (isset($_POST['addFile'])) {
 function GetAndSaveDataFromFile($ary)
 {
   global $conn, $_facultyTable, $defaultLoginExtension;
-  global $_facultyCode, $_facultyName, $_facultyDepartment, $_facultyEmail, $_facultyJoinDate, $_facultyPassword;
+  global $_facultyCode, $_facultyName, $_facultyDepartment, $_facultyEmail, $_facultyJoinDate;
   global $_loginTable, $_loginUsername, $_loginPassword, $_loginUserType;
 
-  $fields = [$_facultyCode, $_facultyName, $_facultyDepartment, $_facultyEmail, $_facultyJoinDate, $_facultyPassword];
+  $fields = [$_facultyCode, $_facultyName, $_facultyDepartment, $_facultyEmail, $_facultyJoinDate];
 
   $facultyCode = mysqli_real_escape_string($conn, $ary[1] ?? '');
   $facultyName = mysqli_real_escape_string($conn, $ary[2] ?? '');

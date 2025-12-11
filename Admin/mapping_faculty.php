@@ -682,7 +682,7 @@ $totalRows = mysqli_num_rows($mappingRes1);
 
             </div>
 
-            <div class="row-2">
+            <div class="row">
 
                 <div>
                     <label class="fw-bold">Slot</label>
@@ -695,7 +695,7 @@ $totalRows = mysqli_num_rows($mappingRes1);
                     </select>
                 </div>
 
-                <div>
+                <!-- <div>
                     <label class="fw-bold">Registration Type</label>
                     <select name="academic_year" id="academicYear" required>
                         <option value="">Select Registration Type</option>
@@ -704,7 +704,7 @@ $totalRows = mysqli_num_rows($mappingRes1);
                         <option value="Withdrawl">Withdrawl</option>
                         <option value="Improvement">Improvement</option>
                     </select>
-                </div>
+                </div> -->
 
             </div>
 
@@ -795,7 +795,7 @@ $totalRows = mysqli_num_rows($mappingRes1);
             </div>
 
 
-            <div class="row-2">
+            <div class="row">
 
                 <div>
                     <label class="fw-bold">Slot</label>
@@ -808,7 +808,7 @@ $totalRows = mysqli_num_rows($mappingRes1);
                     </select>
                 </div>
 
-                <div>
+                <!-- <div>
                     <label class="fw-bold">Registration Type</label>
                     <select name="academic_year" id="academicYear" required>
                         <option value="">Select Registration Type</option>
@@ -817,7 +817,7 @@ $totalRows = mysqli_num_rows($mappingRes1);
                         <option value="Withdrawl">Withdrawl</option>
                         <option value="Improvement">Improvement</option>
                     </select>
-                </div>
+                </div> -->
 
             </div>
 

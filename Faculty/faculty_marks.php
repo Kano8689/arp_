@@ -26,17 +26,13 @@ $maxMarksForMarksEntry = 0;
 
 if (isset($_POST[$btnfldbtnfld[0]])) {
   $fieldNameForMarksEntry = "CA1";
-  $selectFromResultTableField = $_resultSemesterCa1;
+  $_SESSION["MarksEnteredField"] = $selectFromResultTableField = $_resultSemesterCa1;
+
   $isCa1 = $_POST["isCa1"];
   $isUG = $_POST["isUG"];
   $isType = $_POST["isType"];
   $maxMarksForMarksEntry = ($isUG && $isType == 1) ? 50 : (($isUG && $isType == 3) ? 50 : ((!$isUG && $isType == 1) ? 50 : ((!$isUG && $isType == 3) ? 50 : 0)));
 
-  $_SESSION["MarksEnteredField"] = $_resultSemesterCa1;
-
-  // $s = SelectStudentOfSelectedCurse();
-  // $selectCourseStudent = mysqli_query($conn, $s);
-  // CreateQueryForGetStudenbtPush();
   $_SESSION["courseOpenBtn"] = 1;
   $_SESSION["courseOpenBtn1"] = 1;
   // exit;
@@ -44,17 +40,13 @@ if (isset($_POST[$btnfldbtnfld[0]])) {
 
 if (isset($_POST[$btnfldbtnfld[1]])) {
   $fieldNameForMarksEntry = "CA2";
-  $selectFromResultTableField = $_resultSemesterCa2;
+  $_SESSION["MarksEnteredField"] = $selectFromResultTableField = $_resultSemesterCa2;
+
   $isCa2 = $_POST["isCa2"];
   $isUG = $_POST["isUG"];
   $isType = $_POST["isType"];
   $maxMarksForMarksEntry = ($isUG && $isType == 1) ? 50 : (($isUG && $isType == 3) ? 50 : ((!$isUG && $isType == 1) ? 50 : ((!$isUG && $isType == 3) ? 50 : 0)));
 
-  $_SESSION["MarksEnteredField"] = $_resultSemesterCa2;
-
-  // $s = SelectStudentOfSelectedCurse();
-  // $selectCourseStudent = mysqli_query($conn, $s);
-  // CreateQueryForGetStudenbtPush();
   $_SESSION["courseOpenBtn"] = 2;
   $_SESSION["courseOpenBtn1"] = 2;
 
@@ -62,51 +54,39 @@ if (isset($_POST[$btnfldbtnfld[1]])) {
 
 if (isset($_POST[$btnfldbtnfld[2]])) {
   $fieldNameForMarksEntry = "CA3";
-  $selectFromResultTableField = $_resultSemesterCa3;
+  $selectFromResultTableField = $_SESSION["MarksEnteredField"] = $_resultSemesterCa3;
+
   $isCa3 = $_POST["isCa3"];
   $isUG = $_POST["isUG"];
   $isType = $_POST["isType"];
   $maxMarksForMarksEntry = ($isUG && $isType == 1) ? 50 : (($isUG && $isType == 3) ? 50 :  0);
 
-  $_SESSION["MarksEnteredField"] = $_resultSemesterInternalMarks;
-
-  // $s = SelectStudentOfSelectedCurse();
-  // $selectCourseStudent = mysqli_query($conn, $s);
-  // CreateQueryForGetStudenbtPush();
   $_SESSION["courseOpenBtn"] = 3;
   $_SESSION["courseOpenBtn1"] = 3;
 }
 
 if (isset($_POST[$btnfldbtnfld[3]])) {
   $fieldNameForMarksEntry = "Internal";
-  $selectFromResultTableField = $_resultSemesterInternalMarks;
+  $selectFromResultTableField = $_SESSION["MarksEnteredField"] = $_resultInternalMarks;
+
   $isInternal = $_POST["isInternal"];
   $isUG = $_POST["isUG"];
   $isType = $_POST["isType"];
   $maxMarksForMarksEntry = ($isUG && $isType == 1) ? 25 : (($isUG && $isType == 2) ? 10 : ((!$isUG && $isType == 1) ? 20 : ((!$isUG && $isType == 2) ? 10 : 0)));
 
-  $_SESSION["MarksEnteredField"] = $_resultSemesterCa3;
-
-  // $s = SelectStudentOfSelectedCurse();
-  // $selectCourseStudent = mysqli_query($conn, $s);
-  // CreateQueryForGetStudenbtPush();
   $_SESSION["courseOpenBtn"] = 4;
   $_SESSION["courseOpenBtn1"] = 4;
 }
 
 if (isset($_POST[$btnfldbtnfld[4]])) {
   $fieldNameForMarksEntry = "Lab";
-  $selectFromResultTableField = $_resultSemesterPracticalMarks;
+  $selectFromResultTableField = $_SESSION["MarksEnteredField"] = $_resultPracticalMarks;
+
   $isLab = $_POST["isLab"];
   $isUG = $_POST["isUG"];
   $isType = $_POST["isType"];
   $maxMarksForMarksEntry = ($isUG && $isType == 2) ? 100 : (($isUG && $isType == 3) ? 30 : ((!$isUG && $isType == 2) ? 100 : ((!$isUG && $isType == 3) ? 30 : 0)));
 
-  $_SESSION["MarksEnteredField"] = $_resultSemesterPracticalMarks;
-
-  // $s = SelectStudentOfSelectedCurse();
-  // $selectCourseStudent = mysqli_query($conn, $s);
-  // CreateQueryForGetStudenbtPush();
   $_SESSION["courseOpenBtn"] = 5;
   $_SESSION["courseOpenBtn1"] = 5;
 }
@@ -114,29 +94,29 @@ if (isset($_POST[$btnfldbtnfld[4]])) {
 function SelectStudentOfSelectedCurse()
 {
   global $conn;
-  global $_mappingTable, $_mapId, $_facId, $_slotYear, $_semesterType, $_crseId;
-  global $freezePushPermissionTable, $freezePushPermissionFacId, $freezePushPermissionCourseId;
-  global $_resultSemesterResultYear, $_resultSemesterResultSemType, $_resultSemesterStdCrseId;
+  global $_mappingFacultyTable, $_mappingFacultyTblId, $_mappingFacultyId, $_mappingFacultyId, $_mappingFacultySemesterType, $_mappingFacultyCourseId;
+  global $_freezePushPermissionTable, $_freezePushPermissionFacId, $_freezePushPermissionCourseId;
+  global $_resultPracticalMarks, $_resultResultSemType, $_resultStdCrseId;
   global $_facultyId;
 
   $selectCourseId =  $_POST['hiddenMappingId'];
   $facId = GetFacultyDetailCellData($_facultyId);
 
-  $mapTableSingleRowSelect = mysqli_query($conn, "SELECT * FROM $_mappingTable WHERE $_mapId='$selectCourseId'");
+  $mapTableSingleRowSelect = mysqli_query($conn, "SELECT * FROM $_mappingFacultyTable WHERE $_mappingFacultyTblId='$selectCourseId'");
   $mapTableSingleRowRes = mysqli_fetch_assoc($mapTableSingleRowSelect);
 
-  $facId = $mapTableSingleRowRes[$_facId];
+  $facId = $mapTableSingleRowRes[$_mappingFacultyId];
   // echo "$academicYear<br>";
-  $academicYear = $mapTableSingleRowRes[$_slotYear];
+  $academicYear = $mapTableSingleRowRes[$_mappingFacultyId];
   // echo "$academicYear<br>";
   // exit;
-  $semNo = $mapTableSingleRowRes[$_semesterType];
-  $selectCourseId = $mapTableSingleRowRes[$_crseId];
+  $semNo = $mapTableSingleRowRes[$_mappingFacultySemesterType];
+  $selectCourseId = $mapTableSingleRowRes[$_mappingFacultyCourseId];
 
   $stuResId = $selectCourseId;
   $_SESSION['course'] = $stuResId;
 
-  $sql = "SELECT * FROM $_mappingTable WHERE $_facId='$facId' AND $_slotYear='$academicYear' AND $_semesterType='$semNo' AND $_crseId='$selectCourseId'";
+  $sql = "SELECT * FROM $_mappingFacultyTable WHERE $_mappingFacultyId='$facId' AND $_mappingFacultyId='$academicYear' AND $_mappingFacultySemesterType='$semNo' AND $_mappingFacultyCourseId='$selectCourseId'";
 
   return $sql;
 }
@@ -147,13 +127,13 @@ if (isset($_POST['freeze_me'])) {
   $crse = $_SESSION['course'];
   $examName = $_SESSION["courseOpenBtn1"] ?? 0;
   // echo "$examName<br>";
-  $examName = $examName == 1 ? "$freezePushPermissionFreezeCa1" : ($examName == 2 ? "$freezePushPermissionFreezeCa2" : ($examName == 3 ? "$freezePushPermissionFreezeCa3" : ($examName == 4 ? "$freezePushPermissionFreezeLab" : ($examName == 5 ? "$freezePushPermissionFreezeInternal" : ""))));
+  $examName = $examName == 1 ? "$_freezePushPermissionFreezeCa1" : ($examName == 2 ? "$_freezePushPermissionFreezeCa2" : ($examName == 3 ? "$_freezePushPermissionFreezeCa3" : ($examName == 4 ? "$_freezePushPermissionFreezeLab" : ($examName == 5 ? "$_freezePushPermissionFreezeInternal" : ""))));
   
   // echo "$examName";
   // exit;
 
   $status = 0;
-  $sql = "UPDATE $freezePushPermissionTable SET $examName = '0' WHERE $freezePushPermissionFacId='$fac' AND $freezePushPermissionCourseId='$crse'";
+  $sql = "UPDATE $_freezePushPermissionTable SET $examName = '0' WHERE $_freezePushPermissionFacId='$fac' AND $_freezePushPermissionCourseId='$crse'";
   // echo "$sql";
   // exit;
   mysqli_query($conn, $sql);
@@ -174,7 +154,7 @@ if (isset($_POST['loadCourse'])) {
 
   $facId = GetFacultyDetailCellData($_facultyId);
 
-  $selectCourse = "SELECT * FROM $_mappingTable WHERE $_facId='$facId' AND $_slotYear='$academicYear' AND $_semesterType='$semNo'";
+  $selectCourse = "SELECT * FROM $_mappingFacultyTable WHERE $_mappingFacultyId='$facId' AND $_mappingFacultySemesterYear='$academicYear' AND $_mappingFacultySemesterType='$semNo'";
 
   // echo $selectCourse;
   // exit;
@@ -186,12 +166,12 @@ if (isset($_POST['loadCourse'])) {
   $TempCoursePrintingIdsUnique = array();
 
   while ($courseResData = mysqli_fetch_assoc($selectCourseRes)) {
-    if (!in_array($courseResData[$_crseId], $facultyCourseId)) {
-      $TempCoursePrintingIdsUnique[] = $courseResData[$_mapId];
+    if (!in_array($courseResData[$_mappingFacultyCourseId], $facultyCourseId)) {
+      $TempCoursePrintingIdsUnique[] = $courseResData[$_mappingFacultyTblId];
     }
 
-    $facultyCourseId[] = $courseResData[$_crseId];
-    $facultyCourseMappingTableId[] = $courseResData[$_mapId];
+    $facultyCourseId[] = $courseResData[$_mappingFacultyCourseId];
+    $facultyCourseMappingTableId[] = $courseResData[$_mappingFacultyTblId];
   }
   $facultyCourseId = array_unique($facultyCourseId);
   if (count($facultyCourseId) > 0) {
@@ -209,24 +189,24 @@ if (isset($_SESSION['courseOpenBtn'])) {
   $selectCourseId =  $_POST['hiddenMappingId'];
   $facId = GetFacultyDetailCellData($_facultyId);
 
-  $mapTableSingleRowSelect = mysqli_query($conn, "SELECT * FROM $_mappingTable WHERE $_mapId='$selectCourseId'");
+  $mapTableSingleRowSelect = mysqli_query($conn, "SELECT * FROM $_mappingFacultyTable WHERE $_mappingFacultyTblId='$selectCourseId'");
   $mapTableSingleRowRes = mysqli_fetch_assoc($mapTableSingleRowSelect);
 
-  $facId = $mapTableSingleRowRes[$_facId];
+  $facId = $mapTableSingleRowRes[$_mappingFacultyId];
   // echo "$academicYear<br>";
-  $academicYear = $mapTableSingleRowRes[$_slotYear];
+  $academicYear = $mapTableSingleRowRes[$_mappingFacultyId];
   // echo "$academicYear<br>";
   // exit;
-  $semNo = $mapTableSingleRowRes[$_semesterType];
-  $selectCourseId = $mapTableSingleRowRes[$_crseId];
+  $semNo = $mapTableSingleRowRes[$_mappingFacultySemesterType];
+  $selectCourseId = $mapTableSingleRowRes[$_mappingFacultyCourseId];
 
   $stuResId = $selectCourseId;
   $_SESSION['course'] = $stuResId;
 
-  $sql = "SELECT * FROM $_mappingTable WHERE $_facId='$facId' AND $_slotYear='$academicYear' AND $_semesterType='$semNo' AND $_crseId='$selectCourseId'";
+  $sql = "SELECT * FROM $_mappingStudentTable WHERE $_mappingFacultyId='$facId' AND $_mappingFacultyId='$academicYear' AND $_mappingFacultySemesterType='$semNo' AND $_mappingFacultyCourseId='$selectCourseId'";
   $selectCourseStudent = mysqli_query($conn, $sql);
 
-  $freezeCourse = "SELECT * FROM $freezePushPermissionTable WHERE $freezePushPermissionFacId='$facId' AND $freezePushPermissionCourseId='$selectCourseId'";
+  $freezeCourse = "SELECT * FROM $_freezePushPermissionTable WHERE $_freezePushPermissionFacId='$facId' AND $_freezePushPermissionCourseId='$selectCourseId'";
   $freezeCourseRes = mysqli_query($conn, $freezeCourse);
   $freezeCourseRes = mysqli_fetch_assoc($freezeCourseRes);
   $f = str_replace("_", "", $selectFromResultTableField);
@@ -235,7 +215,7 @@ if (isset($_SESSION['courseOpenBtn'])) {
   $f = $f . "_freeze";
   $isUnFreeze = $freezeCourseRes[$f];
 
-  $stuResWhere = "$_resultSemesterResultYear='$academicYear' AND $_resultSemesterResultSemType='$semNo' AND $_resultSemesterStdCrseId='$selectCourseId'";
+  $stuResWhere = "$_resultPracticalMarks='$academicYear' AND $_resultResultSemType='$semNo' AND $_resultStdCrseId='$selectCourseId'";
 }
 
 function GetCourseTPC($field)
@@ -251,10 +231,10 @@ function GetCourseTPC($field)
 
 function GetProgramField($field, $id)
 {
-  global $conn, $programTableName;
-  global $programId, $programNameField, $programSemField, $programDeptField, $graduationTypeField;
+  global $conn, $_programTableName;
+  global $_programId;
 
-  $slct = "SELECT $field FROM $programTableName WHERE $programId = '$id'";
+  $slct = "SELECT $field FROM $_programTableName WHERE $_programId = '$id'";
   $res = mysqli_query($conn, $slct);
   $data = mysqli_fetch_assoc($res);
   return $data[$field] ?? null;
@@ -265,7 +245,7 @@ function GetProgramField($field, $id)
 function GetFacultyDetailCellData($field)
 {
   global $conn, $_facultyTable;
-  global $_facultyId, $_facultyCode, $_facultyName, $_facultyDepartment, $_facultyEmail, $_facultyJoinDate, $_facultyPassword;
+  global $_facultyId, $_facultyCode, $_facultyName, $_facultyDepartment, $_facultyEmail, $_facultyJoinDate;
   global $facLgnId;
 
   $sql = "SELECT * FROM $_facultyTable WHERE $_facultyCode = '$facLgnId'";
@@ -300,9 +280,9 @@ function GetCourseDetailCellData($field, $id)
 function GetStudentDetailCellData($field, $id)
 {
   global $conn, $_studentTable;
-  global $_courseId;
+  global $_studentCode;
 
-  $sql = "SELECT * FROM $_studentTable WHERE $_courseId = '$id'";
+  $sql = "SELECT * FROM $_studentTable WHERE $_studentCode = '$id'";
 
   $res = mysqli_query($conn, $sql);
   $row = mysqli_fetch_assoc($res);
@@ -313,7 +293,7 @@ function GetStudentDetailCellData($field, $id)
 function GetStudentResult($stuId)
 {
   global $conn, $_resultSemesterTable;
-  global $_resultSemesterResultYear, $_resultSemesterResultSemType, $_resultSemesterStdCrseId, $selectCourseId, $_resultSemesterStdDtlId;
+  global $_resultPracticalMarks, $_resultResultSemType, $_resultStdCrseId, $selectCourseId, $_resultSemesterStdDtlId;
   global $stuResWhere;
 
   if ($stuResWhere != "")
@@ -323,19 +303,7 @@ function GetStudentResult($stuId)
 
   $sqlResult = "SELECT * FROM $_resultSemesterTable WHERE $condition";
 
-  // echo "$stuResWhere<br>";
-  // echo "$condition<br>";
-  // echo "$sqlResult<br>";
   $resultData = mysqli_query($conn, $sqlResult);
-
-  // print("<pre>");
-  // echo "$sqlResult";
-  // echo "<br>";
-  // print_r($resultData);
-  // $resultData = mysqli_fetch_all($resultData);
-  // print_r($resultData);
-  // echo "<br>";
-  // exit;
 
   return $resultData;
 }
@@ -412,15 +380,15 @@ include_once("../header.php");
 
             $facFrz = $facId;
             $crsFrz = $data[$_courseId];
-            $FreezeRecords = "SELECT * FROM $freezePushPermissionTable WHERE $freezePushPermissionFacId='$facFrz' AND $freezePushPermissionCourseId='$crsFrz' AND $freezePushPermissionAcademicYear='$academicYear' AND $freezePushPermissionAcademicSem='$semNo'";
+            $FreezeRecords = "SELECT * FROM $_freezePushPermissionTable WHERE $_freezePushPermissionFacId='$facFrz' AND $_freezePushPermissionCourseId='$crsFrz' AND $_freezePushPermissionAcademicYear='$academicYear' AND $_freezePushPermissionAcademicSem='$semNo'";
             $frezzeRecordsData = mysqli_query($conn, $FreezeRecords);
             $frezzeRecordsData = mysqli_fetch_assoc($frezzeRecordsData);
 
-            $isCa1Freze = $frezzeRecordsData[$freezePushPermissionFreezeCa1];
-            $isCa2Freeze = $frezzeRecordsData[$freezePushPermissionFreezeCa2];
-            $isCa3Freeze = $frezzeRecordsData[$freezePushPermissionFreezeCa3];
-            $isLabFreeze = $frezzeRecordsData[$freezePushPermissionFreezeLab];
-            $isInternalFreeze = $frezzeRecordsData[$freezePushPermissionFreezeInternal];
+            $isCa1Freze = $frezzeRecordsData[$_freezePushPermissionFreezeCa1];
+            $isCa2Freeze = $frezzeRecordsData[$_freezePushPermissionFreezeCa2];
+            $isCa3Freeze = $frezzeRecordsData[$_freezePushPermissionFreezeCa3];
+            $isLabFreeze = $frezzeRecordsData[$_freezePushPermissionFreezeLab];
+            $isInternalFreeze = $frezzeRecordsData[$_freezePushPermissionFreezeInternal];
             ?>
 
             <input type="hidden" name="hiddenMappingId" value="<?php echo $TempCoursePrintingIdsUnique[$num++]; ?>" id="">
@@ -477,9 +445,9 @@ include_once("../header.php");
               <?php
               mysqli_data_seek($selectCourseStudent, 0);
               $selectCourseStudentData = mysqli_fetch_assoc($selectCourseStudent);
-              $proId = GetStudentDetailCellData($_studentProgram, $selectCourseStudentData[$_stuId]);
+              $proId = GetStudentDetailCellData($_studentProgram, $selectCourseStudentData[$_studentId]);
 
-              $isUG = GetProgramField($graduationTypeField, $proId) == 1;
+              $isUG = GetProgramField($_graduationTypeField, $proId) == 1;
               $courseTPC = GetCourseTPC($_courseTypeField);
               $isTheory = $courseTPC == 1;
               $isPractical = $courseTPC == 2;
@@ -502,39 +470,26 @@ include_once("../header.php");
             // mysqli_data_seek($resultQuery, 0);
             $RESULTDATAARRAY = [];
 
-            // print("<pre>");
-            // print_r($selectCourseStudent);
-            // $selectCourseStudent = mysqli_fetch_all($selectCourseStudent);
-            // print_r($selectCourseStudent);
-            // echo "";
-            // exit;
-            // mysqli_data_seek($selectCourseStudent, 0);
-
             while ($selectCourseStudentData = mysqli_fetch_assoc($selectCourseStudent)) :
-              $crs = $selectCourseStudentData[$_crseId]; // find course id from mapping table
-              $yr = $selectCourseStudentData[$_slotYear]; // find year from mapping table
-              $typ = $selectCourseStudentData[$_semesterType]; // find semester type from mapping table
+              $crs = $selectCourseStudentData[$_mappingFacultyCourseId]; // find course id from mapping table
+              $yr = $selectCourseStudentData[$_mappingFacultyId]; // find year from mapping table
+              $typ = $selectCourseStudentData[$_mappingFacultySemesterType]; // find semester type from mapping table
 
-              $resultQuery = GetStudentResult($selectCourseStudentData[$_stuId]); // get student data object from student id which is find from mapping table
-
-              // print("<pre>");
-              // print_r($resultQuery);
-              // echo "";
-              // exit;
+              $resultQuery = GetStudentResult($selectCourseStudentData[$_studentId]); // get student data object from student id which is find from mapping table
 
 
               if ($resultQuery === false) {
                 // Handle error: log it, show user message, or set default
-                error_log("Query failed for student ID: " . $_stuId);
+                error_log("Query failed for student ID: " . $_studentId);
                 $result = null; // or array('error' => 'No data found')
               } else {
                 $result = mysqli_fetch_assoc($resultQuery);
               }
 
-              $MAP = $selectCourseStudentData[$_mapId];
-              $STDDTLID = $selectCourseStudentData[$_stuId];
-              $STDCRSEID = $selectCourseStudentData[$_crseId];
-              $RESULTID = $result[$_resultSemesterId] ?? 0;
+              $MAP = $selectCourseStudentData[$_mappingFacultyTblId];
+              $STDDTLID = $selectCourseStudentData[$_studentId];
+              $STDCRSEID = $selectCourseStudentData[$_mappingFacultyCourseId];
+              $RESULTID = $result[$_resultId] ?? 0;
 
 
               $ENNO = GetStudentDetailCellData($_studentCode, $STDDTLID);
@@ -551,7 +506,7 @@ include_once("../header.php");
               $obj->name = $NAME;
 
               $MARKS = $result[$selectFromResultTableField] ?? 0;
-              $REMARKS = $result[$_resultSemesterResultRemarks] ?? "";
+              $REMARKS = $result[$_resultResultRemarks] ?? "";
 
               $RESULTDATAARRAY[] = $obj;
               $_SESSION['RESULTDATAARRAY'] = $RESULTDATAARRAY;

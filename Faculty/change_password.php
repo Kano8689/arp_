@@ -10,7 +10,7 @@ if (!isset($_SESSION[$_session_login_type]) || $_SESSION[$_session_login_type] !
 function GetFacultyDetailCellData($field)
 {
     global $conn, $_facultyTable;
-    global $_facultyId, $_facultyCode, $_facultyName, $_facultyDepartment, $_facultyEmail, $_facultyJoinDate, $_facultyPassword;
+    global $_facultyId, $_facultyCode, $_facultyName, $_facultyDepartment, $_facultyEmail, $_facultyJoinDate;
     global $facLgnId;
 
     $sql = "SELECT * FROM $_facultyTable WHERE $_facultyCode = '$facLgnId'";
@@ -38,18 +38,6 @@ if (isset($_POST['updatePassword'])) {
     
             $updatePassword = "UPDATE $_loginTable SET $_loginPassword = '$encPas' WHERE $_loginUsername='$loginFullId' and $_loginUserType='3'";
             $ret = mysqli_query($conn, $updatePassword);
-    
-            $UpdateDetailsPassword = "UPDATE $_facultyTable SET $_facultyPassword='$encPas' WHERE $_facultyCode='$facLgnId'";
-            $up = mysqli_query($conn, $UpdateDetailsPassword);
-    
-    
-    
-            // echo $updatePassword."<br>";
-            // echo "<br><br><br>";
-            // echo $UpdateDetailsPassword."<br>";
-            // echo $up."<br>";
-            // echo $ret."<br>";
-            // exit;
     
             header("Location: change_password.php");
         }

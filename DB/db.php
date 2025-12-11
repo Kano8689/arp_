@@ -51,7 +51,6 @@ class FacultiesDetails  {
     public $_faculty_department = "facultie_department";
     public $_faculty_email = "faculty_email";
     public $_faculty_joinDate = "faculty_join_date";
-    public $_faculty_password = "faculty_password";
     public $_created_at = "created_at";
     public $_updated_at = "updated_at";
 }
@@ -105,6 +104,7 @@ class MappingStudentTable {
     public $_student_id = "student_id";
     public $_course_id = "course_id";
     public $_slot_id = "slot_id";
+    public $_registration_type = "registration_type";
     public $_semester_year = "semester_year";
     public $_semester_type = "semester_type";
     public $_created_at = "created_at";
@@ -157,7 +157,6 @@ class StudentsDetails {
     public $_student_name = "student_name";
     public $_program_id = "program_id";
     public $_year_admitted = "year_admitted";
-    public $_student_password = "student_password";
     public $_created_at = "created_at";
     public $_updated_at = "updated_at";
 }
@@ -233,7 +232,6 @@ $defaultLoginExtension = "@amity.blr.edu";
     $_facultyDepartment = $_facultiesDetailsObject->_faculty_department;
     $_facultyEmail = $_facultiesDetailsObject->_faculty_email;
     $_facultyJoinDate = $_facultiesDetailsObject->_faculty_joinDate;
-    $_facultyPassword = $_facultiesDetailsObject->_faculty_password;
     $_facultyCreatedAt = $_facultiesDetailsObject->_created_at;
     $_facultyUpdatedAt = $_facultiesDetailsObject->_updated_at;
 }
@@ -291,6 +289,7 @@ $defaultLoginExtension = "@amity.blr.edu";
     $_mappingStudentId = $_mappingStudentTableObject->_student_id;
     $_mappingStudentCourseId = $_mappingStudentTableObject->_course_id;
     $_mappingStudentSlotId = $_mappingStudentTableObject->_slot_id;
+    $_mappingStudentRegistrationType = $_mappingStudentTableObject->_registration_type;
     $_mappingStudentSemesterYear = $_mappingStudentTableObject->_semester_year;
     $_mappingStudentSemesterType = $_mappingStudentTableObject->_semester_type;
     $_mappingStudentCreatedAt = $_mappingStudentTableObject->_created_at;
@@ -347,7 +346,6 @@ $defaultLoginExtension = "@amity.blr.edu";
     $_studentName = $_studentsDetailsObject->_student_name;
     $_studentProgram = $_studentsDetailsObject->_program_id;
     $_studentAdmitYear = $_studentsDetailsObject->_year_admitted;
-    $_studentPassword = $_studentsDetailsObject->_student_password;
     $_studentCreatedAt = $_studentsDetailsObject->_created_at;
     $_studentUpdatedAt = $_studentsDetailsObject->_updated_at;
 }

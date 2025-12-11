@@ -17,7 +17,7 @@ $facLgnId = str_replace($defaultLoginExtension, "", $_SESSION[$_session_login_na
 function GetFacultyDetailCellData($field)
 {
       global $conn, $_facultyTable;
-      global $_facultyId, $_facultyCode, $_facultyName, $_facultyDepartment, $_facultyEmail, $_facultyJoinDate, $_facultyPassword;
+      global $_facultyId, $_facultyCode, $_facultyName, $_facultyDepartment, $_facultyEmail, $_facultyJoinDate;
       global $facLgnId;
 
       $sql = "SELECT * FROM $_facultyTable WHERE $_facultyCode = '$facLgnId'";

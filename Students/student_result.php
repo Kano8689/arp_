@@ -65,7 +65,7 @@ function GetResultDetails($where)
 function GetStudentDetailCellData($field)
 {
   global $conn, $_studentTable;
-  global $_studentId, $_studentCode, $_studentName, $_studentProgram, $_studentAdmitYear, $_studentPassword;
+  global $_studentId, $_studentCode, $_studentName, $_studentProgram, $_studentAdmitYear;
   global $stdLgnId;
 
   $sql = "SELECT * FROM $_studentTable WHERE $_studentCode = '$stdLgnId'";

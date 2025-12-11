@@ -22,10 +22,6 @@ if (isset($_POST['updatePassword'])) {
     // exit;
     $ret = mysqli_query($conn, $updatePassword);
 
-    $table;
-    $passwordField;
-    $userNameField;
-
     switch ($userType) {
       case 1:
         break;
@@ -34,21 +30,10 @@ if (isset($_POST['updatePassword'])) {
         break;
 
       case 3:
-        $table = $_facultyTable;
-        $passwordField = $_facultyPassword;
-        $userNameField = $_facultyCode;
         break;
 
       case 4:
-        $table = $_studentTable;
-        $passwordField = $_studentPassword;
-        $userNameField = $_studentCode;
         break;
-    }
-
-    if ($userType >= 3) {
-      $UpdateDetailsPassword = "UPDATE $table SET $passwordField='$encPas' WHERE $userNameField='$loginId'";
-      mysqli_query($conn, $UpdateDetailsPassword);
     }
 
     header("Location: change_password.php");

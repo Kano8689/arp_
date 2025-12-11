@@ -138,7 +138,7 @@ if (isset($_POST['addStudent'])) {
 
     $where = "$_studentCode='$studentEnrlNo'";
     if (isUniqueOrNot($conn, $_studentTable, $where)) {
-      $AddStudent = "INSERT INTO $_studentTable ($_studentCode,$_studentName,$_studentProgram,$_studentAdmitYear,$_studentPassword) VALUES ('$studentEnrlNo','$studentName','$studentPrgNo','$studentAdtYr','$encPass')";
+      $AddStudent = "INSERT INTO $_studentTable ($_studentCode,$_studentName,$_studentProgram,$_studentAdmitYear) VALUES ('$studentEnrlNo','$studentName','$studentPrgNo','$studentAdtYr')";
       mysqli_query($conn, $AddStudent);
       // echo $AddStudent;
       // exit;
@@ -200,10 +200,10 @@ if (isset($_POST['addFile'])) {
 function GetAndSaveDataFromFile($ary)
 {
   global $conn, $_studentTable, $defaultLoginExtension;
-  global $_studentCode, $_studentName, $_studentProgram, $_studentAdmitYear, $_studentPassword;
+  global $_studentCode, $_studentName, $_studentProgram, $_studentAdmitYear;
   global $_loginTable, $_loginUsername, $_loginPassword, $_loginUserType;
 
-  $fields = [$_studentCode, $_studentName, $_studentProgram, $_studentAdmitYear, $_studentPassword];
+  $fields = [$_studentCode, $_studentName, $_studentProgram, $_studentAdmitYear];
 
   $studentEnrlNo = mysqli_real_escape_string($conn, $ary[1] ?? '');
   $studentName = mysqli_real_escape_string($conn, $ary[2] ?? '');
