@@ -1,0 +1,18 @@
+=> Admin:
+   - add file testing
+   - create common function file for fetch data
+
+=> CEO:
+   - 
+   - create common function file for fetch data
+
+=> Faculty:
+   - max marks is set but when we enter then it can be entered.
+   - create common function file for fetch data
+
+=> Student:
+   - variable changes
+   - student marks
+   - student result
+   - credit counting
+   - create common function file for fetch data

@@ -504,7 +504,7 @@ include_once("../header.php");
                 $STDDTLID = $selectCourseStudentData[$_mappingStudentId];
 
                 $STDCRSEID = $selectCourseStudentData[$_mappingFacultyCourseId];
-                $RESULTID = $result[$_resultId] ?? -10;
+                $RESULTID = $result[$_resultId] ?? 0;
 
 
                 $ENNO = GetStudentDetailCellData($_studentCode, $STDDTLID);

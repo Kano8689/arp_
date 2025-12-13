@@ -19,15 +19,23 @@ if (isset($_POST['loadCourseResult'])) {
   $semSelect = strtolower($semSelect) == "fall" ? 1 : (strtolower($semSelect) == "summer" ? 2 : 0);
 
   $stuId = GetStudentDetailCellData($_studentId);
-  $rsltAry = GetResultDetails("$resultSemesterStdDtlId=$stuId AND $resultSemesterResultYear='$yearSelect' AND $resultSemesterResultSemType='$semSelect'");
+  $rsltAry = GetResultDetails("$_resultStdDtlId=$stuId AND $_resultResultYear='$yearSelect' AND $_resultResultSemType='$semSelect'");
+
   if (mysqli_num_rows($rsltAry) > 0) {
     $display = "block";
   }
 }
 
-function GetGrade($ttl)
+function GetGrade($ttl, $outOf = 0)
 {
-  $grade = $ttl >= 90 ? "A" : ($ttl >= 80 ? "A2" : ($ttl >= 70 ? "B1" : ($ttl >= 60 ? "B2" : ($ttl >= 50 ? "C" : ($ttl >= 35 ? "D" : "FAIL")))));
+  if ($outOf > 0) {
+    $per = ($ttl * 100) / $outOf;
+    $pnt = $per;
+  }
+  $pnt = $ttl;
+
+
+  $grade = $pnt >= 90 ? "A" : ($pnt >= 80 ? "A2" : ($pnt >= 70 ? "B1" : ($pnt >= 60 ? "B2" : ($pnt >= 50 ? "C" : ($pnt >= 35 ? "D" : "FAIL")))));
 
   return $grade;
 }
@@ -45,9 +53,9 @@ function GetCourseDetails($field, $idVal)
 
 function GetResultDetailsRow($fld, $where)
 {
-  global $conn, $resultSemesterTable;
+  global $conn, $_resultTable;
 
-  $sql = "SELECT * FROM $resultSemesterTable WHERE $where";
+  $sql = "SELECT * FROM $_resultTable WHERE $where";
   $res = mysqli_query($conn, $sql);
   $res = mysqli_fetch_assoc($res);
   return $res[$fld] ?? null;
@@ -55,9 +63,9 @@ function GetResultDetailsRow($fld, $where)
 
 function GetResultDetails($where)
 {
-  global $conn, $resultSemesterTable;
+  global $conn, $_resultTable;
 
-  $sql = "SELECT * FROM $resultSemesterTable WHERE $where";
+  $sql = "SELECT * FROM $_resultTable WHERE $where";
   $res = mysqli_query($conn, $sql);
   return $res;
 }
@@ -129,21 +137,24 @@ include_once("../header.php");
             <th style="text-align: center;">Grade</th>
           </tr>
         </thead>
-        <tbody id="marksBody">  
+        <tbody id="marksBody">
           <?php if (isset($rsltAry)) {
             while ($resRow = mysqli_fetch_assoc($rsltAry)) {
-              $rsltId = $resRow[$resultSemesterId];
-              $crCd = GetCourseDetails($_courseCodeField, $resRow[$resultSemesterStdCrseId]);
-              $crNm = GetCourseDetails($_courseNameField, $resRow[$resultSemesterStdCrseId]);
-              $crdt = GetResultDetailsRow($resultSemesterTotalCredit, "$resultSemesterId='$rsltId'");
+              $rsltId = $resRow[$_resultId];
+              $crCd = GetCourseDetails($_courseCodeField, $resRow[$_resultStdCrseId]);
+              $crNm = GetCourseDetails($_courseNameField, $resRow[$_resultStdCrseId]);
+              $crdt = GetResultDetailsRow($_resultTotalCredit, "$_resultId='$rsltId'");
 
-              $ca1 = GetResultDetailsRow($resultSemesterCa1, "$resultSemesterId='$rsltId'");
-              $ca2 = GetResultDetailsRow($resultSemesterCa2, "$resultSemesterId='$rsltId'");
-              $ca3 = GetResultDetailsRow($resultSemesterCa3, "$resultSemesterId='$rsltId'");
-              $prctl = GetResultDetailsRow($resultSemesterPracticalMarks, "$resultSemesterId='$rsltId'");
-              $intrnl = GetResultDetailsRow($resultSemesterInternalMarks, "$resultSemesterId='$rsltId'");
+              $ca1 = GetResultDetailsRow($_resultCa1, "$_resultId='$rsltId'");
+              $ca2 = GetResultDetailsRow($_resultCa2, "$_resultId='$rsltId'");
+              $ca3 = GetResultDetailsRow($_resultCa3, "$_resultId='$rsltId'");
+              $prctl = GetResultDetailsRow($_resultPracticalMarks, "$_resultId='$rsltId'");
+              $intrnl = GetResultDetailsRow($_resultInternalMarks, "$_resultId='$rsltId'");
+
+              $ttl = $outoff = 0;
 
               $ttl = $ca1 + $ca2 + $ca3 + $prctl + $intrnl;
+
           ?>
               <tr>
                 <td style="text-align: center;"><?php echo $crCd; ?></td>

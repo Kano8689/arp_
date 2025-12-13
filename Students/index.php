@@ -49,18 +49,15 @@ function GetProgramDetailCellData($field, $id)
 }
 function GetDepartmentDetailCellData($field, $id)
 {
-  global $conn, $_deptTable;
-  global $_deptId, $_deptName;
+  global $conn, $_departmentTable;
+  global $_departmentId, $_departmentName;
 
-  $sql = "SELECT * FROM $_deptTable WHERE $_deptId = '$id'";
+  $sql = "SELECT * FROM $_departmentTable WHERE $_departmentId = '$id'";
   $res = mysqli_query($conn, $sql);
   $row = mysqli_fetch_assoc($res);
   return $row[$field] ?? null;
 }
 
-
-// echo GetDepartmentDetailCellData($_deptName, GetProgramDetailCellData($_programDeptField,GetProgramDetailCellData($_programId, GetStudentDetailCellData($_studentProgram))));
-// exit;
 include_once("../header.php");
 ?>
 
@@ -80,7 +77,7 @@ include_once("../header.php");
       <p><b>Student Code:</b> <?php echo GetStudentDetailCellData($_studentCode); ?></p>
       <p><b>Student Name:</b> <?php echo GetStudentDetailCellData($_studentName); ?></p>
       <p><b>Student Program:</b> <?php echo GetProgramDetailCellData($_programNameField, GetStudentDetailCellData($_studentProgram)); ?></p>
-      <p><b>Student Department:</b> <?php echo GetDepartmentDetailCellData($_deptName, GetProgramDetailCellData($_programDeptField, GetProgramDetailCellData($_programId, GetStudentDetailCellData($_studentProgram)))); ?></p>
+      <p><b>Student Department:</b> <?php echo GetDepartmentDetailCellData($_departmentName, GetProgramDetailCellData($_programDeptField, GetProgramDetailCellData($_programId, GetStudentDetailCellData($_studentProgram)))); ?></p>
       <p><b>Student Admit Year:</b> <?php echo GetStudentDetailCellData($_studentAdmitYear); ?></p>
     </div>
   </div>
@@ -116,25 +113,6 @@ for ($i=1; $i <= $semCount; $i++) { ?>
 </div>
 
 <script>
-  // Parse student type from URL
-  // const params = new URLSearchParams(window.location.search);
-  // const type = params.get("type") || "btech"; // default B.Tech
-
-  // let totalSems = 8; // B.Tech
-  // if (type === "bsc") totalSems = 6;
-  // if (type === "msc") totalSems = 4;
-
-  // const grid = document.getElementById("semGrid");
-  // for (let i = 1; i <= totalSems; i++) {
-  //   let gpa = (i < 3) ? (7.5 + (Math.random() * 1.0)).toFixed(2) : "NA"; // demo published first 2 sems
-  //   let cgpa = (i < 3) ? (8.0).toFixed(2) : "NA";
-  //   grid.innerHTML += `
-  //     <div class="sem-card card">
-  //       <h4>Semester ${i}</h4>
-  //       <div class="stat">GPA: <strong>${gpa}</strong></div>
-  //       <div class="stat">CGPA: <strong>${cgpa}</strong></div>
-  //     </div>`;
-  // }
 </script>
 
 
