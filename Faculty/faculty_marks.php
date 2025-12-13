@@ -26,7 +26,7 @@ $maxMarksForMarksEntry = 0;
 
 if (isset($_POST[$btnfldbtnfld[0]])) {
   $fieldNameForMarksEntry = "CA1";
-  $_SESSION["MarksEnteredField"] = $selectFromResultTableField = $_resultSemesterCa1;
+  $selectFromResultTableField = $_SESSION["MarksEnteredField"] = $_resultCa1;
 
   $isCa1 = $_POST["isCa1"];
   $isUG = $_POST["isUG"];
@@ -40,7 +40,7 @@ if (isset($_POST[$btnfldbtnfld[0]])) {
 
 if (isset($_POST[$btnfldbtnfld[1]])) {
   $fieldNameForMarksEntry = "CA2";
-  $_SESSION["MarksEnteredField"] = $selectFromResultTableField = $_resultSemesterCa2;
+  $selectFromResultTableField = $_SESSION["MarksEnteredField"] = $_resultCa2;
 
   $isCa2 = $_POST["isCa2"];
   $isUG = $_POST["isUG"];
@@ -49,12 +49,11 @@ if (isset($_POST[$btnfldbtnfld[1]])) {
 
   $_SESSION["courseOpenBtn"] = 2;
   $_SESSION["courseOpenBtn1"] = 2;
-
 }
 
 if (isset($_POST[$btnfldbtnfld[2]])) {
   $fieldNameForMarksEntry = "CA3";
-  $selectFromResultTableField = $_SESSION["MarksEnteredField"] = $_resultSemesterCa3;
+  $selectFromResultTableField = $_SESSION["MarksEnteredField"] = $_resultCa3;
 
   $isCa3 = $_POST["isCa3"];
   $isUG = $_POST["isUG"];
@@ -128,7 +127,7 @@ if (isset($_POST['freeze_me'])) {
   $examName = $_SESSION["courseOpenBtn1"] ?? 0;
   // echo "$examName<br>";
   $examName = $examName == 1 ? "$_freezePushPermissionFreezeCa1" : ($examName == 2 ? "$_freezePushPermissionFreezeCa2" : ($examName == 3 ? "$_freezePushPermissionFreezeCa3" : ($examName == 4 ? "$_freezePushPermissionFreezeLab" : ($examName == 5 ? "$_freezePushPermissionFreezeInternal" : ""))));
-  
+
   // echo "$examName";
   // exit;
 
@@ -194,7 +193,7 @@ if (isset($_SESSION['courseOpenBtn'])) {
 
   $facId = $mapTableSingleRowRes[$_mappingFacultyId];
   // echo "$academicYear<br>";
-  $academicYear = $mapTableSingleRowRes[$_mappingFacultyId];
+  $academicYear = $mapTableSingleRowRes[$_mappingFacultySemesterYear];
   // echo "$academicYear<br>";
   // exit;
   $semNo = $mapTableSingleRowRes[$_mappingFacultySemesterType];
@@ -203,7 +202,9 @@ if (isset($_SESSION['courseOpenBtn'])) {
   $stuResId = $selectCourseId;
   $_SESSION['course'] = $stuResId;
 
-  $sql = "SELECT * FROM $_mappingStudentTable WHERE $_mappingFacultyId='$facId' AND $_mappingFacultyId='$academicYear' AND $_mappingFacultySemesterType='$semNo' AND $_mappingFacultyCourseId='$selectCourseId'";
+  $sql = "SELECT * FROM $_mappingStudentTable WHERE $_mappingFacultySemesterYear='$academicYear' AND $_mappingFacultySemesterType='$semNo' AND $_mappingFacultyCourseId='$selectCourseId'";
+  // echo "$sql";
+  // exit;
   $selectCourseStudent = mysqli_query($conn, $sql);
 
   $freezeCourse = "SELECT * FROM $_freezePushPermissionTable WHERE $_freezePushPermissionFacId='$facId' AND $_freezePushPermissionCourseId='$selectCourseId'";
@@ -215,7 +216,7 @@ if (isset($_SESSION['courseOpenBtn'])) {
   $f = $f . "_freeze";
   $isUnFreeze = $freezeCourseRes[$f];
 
-  $stuResWhere = "$_resultPracticalMarks='$academicYear' AND $_resultResultSemType='$semNo' AND $_resultStdCrseId='$selectCourseId'";
+  $stuResWhere = "$_resultResultYear='$academicYear' AND $_resultResultSemType='$semNo' AND $_resultStdCrseId='$selectCourseId'";
 }
 
 function GetCourseTPC($field)
@@ -280,9 +281,9 @@ function GetCourseDetailCellData($field, $id)
 function GetStudentDetailCellData($field, $id)
 {
   global $conn, $_studentTable;
-  global $_studentCode;
+  global $_studentId;
 
-  $sql = "SELECT * FROM $_studentTable WHERE $_studentCode = '$id'";
+  $sql = "SELECT * FROM $_studentTable WHERE $_studentId = '$id'";
 
   $res = mysqli_query($conn, $sql);
   $row = mysqli_fetch_assoc($res);
@@ -292,18 +293,27 @@ function GetStudentDetailCellData($field, $id)
 
 function GetStudentResult($stuId)
 {
-  global $conn, $_resultSemesterTable;
-  global $_resultPracticalMarks, $_resultResultSemType, $_resultStdCrseId, $selectCourseId, $_resultSemesterStdDtlId;
+  global $conn, $_resultTable;
+  global $_resultStdDtlId;
   global $stuResWhere;
 
-  if ($stuResWhere != "")
-    $stuResWhere = $stuResWhere;
+  // if ($stuResWhere != "")
+  //   $stuResWhere = $stuResWhere;
 
-  $condition = $stuResWhere . " AND $_resultSemesterStdDtlId='$stuId'";
+  $condition = $stuResWhere . " AND $_resultStdDtlId='$stuId'";
 
-  $sqlResult = "SELECT * FROM $_resultSemesterTable WHERE $condition";
+  $sqlResult = "SELECT * FROM $_resultTable WHERE $condition";
 
   $resultData = mysqli_query($conn, $sqlResult);
+  // echo "$stuResWhere<br>";
+  // echo "$condition<br>";
+  // echo "$sqlResult<br>";
+
+  // print("<pre>");
+  // print_r($resultData);
+  // echo "";
+  // print("</pre>");
+  // exit;
 
   return $resultData;
 }
@@ -442,19 +452,6 @@ include_once("../header.php");
         <table class="table">
           <thead id="marksHeader">
             <tr>
-              <?php
-              mysqli_data_seek($selectCourseStudent, 0);
-              $selectCourseStudentData = mysqli_fetch_assoc($selectCourseStudent);
-              $proId = GetStudentDetailCellData($_studentProgram, $selectCourseStudentData[$_studentId]);
-
-              $isUG = GetProgramField($_graduationTypeField, $proId) == 1;
-              $courseTPC = GetCourseTPC($_courseTypeField);
-              $isTheory = $courseTPC == 1;
-              $isPractical = $courseTPC == 2;
-              $isBoth = $courseTPC == 3;
-              $creditTotal = GetCourseTPC($_courseCreditMarksField);
-              ?>
-
               <td style="text-align: center;">Enrollment No.</td>
               <td style="text-align: center;">Name</td>
 
@@ -462,59 +459,61 @@ include_once("../header.php");
               <td style="text-align: center;">Remarks</td>
               <td style="text-align: center;"></td>
             </tr>
+            <?php
+            mysqli_data_seek($selectCourseStudent, 0);
+            if (mysqli_num_rows($selectCourseStudent) > 0) {
+              $selectCourseStudentData = mysqli_fetch_assoc($selectCourseStudent);
+
+              $proId = GetStudentDetailCellData($_studentProgram, $selectCourseStudentData[$_mappingStudentId]);
+
+              $isUG = GetProgramField($_graduationTypeField, $proId) == 1;
+              $courseTPC = GetCourseTPC($_courseTypeField);
+              $isTheory = $courseTPC == 1;
+              $isPractical = $courseTPC == 2;
+              $isBoth = $courseTPC == 3;
+              $creditTotal = GetCourseTPC($_courseCreditMarksField);
+            ?>
+
+
+            <?php } else { ?>
+              <!-- <td style="text-align: center;">Students Not Found.</td> -->
+            <?php } ?>
           </thead>
 
           <tbody id="marksBody">
             <?php
             mysqli_data_seek($selectCourseStudent, 0);
-            // mysqli_data_seek($resultQuery, 0);
-            $RESULTDATAARRAY = [];
 
-            while ($selectCourseStudentData = mysqli_fetch_assoc($selectCourseStudent)) :
-              $crs = $selectCourseStudentData[$_mappingFacultyCourseId]; // find course id from mapping table
-              $yr = $selectCourseStudentData[$_mappingFacultyId]; // find year from mapping table
-              $typ = $selectCourseStudentData[$_mappingFacultySemesterType]; // find semester type from mapping table
+            if (mysqli_num_rows($selectCourseStudent) > 0) {
 
-              $resultQuery = GetStudentResult($selectCourseStudentData[$_studentId]); // get student data object from student id which is find from mapping table
+              while ($selectCourseStudentData = mysqli_fetch_assoc($selectCourseStudent)) :
+                $crs = $selectCourseStudentData[$_mappingFacultyCourseId]; // find course id from mapping table
+                $yr = $selectCourseStudentData[$_mappingFacultySemesterYear]; // find year from mapping table
+                $typ = $selectCourseStudentData[$_mappingFacultySemesterType]; // find semester type from mapping table
 
-
-              if ($resultQuery === false) {
-                // Handle error: log it, show user message, or set default
-                error_log("Query failed for student ID: " . $_studentId);
-                $result = null; // or array('error' => 'No data found')
-              } else {
-                $result = mysqli_fetch_assoc($resultQuery);
-              }
-
-              $MAP = $selectCourseStudentData[$_mappingFacultyTblId];
-              $STDDTLID = $selectCourseStudentData[$_studentId];
-              $STDCRSEID = $selectCourseStudentData[$_mappingFacultyCourseId];
-              $RESULTID = $result[$_resultId] ?? 0;
+                $resultQuery = GetStudentResult($selectCourseStudentData[$_mappingStudentId]); // get student data object from student id which is find from mapping table
 
 
-              $ENNO = GetStudentDetailCellData($_studentCode, $STDDTLID);
-              $NAME = GetStudentDetailCellData($_studentName, $STDDTLID);
+                if ($resultQuery === false) {
+                  error_log("Query failed for student ID: " . $_studentId);
+                  $result = null;
+                } else {
+                  $result = mysqli_fetch_assoc($resultQuery);
+                }
 
-              $obj = new ResultData();
-              $obj->mapId = $MAP;
-              $obj->stdDtlId = $STDDTLID;
-              $obj->stdCrseId = $STDCRSEID;
-              $obj->resultId = $RESULTID;
+                $STDDTLID = $selectCourseStudentData[$_mappingStudentId];
+
+                $STDCRSEID = $selectCourseStudentData[$_mappingFacultyCourseId];
+                $RESULTID = $result[$_resultId] ?? -10;
 
 
-              $obj->enNo = $ENNO;
-              $obj->name = $NAME;
+                $ENNO = GetStudentDetailCellData($_studentCode, $STDDTLID);
+                $NAME = GetStudentDetailCellData($_studentName, $STDDTLID);
 
-              $MARKS = $result[$selectFromResultTableField] ?? 0;
-              $REMARKS = $result[$_resultResultRemarks] ?? "";
-
-              $RESULTDATAARRAY[] = $obj;
-              $_SESSION['RESULTDATAARRAY'] = $RESULTDATAARRAY;
+                $MARKS = $result[$selectFromResultTableField] ?? 0;
+                $REMARKS = $result[$_resultResultRemarks] ?? "";
             ?>
-              <tr>
-                <!-- Individual form for each student's Save button -->
-                <form method="POST" class="markEntryForm">
-                  <input type="hidden" class="id" name="id" value="<?= $MAP; ?>">
+                <tr>
                   <input type="hidden" class="stdDtlId" name="stdDtlId" value="<?= $STDDTLID; ?>">
                   <input type="hidden" class="stdCrseId" name="stdCrseId" value="<?= $STDCRSEID; ?>">
                   <input type="hidden" class="resultId" name="resultId" value="<?= $RESULTID; ?>">
@@ -538,16 +537,20 @@ include_once("../header.php");
                       <span class="spinner" style="display: none;">...</span>
                     </button>
                   </td>
-                </form>
-              </tr>
-            <?php endwhile; ?>
-          </tbody>
-        </table>
+                </tr>
       </form>
+      </tr>
+    <?php endwhile; ?>
+  <?php } else { ?>
+    <tr>
+      <td style="text-align: center;" colspan="4">Students Not Found.</td>
+    </tr>
+  <?php } ?>
+  </tbody>
+  </table>
+  </form>
     </div>
   <?php endif; ?>
-
-
 
   <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
@@ -566,24 +569,8 @@ include_once("../header.php");
 
 <script>
   function SaveResult(trElem) {
-    // const data = {
-    //   id: trElem.querySelector('input[name="id"]')?.value || 0,
-    //   stdDtlId: trElem.querySelector('input[name="stdDtlId"]')?.value || 0,
-    //   stdCrseId: trElem.querySelector('input[name="stdCrseId"]')?.value || 0,
-    //   resultId: trElem.querySelector('input[name="resultId"]')?.value || 0,
-
-    //   ca1: trElem.querySelector('input[name="ca1"]')?.value || 0,
-    //   ca2: trElem.querySelector('input[name="ca2"]')?.value || 0,
-    //   ca3: trElem.querySelector('input[name="ca3"]')?.value || 0,
-    //   practical: trElem.querySelector('input[name="practical"]')?.value || 0,
-    //   internal: trElem.querySelector('input[name="internal"]')?.value || 0,
-    //   ttlCredit: trElem.querySelector('input[name="ttlCredit"]')?.value || 0,
-    //   remarks: trElem.querySelector('input[name="remarks"]')?.value || ''
-    // };
-
-
     const data = {
-      id: trElem.querySelector('input[name="id"]')?.value || 0,
+      // id: trElem.querySelector('input[name="id"]')?.value || 0,
       stdDtlId: trElem.querySelector('input[name="stdDtlId"]')?.value || 0,
       stdCrseId: trElem.querySelector('input[name="stdCrseId"]')?.value || 0,
       resultId: trElem.querySelector('input[name="resultId"]')?.value || 0,
@@ -627,9 +614,7 @@ include_once("../header.php");
       })
       .catch(err => {
         $msg = ('Error submitting marks: ' + err.message);
-        // console.log(result.redirect)
         window.location.reload(true); // deprecated, supported only in Firefox
-        // console.log($msg);
       });
   };
 </script>
@@ -646,7 +631,7 @@ include_once("../header.php");
       let rows = document.querySelectorAll('#marksBody tr');
       rows.forEach(function(row, idx) {
         let record = {
-          id: row.querySelector('.id') ? row.querySelector('.id').value : '',
+          // id: row.querySelector('.id') ? row.querySelector('.id').value : '',
           stdDtlId: row.querySelector('.stdDtlId') ? row.querySelector('.stdDtlId').value : '',
           stdCrseId: row.querySelector('.stdCrseId') ? row.querySelector('.stdCrseId').value : '',
           resultId: row.querySelector('.resultId') ? row.querySelector('.resultId').value : '',
@@ -654,15 +639,6 @@ include_once("../header.php");
           semType: row.querySelector('.semType') ? row.querySelector('.semType').value : '',
           marks: row.querySelector('.marks') ? row.querySelector('.marks').value : '',
           remarks: row.querySelector('.remarks') ? row.querySelector('.remarks').value : ''
-
-          // enNo: row.querySelector('.enNo') ? row.querySelector('.enNo').innerText : '',
-          // stdName: row.querySelector('.stdName') ? row.querySelector('.stdName').innerText : '',
-          // ca1: row.querySelector('.ca1') ? row.querySelector('.ca1').value : '',
-          // ca2: row.querySelector('.ca2') ? row.querySelector('.ca2').value : '',
-          // ca3: row.querySelector('.ca3') ? row.querySelector('.ca3').value : '',
-          // practical: row.querySelector('.practical') ? row.querySelector('.practical').value : '',
-          // internal: row.querySelector('.internal') ? row.querySelector('.internal').value : '',
-          // ttlCredit: row.querySelector('.ttlCredit') ? row.querySelector('.ttlCredit').value : '',
         };
 
         data.push(record);
