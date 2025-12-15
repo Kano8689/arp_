@@ -143,12 +143,12 @@ include_once("../header.php");
               $rsltId = $resRow[$_resultId];
               $crCd = GetCourseDetails($_courseCodeField, $resRow[$_resultStdCrseId]);
               $crNm = GetCourseDetails($_courseNameField, $resRow[$_resultStdCrseId]);
-              $crdt = GetResultDetailsRow($_resultTotalCredit, "$_resultId='$rsltId'");
+              $crdt = GetResultDetailsRow($_resultObtainedCredit, "$_resultId='$rsltId'");
 
               $ca1 = GetResultDetailsRow($_resultCa1, "$_resultId='$rsltId'");
               $ca2 = GetResultDetailsRow($_resultCa2, "$_resultId='$rsltId'");
               $ca3 = GetResultDetailsRow($_resultCa3, "$_resultId='$rsltId'");
-              $prctl = GetResultDetailsRow($_resultPracticalMarks, "$_resultId='$rsltId'");
+              $prctl = GetResultDetailsRow($_resultLabMarks, "$_resultId='$rsltId'");
               $intrnl = GetResultDetailsRow($_resultInternalMarks, "$_resultId='$rsltId'");
 
               $ttl = $outoff = 0;

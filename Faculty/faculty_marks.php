@@ -79,7 +79,7 @@ if (isset($_POST[$btnfldbtnfld[3]])) {
 
 if (isset($_POST[$btnfldbtnfld[4]])) {
   $fieldNameForMarksEntry = "Lab";
-  $selectFromResultTableField = $_SESSION["MarksEnteredField"] = $_resultPracticalMarks;
+  $selectFromResultTableField = $_SESSION["MarksEnteredField"] = $_resultLabMarks;
 
   $isLab = $_POST["isLab"];
   $isUG = $_POST["isUG"];
@@ -95,7 +95,7 @@ function SelectStudentOfSelectedCurse()
   global $conn;
   global $_mappingFacultyTable, $_mappingFacultyTblId, $_mappingFacultyId, $_mappingFacultyId, $_mappingFacultySemesterType, $_mappingFacultyCourseId;
   global $_freezePushPermissionTable, $_freezePushPermissionFacId, $_freezePushPermissionCourseId;
-  global $_resultPracticalMarks, $_resultResultSemType, $_resultStdCrseId;
+  global $_resultLabMarks, $_resultResultSemType, $_resultStdCrseId;
   global $_facultyId;
 
   $selectCourseId =  $_POST['hiddenMappingId'];

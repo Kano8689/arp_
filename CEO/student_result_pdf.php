@@ -389,11 +389,11 @@ $n = 1;
                                                       <td class="text-start"><?php echo GetCourseFieldFormId($cid, $_courseNameField); ?></td>
                                                       <td><?php echo getCourseTypeLabel(GetCourseFieldFormId($cid, $_courseTypeField)); ?></td>
                                                       <td><?php echo GetCourseFieldFormId($cid, $_creditMarksField); ?></td>
-                                                      <td><?php echo GetResultFieldFromId($rid, $_resultTotalCredit); ?></td>
+                                                      <td><?php echo GetResultFieldFromId($rid, $_resultObtainedCredit); ?></td>
                                                       <td><?php echo "NA" ?></td>
                                                       <?php
                                                       $creditRegistered += GetCourseFieldFormId($cid, $_creditMarksField);
-                                                      $earnedRegistered += GetResultFieldFromId($rid, $_resultTotalCredit);
+                                                      $earnedRegistered += GetResultFieldFromId($rid, $_resultObtainedCredit);
                                                       $declareDate = date("d/m/Y", strtotime(GetResultFieldFromId($rid, $_resultDeclareDate)));
                                                       $declareDateMmYyyy = date("F Y", strtotime(GetResultFieldFromId($rid, $_resultDeclareDate)));
                                                       ?>

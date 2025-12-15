@@ -53,16 +53,23 @@ function GetCourseDataFromSemYrTyp($stu, $yr, $typ)
 function GetResultData($stu, $crse, $code, $yr, $typ, $crsetyp){
       global $conn;
       global $_resultTable, $_resultStdDtlId, $_resultStdCrseId, $_resultResultYear, $_resultResultSemType;
-      global $_resultCa1, $_resultCa2, $_resultCa3, $_resultPracticalMarks, $_resultInternalMarks;
+      global $_resultCa1, $_resultCa2, $_resultCa3, $_resultLabMarks, $_resultInternalMarks;
+      global $_resultObtainedCredit;
 
       $typ = strtolower($typ);
       $typ = $typ == "fall" ? 1 : ($typ == "summer" ? 2 : 0);
 
-      $sql = "SELECT $_resultCa1, $_resultCa2, $_resultCa3, $_resultPracticalMarks, $_resultInternalMarks FROM $_resultTable WHERE $_resultStdDtlId='$stu' AND $_resultStdCrseId='$crse' AND $_resultResultYear='$yr' AND $_resultResultSemType='$typ'";
+      $sql = "SELECT $_resultObtainedCredit, $_resultCa1, $_resultCa2, $_resultCa3, $_resultLabMarks, $_resultInternalMarks FROM $_resultTable WHERE $_resultStdDtlId='$stu' AND $_resultStdCrseId='$crse' AND $_resultResultYear='$yr' AND $_resultResultSemType='$typ'";
 
-      $MarksData = mysqli_fetch_assoc(mysqli_query($conn, $sql));
+      // echo "$sql";
+      // exit;
 
-      return isAbleToPass($crsetyp, $code, $MarksData[$_resultCa1]??0, $MarksData[$_resultCa2]??0, $MarksData[$_resultCa3]??0, $MarksData[$_resultInternalMarks]??0,  $MarksData[$_resultPracticalMarks]??0);
+      $MarksData = mysqli_query($conn, $sql);
+      $MarksData = mysqli_fetch_assoc($MarksData);
+
+      // return isAbleToPass($crsetyp, $code, $MarksData[$_resultCa1]??0, $MarksData[$_resultCa2]??0, $MarksData[$_resultCa3]??0, $MarksData[$_resultInternalMarks]??0,  $MarksData[$_resultLabMarks]??0);
+
+      return $MarksData[$_resultObtainedCredit];
 }
 
 function isAbleToPass($typ, $code, $ca1, $ca2, $ca3, $internal, $lab){
@@ -151,8 +158,8 @@ include_once("../header.php");
                                                       $totalRegistered += $course[$_courseCreditMarksField];
                                                       $TotalRegistered += $course[$_courseCreditMarksField];
 
-                                                      // $isPass = $course[$_courseCreditMarksField] == $course[$_resultTotalCredit]; // here get only _resultTotalCredit from GetResultData() //remove another code for func..
-                                                      $isPass = GetResultData($stuId, $course[$_courseId], $course[$_courseCodeField], $semYr, $semTyp, $course[$_courseTypeField]);
+                                                      $isPass = $course[$_courseCreditMarksField] == GetResultData($stuId, $course[$_courseId], $course[$_courseCodeField], $semYr, $semTyp, $course[$_courseTypeField]); // here get only _resultObtainedCredit from GetResultData() //remove another code for func..
+                                                      // $isPass = GetResultData($stuId, $course[$_courseId], $course[$_courseCodeField], $semYr, $semTyp, $course[$_courseTypeField]);
 
 
                                                       if($isPass){

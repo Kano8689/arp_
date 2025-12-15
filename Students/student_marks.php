@@ -170,7 +170,7 @@ include_once("../header.php");
               $ca1 = GetResultDetailsRow($_resultCa1, "$_resultId='$rsltId'");
               $ca2 = GetResultDetailsRow($_resultCa2, "$_resultId='$rsltId'");
               $ca3 = GetResultDetailsRow($_resultCa3, "$_resultId='$rsltId'");
-              $prctl = GetResultDetailsRow($_resultPracticalMarks, "$_resultId='$rsltId'");
+              $prctl = GetResultDetailsRow($_resultLabMarks, "$_resultId='$rsltId'");
               $intrnl = GetResultDetailsRow($_resultInternalMarks, "$_resultId='$rsltId'");
 
               // $ttl = $ca1 + $ca2 + $ca3 + $prctl + $intrnl;

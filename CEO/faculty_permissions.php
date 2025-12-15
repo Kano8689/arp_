@@ -260,6 +260,126 @@ if (isset($_POST["unpush_all"])) {
 
   exit;
 }
+//calculate_grade_all course of all faculty for all exam
+if (isset($_POST["calculate_grade_all"])) {
+  $value = 0;
+  $sql = "SELECT rt.$_resultId, rt.$_resultCa1, rt.$_resultCa2, rt.$_resultCa3, rt.$_resultLabMarks, rt.$_resultInternalMarks, 
+                 ct.$_courseCodeField, ct.$_courseTypeField, ct.$_courseCreditMarksField
+          FROM $_resultTable rt
+          LEFT JOIN $_coursesTable ct ON rt.$_resultStdCrseId = ct.$_courseId";
+  $GradeCalculateAll = mysqli_query($conn, $sql);
+
+  while ($calculate = mysqli_fetch_assoc($GradeCalculateAll)) {
+    $typ = strtolower($calculate[$_courseTypeField]);
+
+    $returnAry = isAbleToPass($typ, $calculate[$_courseCodeField], $calculate[$_resultCa1], $calculate[$_resultCa2], $calculate[$_resultCa3], $calculate[$_resultInternalMarks], $calculate[$_resultLabMarks]);
+
+    $grade = $returnAry[1];
+    $credit = $returnAry[0] ? $calculate[$_courseCreditMarksField] : 0;
+    $id = $calculate[$_resultId];
+
+    $sql = "UPDATE $_resultTable SET $_resultObtainedCredit='$credit', $_resultObtainedGrade='$grade' WHERE $_resultId='$id'";
+    $res = mysqli_query($conn, $sql);
+    // echo "$sql = $res<br>";
+  }
+
+  header("Location: faculty_permissions.php");
+  exit;
+}
+//calculate_grade course of all faculty for all exam
+if (isset($_POST["calculate_grade"])) {
+  $fppId = $_POST['ent_id'];
+  $value = 0;
+
+  $sql = "SELECT * FROM $_freezePushPermissionTable WHERE $_freezePushPermissionId='$fppId'";
+  $data = mysqli_query($conn, $sql);
+  $data = mysqli_fetch_assoc($data);
+  // print("<pre>");
+  // print_r($data);
+  // echo "";
+  // exit;
+
+  $course = $data[$_freezePushPermissionCourseId];
+  $semYr = $data[$_freezePushPermissionAcademicYear];
+  $semTyp = $data[$_freezePushPermissionAcademicSem];
+
+
+
+
+  $sql = "SELECT rt.$_resultId, rt.$_resultCa1, rt.$_resultCa2, rt.$_resultCa3, rt.$_resultLabMarks, rt.$_resultInternalMarks, 
+                 ct.$_courseCodeField, ct.$_courseTypeField, ct.$_courseCreditMarksField
+          FROM $_resultTable rt
+          LEFT JOIN $_coursesTable ct ON rt.$_resultStdCrseId = ct.$_courseId
+          WHERE $_resultStdCrseId='$course' AND $_resultResultYear='$semYr' AND $_resultResultSemType='$semTyp'";
+  $GradeCalculateAll = mysqli_query($conn, $sql);
+  // print("<pre>");
+  // print_r($GradeCalculateAll);
+  // echo "$sql";
+  // exit;
+
+  if (mysqli_num_rows($GradeCalculateAll) > 0) {
+    while ($calculate = mysqli_fetch_assoc($GradeCalculateAll)) {
+      $typ = strtolower($calculate[$_courseTypeField]);
+
+      $returnAry = isAbleToPass($typ, $calculate[$_courseCodeField], $calculate[$_resultCa1], $calculate[$_resultCa2], $calculate[$_resultCa3], $calculate[$_resultInternalMarks], $calculate[$_resultLabMarks]);
+
+      $grade = $returnAry[1];
+      $credit = $returnAry[0] ? $calculate[$_courseCreditMarksField] : 0;
+      $id = $calculate[$_resultId];
+
+      $sql = "UPDATE $_resultTable SET $_resultObtainedCredit='$credit', $_resultObtainedGrade='$grade' WHERE $_resultId='$id'";
+      $res = mysqli_query($conn, $sql);
+      // echo "$sql = $res<br>";
+    }
+  }
+
+  header("Location: faculty_permissions.php");
+  exit;
+}
+
+function isAbleToPass($typ, $code, $ca1, $ca2, $ca3, $internal, $lab)
+{
+  $isUG = (int)$code[3] <= 4 ? 1 : 0;
+  //  echo " Code = $code || isUG = $isUG || typ = $typ || ca1 = $ca1 || ca2 = $ca2 || ca3 = $ca3 || Internal = $internal || lab = $lab<br>";
+  if ($typ == 1) //T
+  {
+    $ttl = $ca1 + $ca2;
+    if ($isUG) {
+      $ttl += $ca3;
+    }
+    // return [$ttl > 40 && $internal > 10, CalculateGrade($ttl+$internal)];
+    return [$ttl > 40 && $internal > 10, CalculateGrade(ConvertMarks($ca1, 50, 30) +
+      ConvertMarks($ca2, 50, 30) +
+      ConvertMarks($ca3, 50, 30) + 10)];
+  } else if ($typ == 2) // P
+  {
+    return [$lab > 50, CalculateGrade($lab)];
+  } else if ($typ == 3) //TEl
+  {
+    $ttl = $ca1 + $ca2;
+    if ($isUG) {
+      $ttl += $ca3;
+    }
+    // return [$ttl > 40 && $internal > 5 && $lab > 15, CalculateGrade($ttl+$internal+$lab)];
+    return [$ttl > 40 && $internal > 5 && $lab > 15, CalculateGrade(ConvertMarks($ca1, 50, 30) +
+      ConvertMarks($ca2, 50, 30) +
+      ConvertMarks($ca3, 50, 30) +
+      $internal + $lab)];
+  }
+}
+function CalculateGrade($ttl)
+{
+  // echo "<br>ttl = $ttl<br>";
+  return $ttl >= 90 ? "A1" : ($ttl >= 80 ? "A2" : ($ttl >= 70 ? "B1" : ($ttl >= 60 ? "B2" : ($ttl >= 50 ? "C" : ($ttl >= 35 ? "D" : "F")))));
+}
+function ConvertMarks($obtained, $outoff, $convertinto)
+{
+  try {
+    return (($convertinto * $obtained) / $outoff);
+  } catch (Exception $e) {
+    return 0;
+  }
+}
 
 
 // ✅ get page & limit
@@ -618,6 +738,7 @@ if (isset($_POST["push"])) {
 
     <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
       <form action="" method="post" style="display: flex; gap: 10px; margin: 0; padding: 0;">
+        <button class="btn" type="submit" name="calculate_grade_all">Calculate Grade</button>
         <button class="btn" type="submit" name="freeze_all">Freeze All</button>
         <button class="btn" type="submit" name="unfreeze_all">Unfreeze All</button>
         <button class="btn" type="submit" name="push_all">Push All</button>
@@ -647,6 +768,7 @@ if (isset($_POST["push"])) {
             <th style="text-align: center; color: white;">Lab</th>
             <th style="text-align: center; color: white;">Freeze/Unfreeze</th>
             <th style="text-align: center; color: white;">Push/Unpush</th>
+            <th style="text-align: center; color: white;">Grade Calculate</th>
           </tr>
         </thead>
 
@@ -665,14 +787,12 @@ if (isset($_POST["push"])) {
               </td>
               <td style="text-align: center;"><?php echo GetCourseDetails($_courseNameField, $row[$_mappingFacultyCourseId]); ?>
               </td>
-              <!-- <td style="text-align: center;"> -->
+
               <?php
               $select_permission_sql = "SELECT * FROM $_freezePushPermissionTable WHERE $_freezePushPermissionFacId = '$row[$_mappingFacultyId]' AND $_freezePushPermissionCourseId = '$row[$_mappingFacultyCourseId]'";
               $select_permission = mysqli_query($conn, $select_permission_sql);
               $permissionExists = mysqli_num_rows($select_permission) > 0;
 
-              // echo "<br>$select_permission_sql = permissionExists: $permissionExists | ";
-              // echo "<br>$select_permission_sql = permissionExists: $permissionExists | ";
               if ($permissionExists) {
                 $permRow = mysqli_fetch_assoc($select_permission);
                 mysqli_data_seek($select_permission, 0);
@@ -692,8 +812,6 @@ if (isset($_POST["push"])) {
                     $isInternal = ($ctype == 1 || $ctype == 3);
                     $isLab = ($ctype == 2 || $ctype == 3);
 
-                    // echo "$ccode<br>";
-                    // echo "$isUG || $isCa1 || $isCa2 || $isCa3 || $isInternal || $isLab<br>";
                     for ($i = 0; $i < count($freezeEntityArray); $i++) {
                       $isFreeze = $permRow[$freezeEntityArray[$i]];
                       $isPush = $permRow[$pushEntityArray[$i]];
@@ -719,6 +837,9 @@ if (isset($_POST["push"])) {
                   <td style="text-align: center;">
                     <button class="btn btn-light" type="submit" name="Push" style="width: 100px; height: 38px;">Push</button>
                     <button class="btn btn-light" type="submit" name="Unpush" style="width: 100px; height: 38px;">Unpush</button>
+                  </td>
+                  <td style="text-align: center;">
+                    <button class="btn btn-secondary" type="submit" name="calculate_grade" style="width: 130px; height: 38px;">Calculate Grade</button>
                   </td>
 
                 </form>
