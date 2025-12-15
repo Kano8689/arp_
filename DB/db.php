@@ -141,6 +141,16 @@ class ResultSemester {
     public $_updated_at = "updated_at";
 }
 
+class SemesterValue {
+    public $_tableName = "semester_value";
+    public $__id = "_id";
+    public $_student_id = "student_id";
+    public $_semester_no = "semester_no";
+    public $_semester_year_type = "semester_year_type";
+    public $_created_at = "created_at";
+    public $_updated_at = "updated_at";
+}
+
 class SlotTable {
     public $_tableName = "slot_table";
     public $__id = "_id";
@@ -175,6 +185,7 @@ $_mappingFacultyTableObject = new MappingFacultyTable();
 $_mappingStudentTableObject = new MappingStudentTable();
 $_programTableObject = new ProgramTable();
 $_resultSemesterObject = new ResultSemester();
+$_semesterValueObject = new SemesterValue();
 $_slotTableObject = new SlotTable();
 $_studentsDetailsObject = new StudentsDetails();
 
@@ -187,6 +198,7 @@ $_session_login_id = "loginName";
 $_main_directory = "arp_";
 $defaultLoginExtension = "@amity.blr.edu";
 
+$_sem_count = "SEM_COUNT";
 
 
 
@@ -326,6 +338,17 @@ $defaultLoginExtension = "@amity.blr.edu";
     $_resultResultDeclareData = $_resultSemesterObject->_declare_date;
     $_resultResultCreatedAt = $_resultSemesterObject->_created_at;
     $_resultResultUpdatedAt = $_resultSemesterObject->_updated_at;
+}
+
+// Slot Table Variables Definations
+{
+    $_semesterValueTable = $_semesterValueObject->_tableName;
+    $_semesterValueId = $_semesterValueObject->__id;
+    $_semesterValueStudentId = $_semesterValueObject->_student_id;
+    $_semesterValueSemNo = $_semesterValueObject->_semester_no;
+    $_semesterValueSemYrTyp = $_semesterValueObject->_semester_year_type;
+    $_slotCreatedAt = $_semesterValueObject->_created_at;
+    $_slotUpdatedAt = $_semesterValueObject->_updated_at;
 }
 
 // Slot Table Variables Definations

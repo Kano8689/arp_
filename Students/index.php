@@ -93,6 +93,7 @@ include_once("../header.php");
 <div class="sem-grid" id="semGrid">
 <?php 
 $semCount = GetProgramDetailCellData($_programSemField, GetStudentDetailCellData($_studentProgram));
+$_SESSION[$_sem_count] = $semCount;
 for ($i=1; $i <= $semCount; $i++) { ?>
   <form method="post" class="sem-card-form">
     <button type="submit" class="sem-card-btn" disabled>

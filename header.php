@@ -85,9 +85,8 @@ $currentPage = basename($_SERVER['PHP_SELF']); // gets current file name
         <?php if ($loginType == 4) { ?>
             <a href="student_marks.php" class="<?= $currentPage == 'student_marks.php' ? 'active' : '' ?>">Marks</a>
             <a href="student_result.php" class="<?= $currentPage == 'student_result.php' ? 'active' : '' ?>">Result</a>
-            <!-- <a href="semester_report.php" class="<?= $currentPage == 'semester_report.php' ? 'active' : '' ?>">Semester Report</a> -->
-            <a href="change_password.php" class="<?= $currentPage == 'change_password.php' ? 'active' : '' ?>">Change
-                Password</a>
+            <a href="change_password.php" class="<?= $currentPage == 'change_password.php' ? 'active' : '' ?>">Change Password</a>
+            <a href="credit_report.php" class="<?= $currentPage == 'credit_report.php' ? 'active' : '' ?>">Credit Report</a>
         <?php } ?>
 
 
