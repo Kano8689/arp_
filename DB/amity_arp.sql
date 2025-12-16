@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 11, 2025 at 09:37 AM
+-- Generation Time: Dec 16, 2025 at 07:02 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -76,7 +76,7 @@ INSERT INTO `courses_table` (`_id`, `course_owner_id`, `course_code`, `course_na
 (29, 4, 'CSE5008', 'Data Communications and Networks', 3, 2, 2, 3, '2025-10-29 18:54:10', '2025-12-02 10:52:09'),
 (30, 4, 'CSE5050', 'Artificial Intelligence and Machine Learning', 3, 2, 2, 3, '2025-10-29 18:54:10', '2025-12-02 10:53:07'),
 (31, 4, 'CSE5009', 'Web Design and Development', 3, 2, 2, 3, '2025-10-29 18:54:10', '2025-12-02 10:53:07'),
-(32, 4, 'CSE5006', 'Relational Database', 3, 2, 2, 3, '2025-10-29 18:54:10', '2025-12-02 10:53:07'),
+(32, 4, 'CSE5006', 'Relational Database', 3, 2, 3, 3, '2025-10-29 18:54:10', '2025-12-15 17:02:06'),
 (33, 4, 'CSE6007', 'MCA Project - 1', 0, 0, 0, 2, '2025-10-29 18:54:10', NULL),
 (34, 4, 'CSE5053', 'Cloud Infrastructure, Services and APIs', 3, 2, 2, 3, '2025-10-29 18:54:10', '2025-12-02 10:53:07'),
 (36, 4, 'CSE5028', 'Network System Administration and Security', 3, 2, 2, 3, '2025-10-29 18:54:10', '2025-12-02 10:53:07'),
@@ -90,7 +90,7 @@ INSERT INTO `courses_table` (`_id`, `course_owner_id`, `course_code`, `course_na
 (44, 4, 'CSE5066', 'Research Methodologies', 1, 3, 0, 3, '2025-10-29 18:54:10', NULL),
 (45, 4, 'CSE5080', 'Quantitative Text Analysis', 3, 2, 2, 3, '2025-10-29 18:54:10', '2025-12-02 10:53:07'),
 (46, 4, 'MAT5007', 'Mathematics for Data Science', 3, 2, 2, 3, '2025-10-29 18:54:10', '2025-12-09 11:54:11'),
-(47, 4, 'MAT5006', 'Time Series Analysis', 3, 2, 2, 3, '2025-10-29 18:54:10', '2025-12-02 10:53:07'),
+(47, 4, 'MAT5006', 'Time Series Analysis', 3, 2, 2, 3, '2025-10-29 18:54:10', '2025-12-15 13:25:36'),
 (96, 4, 'CSE5041', 'Penetration Testing, Incident Response and Forensics', 3, 2, 2, 3, '2025-12-02 10:57:07', '2025-12-09 11:48:12');
 
 -- --------------------------------------------------------
@@ -200,10 +200,10 @@ CREATE TABLE `freeze_push_permission` (
 --
 
 INSERT INTO `freeze_push_permission` (`id`, `fac_id`, `course_id`, `ca1_freeze`, `ca1_push`, `ca2_freeze`, `ca2_push`, `ca3_freeze`, `ca3_push`, `internal_freeze`, `internal_push`, `lab_freeze`, `lab_push`, `academic_year`, `academic_sem`, `created_at`, `updated_at`) VALUES
-(9, 1, 32, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, '2025', 1, '2025-12-10 09:47:31', '2025-12-11 08:22:15'),
-(10, 4, 47, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, '2025', 1, '2025-12-10 09:48:11', '2025-12-11 08:22:15'),
-(11, 3, 46, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, '2025', 1, '2025-12-10 09:55:41', '2025-12-11 08:22:15'),
-(12, 4, 2, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, '2025', 1, '2025-12-10 09:56:51', '2025-12-11 08:22:15');
+(9, 1, 32, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2025', 1, '2025-12-10 09:47:31', '2025-12-13 10:01:21'),
+(10, 4, 47, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2025', 1, '2025-12-10 09:48:11', '2025-12-13 10:01:21'),
+(11, 3, 46, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2025', 1, '2025-12-10 09:55:41', '2025-12-16 17:41:29'),
+(12, 4, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2025', 1, '2025-12-10 09:56:51', '2025-12-13 10:01:21');
 
 -- --------------------------------------------------------
 
@@ -227,10 +227,10 @@ CREATE TABLE `login_table` (
 INSERT INTO `login_table` (`_id`, `user_name`, `user_password`, `user_type`, `created_at`, `updated_at`) VALUES
 (33, 'admin@amity.blr.edu', 'kT7xg0YRq0OQUjdr+14lYS6nGgeLLwo4mIKtSIpJ0S8=', 1, '2025-10-06 08:41:59', '2025-10-07 18:53:15'),
 (40, 'ceo@amity.blr.edu', 'LpdhZzbvY8iTjQ7bQaUovDM9JRyMvf+jieWHRN88C+0=', 2, '2025-10-06 08:41:59', '2025-12-11 08:10:49'),
-(288, '654453@amity.blr.edu', 'thmY6r5z8dEyThLqrZCSwCKXfcHv17UPLxb3/G3WSJ4=', 3, '2025-10-06 08:41:59', '2025-12-11 08:12:21'),
+(288, '654453@amity.blr.edu', 'exL8KwpDf/vFHGHB8/5moI3HRqFLBFDe3PtU3MiHzXw=', 3, '2025-10-06 08:41:59', '2025-12-13 08:58:34'),
 (289, '345345@amity.blr.edu', '6wKP8q3MjvMZMI2UszhDaVUc4zVFxieRMKBnCrK1Zjs=', 3, '2025-10-06 08:41:59', '2025-12-09 16:50:50'),
-(290, '336541@amity.blr.edu', '6wKP8q3MjvMZMI2UszhDaVUc4zVFxieRMKBnCrK1Zjs=', 3, '2025-10-06 08:41:59', '2025-12-09 16:50:50'),
-(291, 'A869117725001@amity.blr.edu', '6wKP8q3MjvMZMI2UszhDaVUc4zVFxieRMKBnCrK1Zjs=', 4, '2025-10-06 08:41:59', '2025-12-09 16:50:50'),
+(290, '336541@amity.blr.edu', 'O89kRjvGGIG846c6Gjm2vephbWNsxtXUWkkpUGl+OGk=', 3, '2025-10-06 08:41:59', '2025-12-13 08:10:55'),
+(291, 'A869117725001@amity.blr.edu', 'kWALLcwdOohQnBIgdi+tDNplaRnYBbQPZaG/y4qq5gs=', 4, '2025-10-06 08:41:59', '2025-12-13 09:18:12'),
 (292, 'A869117725002@amity.blr.edu', '6wKP8q3MjvMZMI2UszhDaVUc4zVFxieRMKBnCrK1Zjs=', 4, '2025-10-06 08:41:59', '2025-12-09 16:50:50'),
 (293, 'A869117725003@amity.blr.edu', '6wKP8q3MjvMZMI2UszhDaVUc4zVFxieRMKBnCrK1Zjs=', 4, '2025-10-06 08:41:59', '2025-12-09 16:50:50');
 
@@ -286,7 +286,9 @@ CREATE TABLE `mapping_student` (
 INSERT INTO `mapping_student` (`_id`, `student_id`, `course_id`, `slot_id`, `registration_type`, `semester_year`, `semester_type`, `created_at`, `updated_at`) VALUES
 (1, 205, 32, 13, 'Fresh', '2025', 1, '2025-12-09 17:40:31', '2025-12-11 08:05:40'),
 (3, 207, 47, 13, 'Fresh', '2025', 1, '2025-12-10 10:01:09', '2025-12-11 08:05:42'),
-(4, 207, 17, 5, 'Backlog', '2025', 1, '2025-12-11 08:07:25', NULL);
+(4, 207, 17, 5, 'Backlog', '2025', 1, '2025-12-11 08:07:25', NULL),
+(5, 206, 47, 13, 'Fresh', '2025', 1, '2025-12-10 10:01:09', '2025-12-11 08:05:42'),
+(6, 205, 47, 13, 'Fresh', '2025', 1, '2025-12-10 10:01:09', '2025-12-15 13:58:14');
 
 -- --------------------------------------------------------
 
@@ -312,7 +314,7 @@ INSERT INTO `program_table` (`_id`, `program_name`, `program_semester`, `graduat
 (1, 'BCA', 6, 1, 1, '2025-10-29 19:22:56', NULL),
 (2, 'MCA', 4, 2, 1, '2025-10-29 19:32:21', NULL),
 (3, 'MSC (Cyber Security)', 4, 2, 1, '2025-10-29 19:32:32', '2025-10-29 19:32:58'),
-(4, 'MSC (Data Science)', 4, 2, 1, '2025-10-29 19:32:47', '2025-12-09 15:47:32');
+(4, 'MSC (Data Science)', 4, 2, 1, '2025-10-29 19:32:47', '2025-12-16 17:34:02');
 
 -- --------------------------------------------------------
 
@@ -327,9 +329,10 @@ CREATE TABLE `result_semester` (
   `ca_1` double DEFAULT 0,
   `ca_2` double DEFAULT 0,
   `ca_3` double DEFAULT 0,
-  `practical_marks` double DEFAULT 0,
+  `lab_marks` double DEFAULT 0,
   `internal_marks` double DEFAULT 0,
-  `total_credit` int(11) NOT NULL DEFAULT 0,
+  `obtained_credit` int(11) NOT NULL DEFAULT 0,
+  `obtained_grade` varchar(5) NOT NULL,
   `result_year` year(4) NOT NULL DEFAULT current_timestamp(),
   `result_sem_type` int(11) DEFAULT 0,
   `remarks` text NOT NULL,
@@ -342,10 +345,36 @@ CREATE TABLE `result_semester` (
 -- Dumping data for table `result_semester`
 --
 
-INSERT INTO `result_semester` (`_id`, `std_dtl_id`, `student_course_id`, `ca_1`, `ca_2`, `ca_3`, `practical_marks`, `internal_marks`, `total_credit`, `result_year`, `result_sem_type`, `remarks`, `declare_date`, `created_at`, `updated_at`) VALUES
-(89, 205, 32, 50, 0, 0, 22, 0, 0, '2025', 1, '', '2025-12-04', '2025-12-04 16:34:43', '2025-12-08 10:13:34'),
-(90, 206, 32, 30, 0, 0, 10, 0, 0, '2025', 1, '', '2025-12-04', '2025-12-04 16:34:43', '2025-12-08 10:13:34'),
-(92, 207, 32, 22, 0, 0, 10, 0, 0, '2025', 1, '', '2025-12-04', '2025-12-04 16:49:23', '2025-12-08 10:13:34');
+INSERT INTO `result_semester` (`_id`, `std_dtl_id`, `student_course_id`, `ca_1`, `ca_2`, `ca_3`, `lab_marks`, `internal_marks`, `obtained_credit`, `obtained_grade`, `result_year`, `result_sem_type`, `remarks`, `declare_date`, `created_at`, `updated_at`) VALUES
+(94, 205, 32, 50, 0, 0, 29, 9, 3, 'B2', '2025', 1, '', '2025-12-13', '2025-12-13 08:45:08', '2025-12-16 17:01:40'),
+(97, 207, 47, 20, 20, 0, 0, 0, 0, 'F', '2025', 1, '', '2025-12-13', '2025-12-13 09:01:13', '2025-12-16 17:01:40'),
+(98, 206, 47, 10, 0, 0, 0, 0, 0, 'F', '2025', 1, '', '2025-12-13', '2025-12-13 09:01:13', '2025-12-16 17:01:40'),
+(99, 205, 47, 10, 17, 0, 28, 8, 0, 'F', '2025', 1, '', '2025-12-13', '2025-12-13 09:01:13', '2025-12-16 17:01:40');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `semester_value`
+--
+
+CREATE TABLE `semester_value` (
+  `_id` int(11) NOT NULL,
+  `student_id` int(11) NOT NULL,
+  `semester_no` int(11) NOT NULL,
+  `semester_year_type` varchar(30) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `semester_value`
+--
+
+INSERT INTO `semester_value` (`_id`, `student_id`, `semester_no`, `semester_year_type`, `created_at`, `updated_at`) VALUES
+(1, 205, 1, '2025-FALL', '2025-12-15 11:59:05', NULL),
+(2, 205, 2, '2025-SUMMER', '2025-12-15 11:59:38', NULL),
+(3, 205, 3, '2026-FALL', '2025-12-15 11:59:38', '2025-12-15 12:16:41'),
+(4, 205, 4, '2026-SUMMER', '2025-12-15 11:59:53', '2025-12-15 12:16:43');
 
 -- --------------------------------------------------------
 
@@ -480,15 +509,18 @@ ALTER TABLE `login_table`
 --
 ALTER TABLE `mapping_faculty`
   ADD PRIMARY KEY (`_id`),
-  ADD KEY `mapping_faculty_table_faculty_id_relation_ship` (`faculty_id`),
   ADD KEY `mapping_course_table_faculty_id_relation_ship` (`course_id`),
+  ADD KEY `mapping_faculty_table_faculty_id_relation_ship` (`faculty_id`),
   ADD KEY `mapping_faculty_table_slot_id_relation_ship` (`slot_id`);
 
 --
 -- Indexes for table `mapping_student`
 --
 ALTER TABLE `mapping_student`
-  ADD PRIMARY KEY (`_id`);
+  ADD PRIMARY KEY (`_id`),
+  ADD KEY `mapping_course_table_syudent_id_relation_ship` (`course_id`),
+  ADD KEY `mapping_faculty_table_student_id_relation_ship` (`student_id`),
+  ADD KEY `mapping_student_table_slot_id_relation_ship` (`slot_id`);
 
 --
 -- Indexes for table `program_table`
@@ -504,6 +536,13 @@ ALTER TABLE `result_semester`
   ADD PRIMARY KEY (`_id`),
   ADD KEY `student_courses_final_result_id_relation` (`student_course_id`),
   ADD KEY `student_details_final_result_id_relation` (`std_dtl_id`);
+
+--
+-- Indexes for table `semester_value`
+--
+ALTER TABLE `semester_value`
+  ADD PRIMARY KEY (`_id`),
+  ADD KEY `student_details_student_id_relation` (`student_id`);
 
 --
 -- Indexes for table `slot_table`
@@ -568,7 +607,7 @@ ALTER TABLE `mapping_faculty`
 -- AUTO_INCREMENT for table `mapping_student`
 --
 ALTER TABLE `mapping_student`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `program_table`
@@ -580,7 +619,13 @@ ALTER TABLE `program_table`
 -- AUTO_INCREMENT for table `result_semester`
 --
 ALTER TABLE `result_semester`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+
+--
+-- AUTO_INCREMENT for table `semester_value`
+--
+ALTER TABLE `semester_value`
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `slot_table`
@@ -615,9 +660,17 @@ ALTER TABLE `freeze_push_permission`
 -- Constraints for table `mapping_faculty`
 --
 ALTER TABLE `mapping_faculty`
-  ADD CONSTRAINT `mapping_course_table_faculty_id_relation_ship` FOREIGN KEY (`course_id`) REFERENCES `courses_table` (`_id`),
-  ADD CONSTRAINT `mapping_faculty_table_faculty_id_relation_ship` FOREIGN KEY (`faculty_id`) REFERENCES `faculties_details` (`_id`),
-  ADD CONSTRAINT `mapping_faculty_table_slot_id_relation_ship` FOREIGN KEY (`slot_id`) REFERENCES `slot_table` (`_id`);
+  ADD CONSTRAINT `mapping_course_table_faculty_id_relation_ship` FOREIGN KEY (`course_id`) REFERENCES `courses_table` (`_id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `mapping_faculty_table_faculty_id_relation_ship` FOREIGN KEY (`faculty_id`) REFERENCES `faculties_details` (`_id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `mapping_faculty_table_slot_id_relation_ship` FOREIGN KEY (`slot_id`) REFERENCES `slot_table` (`_id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `mapping_student`
+--
+ALTER TABLE `mapping_student`
+  ADD CONSTRAINT `mapping_course_table_syudent_id_relation_ship` FOREIGN KEY (`course_id`) REFERENCES `courses_table` (`_id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `mapping_faculty_table_student_id_relation_ship` FOREIGN KEY (`student_id`) REFERENCES `students_details` (`_id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `mapping_student_table_slot_id_relation_ship` FOREIGN KEY (`slot_id`) REFERENCES `slot_table` (`_id`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `program_table`
@@ -631,6 +684,12 @@ ALTER TABLE `program_table`
 ALTER TABLE `result_semester`
   ADD CONSTRAINT `student_course_id_final_result_id_relation` FOREIGN KEY (`student_course_id`) REFERENCES `courses_table` (`_id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `student_details_id_final_result_id_relation` FOREIGN KEY (`std_dtl_id`) REFERENCES `students_details` (`_id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `semester_value`
+--
+ALTER TABLE `semester_value`
+  ADD CONSTRAINT `student_details_student_id_relation` FOREIGN KEY (`student_id`) REFERENCES `students_details` (`_id`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `students_details`

@@ -3,6 +3,7 @@
 use Dom\Mysql;
 use PhpOffice\PhpSpreadsheet\Calculation\TextData\Replace;
 
+
 include_once("../DB/db.php");
 if (!isset($_SESSION[$_session_login_type]) || $_SESSION[$_session_login_type] != 4) {
       header("Location: ../");
@@ -119,6 +120,18 @@ include_once("../header.php");
                   <span class="crumb-link crumb-disabled">Credit Report</span>
             </div>
       </div>
+
+      <!-- After the breadcrumb section, add: -->
+      <div style="margin-bottom: 20px; margin-top: 20px;">
+            <form action="credit_report_download.php" method="GET" style="display: inline;">
+                  <input type="hidden" name="action" value="download">
+                  <button type="submit" class="btn btn-success" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                        📥 Download as Excel (.xlsx)
+                  </button>
+            </form>
+      </div>
+
+
 
 
       <?php
