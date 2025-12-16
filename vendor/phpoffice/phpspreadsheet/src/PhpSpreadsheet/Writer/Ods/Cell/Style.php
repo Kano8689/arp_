@@ -20,6 +20,7 @@ class Style
     public const COLUMN_STYLE_PREFIX = 'co';
     public const ROW_STYLE_PREFIX = 'ro';
     public const TABLE_STYLE_PREFIX = 'ta';
+    public const INDENT_TO_INCHES = 0.1043; // undocumented, used trial and error
 
     private XMLWriter $writer;
 
@@ -28,12 +29,13 @@ class Style
         $this->writer = $writer;
     }
 
-    private function mapHorizontalAlignment(string $horizontalAlignment): string
+    private function mapHorizontalAlignment(?string $horizontalAlignment): string
     {
         return match ($horizontalAlignment) {
             Alignment::HORIZONTAL_CENTER, Alignment::HORIZONTAL_CENTER_CONTINUOUS, Alignment::HORIZONTAL_DISTRIBUTED => 'center',
             Alignment::HORIZONTAL_RIGHT => 'end',
             Alignment::HORIZONTAL_FILL, Alignment::HORIZONTAL_JUSTIFY => 'justify',
+            Alignment::HORIZONTAL_GENERAL, '', null => '',
             default => 'start',
         };
     }
@@ -145,8 +147,11 @@ class Style
     {
         // Align
         $hAlign = $style->getAlignment()->getHorizontal();
+        $hAlign = $this->mapHorizontalAlignment($hAlign);
         $vAlign = $style->getAlignment()->getVertical();
         $wrap = $style->getAlignment()->getWrapText();
+        $indent = $style->getAlignment()->getIndent();
+        $readOrder = $style->getAlignment()->getReadOrder();
 
         $this->writer->startElement('style:table-cell-properties');
         if (!empty($vAlign) || $wrap) {
@@ -168,10 +173,21 @@ class Style
 
         $this->writer->endElement();
 
-        if (!empty($hAlign)) {
-            $hAlign = $this->mapHorizontalAlignment($hAlign);
-            $this->writer->startElement('style:paragraph-properties');
-            $this->writer->writeAttribute('fo:text-align', $hAlign);
+        if ($hAlign !== '' || !empty($indent) || $readOrder === Alignment::READORDER_RTL || $readOrder === Alignment::READORDER_LTR) {
+            $this->writer
+                ->startElement('style:paragraph-properties');
+            if ($hAlign !== '') {
+                $this->writer->writeAttribute('fo:text-align', $hAlign);
+            }
+            if (!empty($indent)) {
+                $indentString = sprintf('%.4f', $indent * self::INDENT_TO_INCHES) . 'in';
+                $this->writer->writeAttribute('fo:margin-left', $indentString);
+            }
+            if ($readOrder === Alignment::READORDER_RTL) {
+                $this->writer->writeAttribute('style:writing-mode', 'rl-tb');
+            } elseif ($readOrder === Alignment::READORDER_LTR) {
+                $this->writer->writeAttribute('style:writing-mode', 'lr-tb');
+            }
             $this->writer->endElement();
         }
     }
@@ -194,15 +210,26 @@ class Style
 
         if ($font->getBold()) {
             $this->writer->writeAttribute('fo:font-weight', 'bold');
-            $this->writer->writeAttribute('style:font-weight-complex', 'bold');
-            $this->writer->writeAttribute('style:font-weight-asian', 'bold');
+            $this->writer->writeAttribute(
+                'style:font-weight-complex',
+                'bold'
+            );
+            $this->writer->writeAttribute(
+                'style:font-weight-asian',
+                'bold'
+            );
         }
 
         if ($font->getItalic()) {
             $this->writer->writeAttribute('fo:font-style', 'italic');
         }
 
-        $this->writer->writeAttribute('fo:color', sprintf('#%s', $font->getColor()->getRGB()));
+        if ($font->getAutoColor()) {
+            $this->writer
+                ->writeAttribute('style:use-window-font-color', 'true');
+        } else {
+            $this->writer->writeAttribute('fo:color', sprintf('#%s', $font->getColor()->getRGB()));
+        }
 
         if ($family = $font->getName()) {
             $this->writer->writeAttribute('fo:font-family', $family);
@@ -281,6 +308,21 @@ class Style
         $this->writer->endElement(); // Close style:style
     }
 
+    public function writeDefaultRowStyle(RowDimension $rowDimension, int $sheetId): void
+    {
+        $this->writer->startElement('style:style');
+        $this->writer->writeAttribute('style:family', 'table-row');
+        $this->writer->writeAttribute(
+            'style:name',
+            sprintf('%s%d', self::ROW_STYLE_PREFIX, $sheetId)
+        );
+
+        $this->writeRowProperties($rowDimension);
+
+        // End
+        $this->writer->endElement(); // Close style:style
+    }
+
     public function writeTableStyle(Worksheet $worksheet, int $sheetId): void
     {
         $this->writer->startElement('style:style');
@@ -289,6 +331,7 @@ class Style
             'style:name',
             sprintf('%s%d', self::TABLE_STYLE_PREFIX, $sheetId)
         );
+        $this->writer->writeAttribute('style:master-page-name', 'Default');
 
         $this->writer->startElement('style:table-properties');
 

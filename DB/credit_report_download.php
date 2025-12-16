@@ -1,9 +1,10 @@
 <?php
+require '../vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Style\PatternFill;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 
@@ -76,21 +77,6 @@ $spreadsheet->getProperties()
 $sheet = $spreadsheet->getActiveSheet();
 $sheet->setTitle("Credit Report");
 
-// Define Colors
-$headerFill = new PatternFill();
-$headerFill->setFillType(PatternFill::FILL_SOLID);
-$headerFill->getStartColor()->setARGB('FF215C98'); // Dark Blue
-
-$subHeaderFill = new PatternFill();
-$subHeaderFill->setFillType(PatternFill::FILL_SOLID);
-$subHeaderFill->getStartColor()->setARGB('FFFFC000'); // Yellow
-
-$borderStyle = new Border();
-$borderStyle->setLeft(new Border\Line(['style' => Border\Line::STYLE_THIN]));
-$borderStyle->setRight(new Border\Line(['style' => Border\Line::STYLE_THIN]));
-$borderStyle->setTop(new Border\Line(['style' => Border\Line::STYLE_THIN]));
-$borderStyle->setBottom(new Border\Line(['style' => Border\Line::STYLE_THIN]));
-
 // Get Student ID
 $stuId = GetStudentDetailCellData($_studentId);
 
@@ -109,7 +95,9 @@ $TotalObtained = 0;
 for ($i = 1; $i <= $sem_count; $i++) {
     $semDataObj = mysqli_fetch_assoc($SelectSemData);
     
-    if (!$semDataObj) break;
+    if (!$semDataObj) {
+        break;
+    }
     
     $semYrVlu = str_replace("-", "/", $semDataObj[$_semesterValueSemYrTyp]);
     $semYr = substr($semYrVlu, 0, 4);
@@ -120,18 +108,36 @@ for ($i = 1; $i <= $sem_count; $i++) {
     $sheet->mergeCells("A$currentRow:F$currentRow");
     $sheet->getStyle("A$currentRow")->getFont()->setBold(true)->setSize(12);
     $sheet->getStyle("A$currentRow")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-    $sheet->getStyle("A$currentRow")->setFill($headerFill);
+    $sheet->getStyle("A$currentRow")->getFill()
+          ->setFillType(Fill::FILL_SOLID)
+          ->getStartColor()->setARGB('FF215C98');
     $sheet->getStyle("A$currentRow")->getFont()->getColor()->setARGB('FFFFFFFF');
     $currentRow++;
 
     // Column Headers
     $headers = ['Course Code', 'Course Name', 'Registered Credit', 'Obtained Credit', 'Result/Grade', 'Registration Type'];
     foreach ($headers as $col => $header) {
-        $sheet->setCellValue(chr(65 + $col) . $currentRow, $header);
-        $sheet->getStyle(chr(65 + $col) . $currentRow)->setFill($subHeaderFill);
-        $sheet->getStyle(chr(65 + $col) . $currentRow)->getFont()->setBold(true)->setColor(new Color('FF215C98'));
-        $sheet->getStyle(chr(65 + $col) . $currentRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle(chr(65 + $col) . $currentRow)->setBorder($borderStyle);
+        $cellAddr = chr(65 + $col) . $currentRow;
+
+        $sheet->setCellValue($cellAddr, $header);
+
+        // Yellow fill
+        $sheet->getStyle($cellAddr)->getFill()
+              ->setFillType(Fill::FILL_SOLID)
+              ->getStartColor()->setARGB('FFFFC000');
+
+        // Font
+        $sheet->getStyle($cellAddr)->getFont()
+              ->setBold(true)
+              ->getColor()->setARGB('FF215C98');
+
+        // Center alignment
+        $sheet->getStyle($cellAddr)->getAlignment()
+              ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+        // Borders
+        $sheet->getStyle($cellAddr)->getBorders()->getAllBorders()
+              ->setBorderStyle(Border::BORDER_THIN);
     }
     $currentRow++;
 
@@ -146,7 +152,14 @@ for ($i = 1; $i <= $sem_count; $i++) {
             $totalRegistered += $course[$_courseCreditMarksField];
             $TotalRegistered += $course[$_courseCreditMarksField];
 
-            $returnResultData = GetResultData($stuId, $course[$_courseId], $course[$_courseCodeField], $semYr, $semTyp, $course[$_courseTypeField]);
+            $returnResultData = GetResultData(
+                $stuId,
+                $course[$_courseId],
+                $course[$_courseCodeField],
+                $semYr,
+                $semTyp,
+                $course[$_courseTypeField]
+            );
 
             $isPass = $course[$_courseCreditMarksField] == $returnResultData[0];
 
@@ -166,14 +179,18 @@ for ($i = 1; $i <= $sem_count; $i++) {
             // Apply styles to all cells in row
             for ($col = 0; $col < 6; $col++) {
                 $cellAddress = chr(65 + $col) . $currentRow;
-                $sheet->getStyle($cellAddress)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                $sheet->getStyle($cellAddress)->setBorder($borderStyle);
+
+                $sheet->getStyle($cellAddress)->getAlignment()
+                      ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+                $sheet->getStyle($cellAddress)->getBorders()->getAllBorders()
+                      ->setBorderStyle(Border::BORDER_THIN);
             }
 
             $currentRow++;
         }
 
-        // Total Row for Semester
+        // Total Row for Semester (labels)
         $sheet->setCellValue("C$currentRow", "Total Registered");
         $sheet->setCellValue("D$currentRow", "Total Obtained");
         $sheet->getStyle("C$currentRow")->getFont()->setBold(true);
@@ -189,8 +206,14 @@ for ($i = 1; $i <= $sem_count; $i++) {
         $sheet->getStyle("D$currentRow")->getFont()->setBold(true)->setSize(11);
         $sheet->getStyle("C$currentRow")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle("D$currentRow")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle("C$currentRow")->setFill($subHeaderFill);
-        $sheet->getStyle("D$currentRow")->setFill($subHeaderFill);
+
+        $sheet->getStyle("C$currentRow")->getFill()
+              ->setFillType(Fill::FILL_SOLID)
+              ->getStartColor()->setARGB('FFFFC000');
+        $sheet->getStyle("D$currentRow")->getFill()
+              ->setFillType(Fill::FILL_SOLID)
+              ->getStartColor()->setARGB('FFFFC000');
+
         $currentRow++;
 
     } else {
@@ -210,7 +233,9 @@ $sheet->setCellValue("A$currentRow", "Credit Summary");
 $sheet->mergeCells("A$currentRow:F$currentRow");
 $sheet->getStyle("A$currentRow")->getFont()->setBold(true)->setSize(12);
 $sheet->getStyle("A$currentRow")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle("A$currentRow")->setFill($headerFill);
+$sheet->getStyle("A$currentRow")->getFill()
+      ->setFillType(Fill::FILL_SOLID)
+      ->getStartColor()->setARGB('FF215C98');
 $sheet->getStyle("A$currentRow")->getFont()->getColor()->setARGB('FFFFFFFF');
 $currentRow++;
 
@@ -230,8 +255,13 @@ $sheet->getStyle("C$currentRow")->getFont()->setBold(true)->setSize(11);
 $sheet->getStyle("D$currentRow")->getFont()->setBold(true)->setSize(11);
 $sheet->getStyle("C$currentRow")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle("D$currentRow")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle("C$currentRow")->setFill($subHeaderFill);
-$sheet->getStyle("D$currentRow")->setFill($subHeaderFill);
+
+$sheet->getStyle("C$currentRow")->getFill()
+      ->setFillType(Fill::FILL_SOLID)
+      ->getStartColor()->setARGB('FFFFC000');
+$sheet->getStyle("D$currentRow")->getFill()
+      ->setFillType(Fill::FILL_SOLID)
+      ->getStartColor()->setARGB('FFFFC000');
 
 // Set Column Widths
 $sheet->getColumnDimension('A')->setWidth(15);
@@ -252,5 +282,3 @@ header('Cache-Control: max-age=0');
 $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
 $writer->save('php://output');
 exit;
-
-?>
