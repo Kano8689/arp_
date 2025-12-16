@@ -1,25 +1,16 @@
 => Admin:
    - add file testing
-   - create common function file for fetch data
+
 
 => CEO:
    - result students ui
-   - in result error
-   - create common function file for fetch data
+   - freeze/unfreeze - select year and sem
+
 
 => Faculty:
    - max marks is set but when we enter then it can be entered.
-   - create common function file for fetch data
+
 
 => Student:
    - variable changes
-   - Marks
-      - Show Valid Field
-      - Show valid marks for each field
-      - Show total (if wants)
-      - Show credit or not
-   - Result
-      - credit calculation
-      - Grade calculation
-      - total and outof calculation
-   - create common function file for fetch data
+   - download button for credit report

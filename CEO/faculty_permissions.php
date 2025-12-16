@@ -337,43 +337,104 @@ if (isset($_POST["calculate_grade"])) {
   exit;
 }
 
-function isAbleToPass($typ, $code, $ca1, $ca2, $ca3, $internal, $lab)
-{
+function isAbleToPass($typ, $code, $ca1, $ca2, $ca3, $internal, $lab) {
   $isUG = (int)$code[3] <= 4 ? 1 : 0;
-  //  echo " Code = $code || isUG = $isUG || typ = $typ || ca1 = $ca1 || ca2 = $ca2 || ca3 = $ca3 || Internal = $internal || lab = $lab<br>";
-  if ($typ == 1) //T
-  {
-    $ttl = $ca1 + $ca2;
-    if ($isUG) {
-      $ttl += $ca3;
-    }
-    // return [$ttl > 40 && $internal > 10, CalculateGrade($ttl+$internal)];
-    return [$ttl > 40 && $internal > 10, CalculateGrade(ConvertMarks($ca1, 50, 30) +
-      ConvertMarks($ca2, 50, 30) +
-      ConvertMarks($ca3, 50, 30) + 10)];
-  } else if ($typ == 2) // P
-  {
-    return [$lab > 50, CalculateGrade($lab)];
-  } else if ($typ == 3) //TEl
-  {
-    $ttl = $ca1 + $ca2;
-    if ($isUG) {
-      $ttl += $ca3;
-    }
-    // return [$ttl > 40 && $internal > 5 && $lab > 15, CalculateGrade($ttl+$internal+$lab)];
-    return [$ttl > 40 && $internal > 5 && $lab > 15, CalculateGrade(ConvertMarks($ca1, 50, 30) +
-      ConvertMarks($ca2, 50, 30) +
-      ConvertMarks($ca3, 50, 30) +
-      $internal + $lab)];
+
+  $tPass = 0;
+  $intrnlPass = 0;
+  $labPass = 0;
+
+  $convert = 50;
+  
+  $gradeTtl = 0;
+  
+  
+  switch($typ){
+    case 1:
+      if($isUG){
+        $convert = 25;
+        
+        $ttl = $ca1 + $ca2 + $ca3;
+        $gradeTtl = ConvertMarks($ca1, 50, $convert) + ConvertMarks($ca2, 50, $convert) + ConvertMarks($ca3, 50, $convert) + $internal;
+        
+        $tPass = 60;
+        $intrnlPass = 10;
+      }else{
+        $convert = 40;
+        
+        $ttl = $ca1 + $ca2;
+        $gradeTtl = ConvertMarks($ca1, 50, $convert) + ConvertMarks($ca2, 50, $convert) + $internal;
+
+        $tPass = 40;
+        $intrnlPass = 10;
+      }
+
+      // return [($ttl > $tPass && $internal > $intrnlPass),(CalculateGrade($gradeTtl))];
+      if(($ttl > $tPass && $internal > $intrnlPass)){
+        return [($ttl > $tPass && $internal > $intrnlPass),(CalculateGrade($gradeTtl))];
+      }
+      else{
+        return [($ttl > $tPass && $internal > $intrnlPass),(CalculateGrade(0))];
+      }
+      break;
+
+    case 2:
+      $labPass = 40;
+      $gradeTtl = $lab;
+      // if($isUG){
+      //   $labPass = 40;
+      //   $gradeTtl = $lab;
+      // }else{
+      //   $labPass = 40;
+      //   $gradeTtl = $lab;
+      // }
+
+      // return [($lab > $labPass), (CalculateGrade($gradeTtl))];
+      if(($lab > $labPass)){
+        return [($lab > $labPass), (CalculateGrade($gradeTtl))];
+      }
+      else{
+        return [($lab > $labPass), (CalculateGrade(0))];
+      }
+      break;
+
+    case 3:
+      if($isUG){
+        $convert = 20;
+        
+        $ttl = $ca1 + $ca2 + $ca3;
+        $gradeTtl = ConvertMarks($ca1, 50, $convert) + ConvertMarks($ca2, 50, $convert) + ConvertMarks($ca3, 50, $convert) + $lab + $internal;
+        
+        $tPass = 60;
+        $intrnlPass = 5;
+        $labPass = 15;
+      }else{
+        $convert = 30;
+        
+        $ttl = $ca1 + $ca2;
+        $gradeTtl = ConvertMarks($ca1, 50, $convert) + ConvertMarks($ca2, 50, $convert) + $lab + $internal;
+
+        $tPass = 40;
+        $intrnlPass = 5;
+        $labPass = 15;
+      }
+
+      // return [($ttl > $tPass && $internal > $intrnlPass && $lab > $labPass),($gradeTtl)];
+      if(($ttl > $tPass && $internal > $intrnlPass && $lab > $labPass)){
+        return [($ttl > $tPass && $internal > $intrnlPass && $lab > $labPass),(CalculateGrade($gradeTtl))];
+      }
+      else{
+        return [($ttl > $tPass && $internal > $intrnlPass && $lab > $labPass),(CalculateGrade(0))];
+      }
+      break;
   }
 }
-function CalculateGrade($ttl)
-{
-  // echo "<br>ttl = $ttl<br>";
+
+function CalculateGrade($ttl) {
+  // return $ttl;
   return $ttl >= 90 ? "A1" : ($ttl >= 80 ? "A2" : ($ttl >= 70 ? "B1" : ($ttl >= 60 ? "B2" : ($ttl >= 50 ? "C" : ($ttl >= 35 ? "D" : "F")))));
 }
-function ConvertMarks($obtained, $outoff, $convertinto)
-{
+function ConvertMarks($obtained, $outoff, $convertinto) {
   try {
     return (($convertinto * $obtained) / $outoff);
   } catch (Exception $e) {

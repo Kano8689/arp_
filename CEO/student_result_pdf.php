@@ -47,9 +47,9 @@ function SelectProgramDetailsFromId($id, $field)
 }
 function SelectDepartmentDetailsFromId($id, $field)
 {
-      global $conn, $_deptTable, $_deptId;
+      global $conn, $_departmentTable, $_departmentId;
 
-      $sql = "SELECT * FROM $_deptTable WHERE $_deptId='$id'";
+      $sql = "SELECT * FROM $_departmentTable WHERE $_departmentId='$id'";
       $res = mysqli_query($conn, $sql);
 
       $res = mysqli_fetch_assoc($res);
@@ -58,14 +58,14 @@ function SelectDepartmentDetailsFromId($id, $field)
 }
 function GetResultTableId($id = null)
 {
-      global $conn, $_resultTable, $_resultId, $_resultStdDtlId, $_resultStdCrseId, $_resultYear, $_resultSemType;
+      global $conn, $_resultTable, $_resultId, $_resultStdDtlId, $_resultStdCrseId, $_resultResultYear, $_resultResultSemType;
 
       global $stdRetriveId, $resultRetriveYr, $resultRetriveSem;
 
       if ($id == null)
-            $sql = "SELECT * FROM $_resultTable WHERE $_resultYear='$resultRetriveYr' AND $_resultSemType='$resultRetriveSem' AND $_resultStdDtlId IN $stdRetriveId";
+            $sql = "SELECT * FROM $_resultTable WHERE $_resultResultYear='$resultRetriveYr' AND $_resultResultSemType='$resultRetriveSem' AND $_resultStdDtlId IN $stdRetriveId";
       else
-            $sql = "SELECT * FROM $_resultTable WHERE $_resultYear='$resultRetriveYr' AND $_resultSemType='$resultRetriveSem' AND $_resultStdDtlId='$id'";
+            $sql = "SELECT * FROM $_resultTable WHERE $_resultResultYear='$resultRetriveYr' AND $_resultResultSemType='$resultRetriveSem' AND $_resultStdDtlId='$id'";
       $res = mysqli_query($conn, $sql);
 
       $ids = [];
@@ -131,7 +131,7 @@ function getCourseTypeLabel($type)
             case 2:
                   return "P";   // Practical
             case 3:
-                  return "TEP";  // Term End or other specific label
+                  return "TEL";  // Term End or other specific label
             default:
                   return "";    // Default if none matches
       }
@@ -340,7 +340,7 @@ $n = 1;
                               <div class="col-md-6 info-row"><b>Name of the Candidate:</b> <?php echo htmlspecialchars(StudentFieldFetch($data, $_studentName)); ?></div>
                         </div>
                         <?php $p_id = htmlspecialchars(StudentFieldFetch($data, $_studentProgram)); ?>
-                        <div class="col-md-6 info-row"><b>School / Institute:</b> <?php echo  htmlspecialchars(SelectDepartmentDetailsFromId(SelectProgramDetailsFromId($p_id, $_programDeptField),  $_deptName)); ?>
+                        <div class="col-md-6 info-row"><b>School / Institute:</b> <?php echo  htmlspecialchars(SelectDepartmentDetailsFromId(SelectProgramDetailsFromId($p_id, $_programDeptField),  $_departmentName)); ?>
                         </div>
                         <div class="row mb-3">
                               <div class="col-md-6 info-row"><b>Program:</b> <?php echo htmlspecialchars(SelectProgramDetailsFromId($p_id, $_programNameField)); ?></div>
@@ -388,14 +388,14 @@ $n = 1;
                                                       <td><?php echo GetCourseFieldFormId($cid, $_courseCodeField); ?></td>
                                                       <td class="text-start"><?php echo GetCourseFieldFormId($cid, $_courseNameField); ?></td>
                                                       <td><?php echo getCourseTypeLabel(GetCourseFieldFormId($cid, $_courseTypeField)); ?></td>
-                                                      <td><?php echo GetCourseFieldFormId($cid, $_creditMarksField); ?></td>
+                                                      <td><?php echo GetCourseFieldFormId($cid, $_courseCreditMarksField); ?></td>
                                                       <td><?php echo GetResultFieldFromId($rid, $_resultObtainedCredit); ?></td>
-                                                      <td><?php echo "NA" ?></td>
+                                                      <td><?php echo GetResultFieldFromId($rid, $_resultObtainedGrade); ?></td>
                                                       <?php
-                                                      $creditRegistered += GetCourseFieldFormId($cid, $_creditMarksField);
+                                                      $creditRegistered += GetCourseFieldFormId($cid, $_courseCreditMarksField);
                                                       $earnedRegistered += GetResultFieldFromId($rid, $_resultObtainedCredit);
-                                                      $declareDate = date("d/m/Y", strtotime(GetResultFieldFromId($rid, $_resultDeclareDate)));
-                                                      $declareDateMmYyyy = date("F Y", strtotime(GetResultFieldFromId($rid, $_resultDeclareDate)));
+                                                      $declareDate = date("d/m/Y", strtotime(GetResultFieldFromId($rid, $_resultResultDeclareData)));
+                                                      $declareDateMmYyyy = date("F Y", strtotime(GetResultFieldFromId($rid, $_resultResultDeclareData)));
                                                       ?>
                                                 </tr>
                                     <?php }
@@ -407,13 +407,13 @@ $n = 1;
 
                         <div class="row mt-4">
                               <div class="col-md-4"><b>Credits Registered:</b> <?php echo $creditRegistered; ?></div>
-                              <div class="col-md-4"><b>Total Credits Registered:</b> 47</div>
+                              <!-- <div class="col-md-4"><b>Total Credits Registered:</b> 47</div> -->
                               <div class="col-md-4"><b>SGPA:</b> 0.00</div>
                         </div>
 
                         <div class="row">
                               <div class="col-md-4"><b>Credits Earned:</b> <?php echo $earnedRegistered; ?></div>
-                              <div class="col-md-4"><b>Total Credits Earned:</b> 35</div>
+                              <!-- <div class="col-md-4"><b>Total Credits Earned:</b> 35</div> -->
                               <div class="col-md-4"><b>CGPA:</b> 8.38</div>
                         </div>
 

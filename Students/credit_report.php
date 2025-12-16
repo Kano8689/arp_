@@ -50,16 +50,17 @@ function GetCourseDataFromSemYrTyp($stu, $yr, $typ)
       return $SelectCourseData;
 }
 
-function GetResultData($stu, $crse, $code, $yr, $typ, $crsetyp){
+function GetResultData($stu, $crse, $code, $yr, $typ, $crsetyp)
+{
       global $conn;
       global $_resultTable, $_resultStdDtlId, $_resultStdCrseId, $_resultResultYear, $_resultResultSemType;
       global $_resultCa1, $_resultCa2, $_resultCa3, $_resultLabMarks, $_resultInternalMarks;
-      global $_resultObtainedCredit;
+      global $_resultObtainedCredit, $_resultObtainedGrade;
 
       $typ = strtolower($typ);
       $typ = $typ == "fall" ? 1 : ($typ == "summer" ? 2 : 0);
 
-      $sql = "SELECT $_resultObtainedCredit, $_resultCa1, $_resultCa2, $_resultCa3, $_resultLabMarks, $_resultInternalMarks FROM $_resultTable WHERE $_resultStdDtlId='$stu' AND $_resultStdCrseId='$crse' AND $_resultResultYear='$yr' AND $_resultResultSemType='$typ'";
+      $sql = "SELECT $_resultObtainedCredit, $_resultObtainedGrade, $_resultCa1, $_resultCa2, $_resultCa3, $_resultLabMarks, $_resultInternalMarks FROM $_resultTable WHERE $_resultStdDtlId='$stu' AND $_resultStdCrseId='$crse' AND $_resultResultYear='$yr' AND $_resultResultSemType='$typ'";
 
       // echo "$sql";
       // exit;
@@ -69,27 +70,26 @@ function GetResultData($stu, $crse, $code, $yr, $typ, $crsetyp){
 
       // return isAbleToPass($crsetyp, $code, $MarksData[$_resultCa1]??0, $MarksData[$_resultCa2]??0, $MarksData[$_resultCa3]??0, $MarksData[$_resultInternalMarks]??0,  $MarksData[$_resultLabMarks]??0);
 
-      return $MarksData[$_resultObtainedCredit];
+      return [$MarksData[$_resultObtainedCredit] ?? "", $MarksData[$_resultObtainedGrade] ?? ""];
 }
 
-function isAbleToPass($typ, $code, $ca1, $ca2, $ca3, $internal, $lab){
-       $isUG = (int)$code[3] <= 4 ? 1 : 0;
-      if($typ==1)//T
+function isAbleToPass($typ, $code, $ca1, $ca2, $ca3, $internal, $lab)
+{
+      $isUG = (int)$code[3] <= 4 ? 1 : 0;
+      if ($typ == 1) //T
       {
             $ttl = $ca1 + $ca2;
-            if($isUG){
+            if ($isUG) {
                   $ttl += $ca3;
             }
             return $ttl > 40 && $internal > 10;
-      }
-      else if($typ==2) // P
+      } else if ($typ == 2) // P
       {
             return $lab > 50;
-      }
-      else if($typ==3)//TEl
+      } else if ($typ == 3) //TEl
       {
             $ttl = $ca1 + $ca2;
-            if($isUG){
+            if ($isUG) {
                   $ttl += $ca3;
             }
             return $ttl > 40 && $internal > 5 && $lab > 15;
@@ -121,16 +121,16 @@ include_once("../header.php");
       </div>
 
 
-      <?php 
-            $TotalRegistered = 0;
-            $TotalObtained = 0;
-            for ($i = 1; $i <= $sem_count; $i++) {
-                  $semDataObj = mysqli_fetch_assoc($SelectSemData);
-                  $semYrVlu  = str_replace("-", "/", $semDataObj[$_semesterValueSemYrTyp]);
-                  $semYr  = substr($semYrVlu, 0, 4);
-                  $semTyp  = substr($semYrVlu, 5, strlen($semYrVlu));
+      <?php
+      $TotalRegistered = 0;
+      $TotalObtained = 0;
+      for ($i = 1; $i <= $sem_count; $i++) {
+            $semDataObj = mysqli_fetch_assoc($SelectSemData);
+            $semYrVlu  = str_replace("-", "/", $semDataObj[$_semesterValueSemYrTyp]);
+            $semYr  = substr($semYrVlu, 0, 4);
+            $semTyp  = substr($semYrVlu, 5, strlen($semYrVlu));
 
-            
+
       ?>
 
             <div class="card" style="display: block;">
@@ -138,7 +138,7 @@ include_once("../header.php");
                         <table class="table">
                               <thead>
                                     <tr>
-                                          <th style="text-align: center;" colspan="5">Semester <?php echo $i . " ($semYrVlu)"; ?> </th>
+                                          <th style="text-align: center;" colspan="6">Semester <?php echo $i . " ($semYrVlu)"; ?> </th>
                                     </tr>
                                     <tr class="header2">
                                           <td style="text-align: center;">Course Code</td>
@@ -146,43 +146,48 @@ include_once("../header.php");
                                           <td style="text-align: center;">Registered Credit</td>
                                           <td style="text-align: center;">Obtained Credit</td>
                                           <td style="text-align: center;">Result/Grade</td>
+                                          <td style="text-align: center;">Registration Type</td>
                                     </tr>
                               </thead>
                               <tbody id="marksBody">
                                     <?php $SemCourse = GetCourseDataFromSemYrTyp($stuId, $semYr, $semTyp);
-                                          if (mysqli_num_rows($SemCourse) > 0) {
-                                                $totalRegistered = 0;
-                                                $totalObtained = 0;
-                                                while ($course = mysqli_fetch_assoc($SemCourse)) {
+                                    if (mysqli_num_rows($SemCourse) > 0) {
+                                          $totalRegistered = 0;
+                                          $totalObtained = 0;
+                                          while ($course = mysqli_fetch_assoc($SemCourse)) {
 
-                                                      $totalRegistered += $course[$_courseCreditMarksField];
-                                                      $TotalRegistered += $course[$_courseCreditMarksField];
+                                                $totalRegistered += $course[$_courseCreditMarksField];
+                                                $TotalRegistered += $course[$_courseCreditMarksField];
 
-                                                      $isPass = $course[$_courseCreditMarksField] == GetResultData($stuId, $course[$_courseId], $course[$_courseCodeField], $semYr, $semTyp, $course[$_courseTypeField]); // here get only _resultObtainedCredit from GetResultData() //remove another code for func..
-                                                      // $isPass = GetResultData($stuId, $course[$_courseId], $course[$_courseCodeField], $semYr, $semTyp, $course[$_courseTypeField]);
+                                                $returnResultData = GetResultData($stuId, $course[$_courseId], $course[$_courseCodeField], $semYr, $semTyp, $course[$_courseTypeField]);
+
+                                                $isPass = $course[$_courseCreditMarksField] == $returnResultData[0]; // here get only _resultObtainedCredit from GetResultData() //remove another code for func..
+                                                // $isPass = GetResultData($stuId, $course[$_courseId], $course[$_courseCodeField], $semYr, $semTyp, $course[$_courseTypeField]);
 
 
-                                                      if($isPass){
-                                                            $totalObtained += $course[$_courseCreditMarksField];
-                                                            $TotalObtained += $course[$_courseCreditMarksField];
-                                                      }
-                                                      
+                                                if ($isPass) {
+                                                      $totalObtained += $course[$_courseCreditMarksField];
+                                                      $TotalObtained += $course[$_courseCreditMarksField];
+                                                }
+
 
                                     ?>
-                                          <tr>
-                                                <td style="text-align: center;"><?php echo $course[$_courseCodeField]; ?></td>
-                                                <td style="text-align: center;"><?php echo $course[$_courseNameField]; ?></td>
-                                                <td style="text-align: center;"><?php echo $course[$_courseCreditMarksField]; ?></td>
-                                                <td style="text-align: center;"><?php echo $isPass ? $course[$_courseCreditMarksField] : 0; ?></td>
-                                                <td style="text-align: center;"><?php echo "VALUE"; ?></td>
-                                          </tr>
+                                                <tr>
+                                                      <td style="text-align: center;"><?php echo $course[$_courseCodeField]; ?></td>
+                                                      <td style="text-align: center;"><?php echo $course[$_courseNameField]; ?></td>
+                                                      <td style="text-align: center;"><?php echo $course[$_courseCreditMarksField]; ?></td>
+                                                      <td style="text-align: center;"><?php echo $isPass ? $course[$_courseCreditMarksField] : 0; ?></td>
+                                                      <td style="text-align: center;"><?php echo $returnResultData[1]; ?></td>
+                                                      <td style="text-align: center;"><?php echo $course[$_mappingStudentRegistrationType]; ?></td>
+                                                </tr>
 
-                                    <?php } ?>
+                                          <?php } ?>
                                           <tr>
                                                 <td style="text-align: center;"><?php echo ""; ?></td>
                                                 <td style="text-align: center;"><?php echo ""; ?></td>
                                                 <td style="text-align: center;"><b><?php echo "Total Registered"; ?></b></td>
                                                 <td style="text-align: center;"><b><?php echo "Total Obtained"; ?></b></td>
+                                                <td style="text-align: center;"><?php echo ""; ?></td>
                                                 <td style="text-align: center;"><?php echo ""; ?></td>
                                           </tr>
                                           <tr>
@@ -191,11 +196,12 @@ include_once("../header.php");
                                                 <td style="text-align: center;"><b><?php echo "$totalRegistered"; ?></b></td>
                                                 <td style="text-align: center;"><b><?php echo "$totalObtained"; ?></b></td>
                                                 <td style="text-align: center;"><?php echo ""; ?></td>
+                                                <td style="text-align: center;"><?php echo ""; ?></td>
                                           </tr>
 
                                     <?php } else { ?>
                                           <tr>
-                                                <td style="text-align: center;" colspan="5"><?php echo "Not Register Yet."; ?></td>
+                                                <td style="text-align: center;" colspan="6"><?php echo "Not Register Yet."; ?></td>
                                           </tr>
                                     <?php } ?>
 
@@ -211,7 +217,7 @@ include_once("../header.php");
                   <table class="table">
                         <thead>
                               <tr>
-                                    <th style="text-align: center;" colspan="5">Credit Summary </th>
+                                    <th style="text-align: center;" colspan="6">Credit Summary </th>
                               </tr>
                         </thead>
                         <tbody id="marksBody">
