@@ -1,9 +1,12 @@
 => Admin:
    - add file testing
+   - mapping modue code changedl
 
 
 => CEO:
    - result students ui
+   - result students download
+   - result signature position
    - freeze/unfreeze - select year and sem
 
 
@@ -12,5 +15,3 @@
 
 
 => Student:
-   - variable changes
-   - download button for credit report

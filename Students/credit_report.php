@@ -3,6 +3,7 @@
 use Dom\Mysql;
 
 require '../vendor/autoload.php';
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 // use PhpOffice\PhpSpreadsheet\Calculation\TextData\Replace;
@@ -126,15 +127,16 @@ include_once("../header.php");
       </div>
 
       <!-- After the breadcrumb section, add: -->
-      <div style="margin-bottom: 20px; margin-top: 20px;">
-            <form action="../DB/credit_report_download.php" method="GET" style="display: inline;">
+      <div style="margin: 20px 0; display: flex; justify-content: flex-end;">
+            <form action="../DB/credit_report_download.php" method="GET">
                   <input type="hidden" name="action" value="download">
-                  <button type="submit" class="btn btn-success" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                  <button type="submit" class="btn btn-success"
+                        style="padding: 10px 20px; background-color: #215C98; color: #FFC000;
+                   border: none; border-radius: 4px; cursor: pointer;">
                         📥 Download as Excel (.xlsx)
                   </button>
             </form>
       </div>
-
 
 
 

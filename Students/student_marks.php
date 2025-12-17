@@ -11,6 +11,14 @@ if (!isset($_SESSION[$_session_login_type]) || $_SESSION[$_session_login_type] !
 $stdLgnId = str_replace($defaultLoginExtension, "", $_SESSION[$_session_login_name] ?? "");
 
 
+$graduationCkeckSql = "SELECT pt.$_graduationTypeField 
+                       FROM $_programTableName pt
+                       LEFT JOIN $_studentTable cd
+                       ON cd.$_studentProgram = pt.$_programId
+                       WHERE cd.$_studentCode = '$stdLgnId'";
+$graduationCkeckSql = mysqli_query($conn, $graduationCkeckSql);
+$graduationCkeckSql = mysqli_fetch_assoc($graduationCkeckSql);
+$isUgStudent = $graduationCkeckSql[$_graduationTypeField] == 1;
 
 $display = "none";
 $yearSelect = "";
@@ -50,7 +58,7 @@ function GetResultDetailsRow($fld, $where)
   $res = mysqli_query($conn, $sql);
   $res = mysqli_fetch_assoc($res);
   $crsId = $res[$_resultStdCrseId];
-  
+
   return $res[$fld] ?? null;
 }
 
@@ -59,7 +67,7 @@ function GetResultDetails($where)
   global $conn, $_resultTable;
 
   $sql = "SELECT * FROM $_resultTable WHERE $where";
-  $res = mysqli_query($conn, $sql); 
+  $res = mysqli_query($conn, $sql);
   return $res;
 }
 
@@ -129,7 +137,9 @@ include_once("../header.php");
             <th style="text-align: center;">Credits</th>
             <th style="text-align: center;">CA1 (40)</th>
             <th style="text-align: center;">CA2 (40)</th>
-            <th style="text-align: center;">CA3 (40)</th>
+            <?php if ($isUgStudent) { ?>
+              <th style="text-align: center;">CA3 (40)</th>
+            <?php } ?>
             <th style="text-align: center;">Practical (100)</th>
             <th style="text-align: center;">Internals (20)</th>
             <!-- <th style="text-align: center;">Total (100)</th> -->
@@ -140,19 +150,19 @@ include_once("../header.php");
             while ($resRow = mysqli_fetch_assoc($rsltAry)) {
               $stu = $resRow[$_resultStdDtlId];
               $crse = $resRow[$_resultStdCrseId];
-              
+
               $pushResultMap = "SELECT * FROM $_mappingStudentTable WHERE $_mappingStudentId='$stu' AND $_mappingStudentCourseId='$crse' AND $_mappingStudentSemesterYear='$yearSelect' AND $_mappingStudentSemesterType='$semSelect'";
               $response = mysqli_query($conn, $pushResultMap);
               $response = mysqli_fetch_assoc($response);
               $slt = $response[$_mappingStudentSlotId];
-              
+
               $pushResultMap = "SELECT * FROM $_mappingFacultyTable WHERE $_mappingFacultySlotId='$slt' AND $_mappingFacultyCourseId='$crse' AND $_mappingFacultySemesterYear='$yearSelect' AND $_mappingFacultySemesterType='$semSelect'";
               $response = mysqli_query($conn, $pushResultMap);
               $response = mysqli_fetch_assoc($response);
               $fac = $response[$_mappingFacultyId] ?? 0;
-              
+
               $pushResultMap = "SELECT * FROM $_freezePushPermissionTable WHERE $_freezePushPermissionFacId='$fac' AND $_freezePushPermissionCourseId='$crse'";
-              
+
               $response = mysqli_query($conn, $pushResultMap);
               $response = mysqli_fetch_assoc($response);
               // $isUnPush = $response[$ceoPermissionPush];
@@ -180,12 +190,14 @@ include_once("../header.php");
                 <td style="text-align: center;"><?php echo $crNm; ?></td>
                 <td style="text-align: center;"><b><?php echo $crdt; ?></b></td>
 
-                <?php if($isCa1) { ?> <td style="text-align: center;"><?php echo $ca1; ?></td><?php } else {?> <td style="text-align: center; color: rgba(203, 0, 0, 1);"><b>-</b></td> <?php } ?>
-                <?php if($isCa2) { ?> <td style="text-align: center;"><?php echo $ca2; ?></td><?php } else {?> <td style="text-align: center; color: rgba(203, 0, 0, 1);"><b>-</b></td> <?php } ?>
-                <?php if($isCa3) { ?> <td style="text-align: center;"><?php echo $ca3; ?></td><?php } else {?> <td style="text-align: center; color: rgba(203, 0, 0, 1);"><b>-</b></td> <?php } ?>
-                <?php if($isLab) { ?> <td style="text-align: center;"><?php echo $prctl; ?></td><?php } else {?> <td style="text-align: center; color: rgba(203, 0, 0, 1);"><b>-</b></td> <?php } ?>
-                <?php if($isInternal) { ?> <td style="text-align: center;"><?php echo $intrnl; ?></td><?php } else {?> <td style="text-align: center; color: rgba(203, 0, 0, 1);"><b>-</b></td> <?php } ?>
-                  <!-- <td style="text-align: center;"><b><?php echo $ttl; ?></b></td> -->
+                <?php if ($isCa1) { ?> <td style="text-align: center;"><?php echo $ca1; ?></td><?php } else { ?> <td style="text-align: center; color: rgba(203, 0, 0, 1);"><b>-</b></td> <?php } ?>
+                <?php if ($isCa2) { ?> <td style="text-align: center;"><?php echo $ca2; ?></td><?php } else { ?> <td style="text-align: center; color: rgba(203, 0, 0, 1);"><b>-</b></td> <?php } ?>
+                <?php if ($isUgStudent) { ?>
+                  <?php if ($isCa3) { ?> <td style="text-align: center;"><?php echo $ca3; ?></td><?php } else { ?> <td style="text-align: center; color: rgba(203, 0, 0, 1);"><b>-</b></td> <?php } ?>
+                <?php } ?>
+                <?php if ($isLab) { ?> <td style="text-align: center;"><?php echo $prctl; ?></td><?php } else { ?> <td style="text-align: center; color: rgba(203, 0, 0, 1);"><b>-</b></td> <?php } ?>
+                <?php if ($isInternal) { ?> <td style="text-align: center;"><?php echo $intrnl; ?></td><?php } else { ?> <td style="text-align: center; color: rgba(203, 0, 0, 1);"><b>-</b></td> <?php } ?>
+                <!-- <td style="text-align: center;"><b><?php echo $ttl; ?></b></td> -->
               </tr>
           <?php }
           } ?>
