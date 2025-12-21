@@ -248,16 +248,6 @@ $n = 1;
                   font-weight: 600;
             }
 
-            .signature-area {
-                  margin-top: 3.5rem;
-                  text-align: right;
-                  font-size: 1.2rem;
-                  font-weight: 700;
-                  color: #2980b9;
-                  font-style: italic;
-                  letter-spacing: 0.04em;
-            }
-
             .footer-note {
                   font-size: 0.9rem;
                   margin-top: 2rem;
@@ -306,15 +296,28 @@ $n = 1;
                   z-index: 0;
             }
 
-            .signature-area {
-                  text-align: right;
+            .signature-area .signature-img {
+                  margin-top: 3.5rem;
+                  max-height: 70px;
+                  font-size: 1.2rem;
+                  margin-bottom: 10px;
+                  display: block;
+                  margin-left: auto;
+                  margin-right: 0;
+                  font-weight: 700;
+                  color: #2980b9;
+                  font-style: italic;
+                  letter-spacing: 0.04em;
             }
 
-            .signature-area .signature-img {
-                  max-height: 70px;
-                  margin-bottom: 10px;
+            .signature-area {
+                  margin-top: 3.5rem;
                   text-align: right;
-                  display: inline-block;
+                  font-size: 1.2rem;
+                  font-weight: 700;
+                  color: #2980b9;
+                  font-style: italic;
+                  letter-spacing: 0.04em;
             }
       </style>
 </head>
@@ -422,9 +425,12 @@ $n = 1;
                         </div>
 
                         <div class="signature-area">
-                              <img src="../assets/signature.png" alt="Signature" style="max-height: 70px; display: block; margin-bottom: 10px;">
+                              <img src="../assets/signature.png"
+                                    alt="Signature"
+                                    class="signature-img">
                               <span><b>Controller of Examinations</b></span>
                         </div>
+
 
 
 

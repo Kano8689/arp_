@@ -187,7 +187,13 @@ function paginationUI($conn, $table, $currentPage, $limit, $whereSQL = '', $filt
 function paginationUI3($conn, $table, $currentPage, $limit, $whereSQL = '', $filterQuery = '')
 {
     // $n = count($uniqueResults);
-    // echo "$currentPage";
+    // echo "$table<br>";
+    // echo "$currentPage<br>";
+    // echo "$limit<br>";
+    // echo "$whereSQL<br>";
+    $whereSQL = str_replace("m.", "", $whereSQL);
+    // echo "$whereSQL<br>";
+    // echo "$filterQuery<br>";
     // exit;
 
     $currentPage = (int) $currentPage;
@@ -198,7 +204,7 @@ function paginationUI3($conn, $table, $currentPage, $limit, $whereSQL = '', $fil
     // Count total records (with optional filter)
     $query = "SELECT COUNT(*) as cnt FROM $table $whereSQL";
     $result = mysqli_query($conn, $query);
-    
+    // 
     // echo "$query<br>";
     // echo "$whereSQL<br>";
     // echo "$table<br>";

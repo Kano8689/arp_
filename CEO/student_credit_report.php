@@ -131,7 +131,7 @@ include_once("../header.php");
       <!-- Enter Enrollment Number -->
       <div>
             <div class="card" style="display: block;">
-                  <form method="POST" style="width:550px; background:#fff; padding:20px; border-radius:6px; box-shadow:0 0 8px #ccc;">
+                  <form method="POST" style="width:100%; background:#fff; padding:20px; border-radius:6px; box-shadow:0 0 8px #ccc;">
 
                         <label class="fw-bold">Enrollment No :</label>
                         <input type="text" id="loginId" name="enNo2Fnd" value="" placeholder="Enrollment No" required style="width:100%; margin-bottom:15px;">

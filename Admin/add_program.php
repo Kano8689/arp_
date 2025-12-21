@@ -224,7 +224,7 @@ if (isset($_POST['addFile'])) {
 
     // Convert department name to ID
     $programDeptId = GetDepartmentNameId($programDept, false);
-    $graduationType = $graduationType == "UG" ? 1 : ($graduationType == "PG" ? 2 : 0);
+    $graduationType = strtoupper(trim($graduationType, " ")) == "UG" ? 1 : (strtoupper(trim($graduationType, " ")) == "PG" ? 2 : 0);
 
     if (!$programDeptId) {
       // Department not found, mark as failed
