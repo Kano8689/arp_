@@ -176,17 +176,18 @@ include_once("../header.php");
                                           while ($course = mysqli_fetch_assoc($SemCourse)) {
 
                                                 $totalRegistered += $course[$_courseCreditMarksField];
-                                                $TotalRegistered += $course[$_courseCreditMarksField];
+
+                                                if($course[$_mappingStudentRegistrationType] == "Fresh")
+                                                      $TotalRegistered += $course[$_courseCreditMarksField];
 
                                                 $returnResultData = GetResultData($stuId, $course[$_courseId], $course[$_courseCodeField], $semYr, $semTyp, $course[$_courseTypeField]);
 
-                                                $isPass = $course[$_courseCreditMarksField] == $returnResultData[0]; // here get only _resultObtainedCredit from GetResultData() //remove another code for func..
-                                                // $isPass = GetResultData($stuId, $course[$_courseId], $course[$_courseCodeField], $semYr, $semTyp, $course[$_courseTypeField]);
-
+                                                $isPass = $course[$_courseCreditMarksField] == $returnResultData[0];
 
                                                 if ($isPass) {
                                                       $totalObtained += $course[$_courseCreditMarksField];
-                                                      $TotalObtained += $course[$_courseCreditMarksField];
+                                                      if($course[$_mappingStudentRegistrationType] == "Fresh")
+                                                            $TotalObtained += $course[$_courseCreditMarksField];
                                                 }
 
 
