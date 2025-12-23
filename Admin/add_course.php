@@ -146,7 +146,11 @@ if (isset($_POST['addFile'])) {
   switch ($ext) {
     case 'csv':
       $handle = fopen($_FILES['file']['tmp_name'], "r");
+      $rowIndex = 0;
       while ($row = fgetcsv($handle)) {
+        if ($rowIndex == 0)
+          continue;
+        $rowIndex++;
         GetAndSaveDataFromFile($row);
       }
       break;
@@ -156,6 +160,8 @@ if (isset($_POST['addFile'])) {
       $spreadsheet = IOFactory::load($_FILES['file']['tmp_name']);
       $sheetData = $spreadsheet->getActiveSheet()->toArray();
       foreach ($sheetData as $index => $row) {
+        if ($index == 0)
+          continue;
         GetAndSaveDataFromFile($row);
       }
       break;

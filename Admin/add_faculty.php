@@ -148,8 +148,11 @@ if (isset($_POST['addFile'])) {
   switch ($ext) {
     case 'csv':
       $handle = fopen($_FILES['file']['tmp_name'], "r");
-
+       $rowIndex = 0;
       while ($row = fgetcsv($handle)) {
+        if ($rowIndex == 0)
+          continue;
+        $rowIndex++;
         GetAndSaveDataFromFile($row);
       }
 
@@ -161,6 +164,8 @@ if (isset($_POST['addFile'])) {
       $sheetData = $spreadsheet->getActiveSheet()->toArray();
 
       foreach ($sheetData as $index => $row) {
+        if ($index == 0)
+          continue;
         GetAndSaveDataFromFile($row);
       }
 
