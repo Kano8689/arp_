@@ -81,7 +81,7 @@ function SelectData($conn, $table, $whereData)
 function InsertData($conn, $table, $fields, $data)
 {     
       $insert = "INSERT INTO $table $fields VALUES $data";
-      echo "Insert query: " . $insert . "<br>";
+      // echo "Insert query: " . $insert . "<br>";
       // exit;
 
       mysqli_query($conn, $insert);

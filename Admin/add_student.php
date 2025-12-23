@@ -174,6 +174,8 @@ if (isset($_POST['addFile'])) {
       $sheetData = $spreadsheet->getActiveSheet()->toArray();
 
       foreach ($sheetData as $index => $row) {
+        if ($index == 0)
+          continue;
         GetAndSaveDataFromFile($row);
       }
 
@@ -230,6 +232,13 @@ function GetAndSaveDataFromFile($ary)
     $un = $studentEnrlNo . $defaultLoginExtension;
     LoginTableInsert($conn, $_loginTable, [$_loginUsername, $_loginPassword, $_loginUserType], [$un, $encPass, 4]);
   }
+
+  // print("<pre>");
+  // print_r($fields);
+  // print_r($data);
+  // print_r($whereData);
+  // echo "$_studentTable<br>";
+  // exit;
 
   FieldStringSetter($conn, $_studentTable, $fields, $data, $whereData);
 }
