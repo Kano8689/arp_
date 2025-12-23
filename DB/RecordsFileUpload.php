@@ -49,33 +49,39 @@ function FieldStringSetter($conn, $tableName, $Fields, $Data, $whereData = null)
 
 function OperationDecider($conn, $table, $whereData, $fields, $data, $setFieldData)
 {
+      // echo "<br>1. $data<br>";
+      // $isUpdate = ;
+      // echo "<br>2. $data<br>";
       if (SelectData($conn, $table, $whereData) > 0) {
+            // echo "<br>3. $data<br>";
             // echo "Updating data...<br>";
             // exit;
             UpdateData($conn, $table, $setFieldData, $whereData);
       } else {
+            // echo "<br>4. $data<br>";
             // echo "Inserting data...<br>";
-            // exit;
             InsertData($conn, $table, $fields, $data);
       }
+      // echo "<br><br><br>";
+      // exit;
+      // exit;
 }
 
 function SelectData($conn, $table, $whereData)
 {
       $select = "SELECT * FROM $table WHERE $whereData";
-      // echo "Select query: " . $select . "<br>"; 
+      // echo "<br>Select query: " . $select . "<br>"; 
       // $n = mysqli_num_rows($res);
       // echo "Select query: " . $n . "<br>";
       $res = mysqli_query($conn, $select);
-
 
       return mysqli_num_rows($res);
 }
 
 function InsertData($conn, $table, $fields, $data)
-{
+{     
       $insert = "INSERT INTO $table $fields VALUES $data";
-      // echo "Insert query: " . $insert . "<br>";
+      echo "Insert query: " . $insert . "<br>";
       // exit;
 
       mysqli_query($conn, $insert);

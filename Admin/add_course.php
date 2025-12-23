@@ -32,18 +32,18 @@ $whereClause = [];
 
 // Filter by owner ID
 if ($filterOwner !== '') {
-  $whereClause[] = "o.$courseOwnerIdField = '$filterOwner'";
+  $whereClause[] = "o.$_courseOwnerIdField = '$filterOwner'";
 }
 
 // Filter by code, name, type
 if ($filterCode !== '') {
-  $whereClause[] = "c.$courseCodeField LIKE '%$filterCode%'";
+  $whereClause[] = "c.$_courseCodeField LIKE '%$filterCode%'";
 }
 if ($filterName !== '') {
-  $whereClause[] = "c.$courseNameField LIKE '%$filterName%'";
+  $whereClause[] = "c.$_courseNameField LIKE '%$filterName%'";
 }
 if ($filterType !== '') {
-  $whereClause[] = "c.$courseTypeField = '$filterType'";
+  $whereClause[] = "c.$_courseTypeField = '$filterType'";
 }
 
 $whereSQL = '';
@@ -141,7 +141,7 @@ if (isset($_POST['addCourse'])) {
 // Multi Records File Insertion
 if (isset($_POST['addFile'])) {
   $ext = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
-  $fields = [$courseOwnerField, $courseCodeField, $courseNameField, $courseTypeField, $theoryMarksField, $practicalMarksField, $creditMarksField];
+  $fields = [$_courseOwnerField, $_courseCodeField, $_courseNameField, $_courseTypeField, $_courseTheoryMarksField, $_coursePracticalMarksField, $_courseCreditMarksField];
 
   switch ($ext) {
     case 'csv':
@@ -179,11 +179,11 @@ if (isset($_POST['addFile'])) {
 
 function GetAndSaveDataFromFile($ary)
 {
-  global $conn, $coursesTable;
-  global $courseOwnerField, $courseCodeField, $courseNameField, $courseTypeField, $theoryMarksField, $practicalMarksField, $creditMarksField;
-  global $courseOwnerTable, $courseOwnerNameField, $courseOwnerIdField;
+  global $conn, $_coursesTable;
+  global $_courseOwnerField, $_courseCodeField, $_courseNameField, $_courseTypeField, $_courseTheoryMarksField, $_coursePracticalMarksField, $_courseCreditMarksField;
+  global $_courseOwnerTable, $_courseOwnerNameField, $_courseOwnerIdField;
 
-  $fields = [$courseOwnerField, $courseCodeField, $courseNameField, $courseTypeField, $theoryMarksField, $practicalMarksField, $creditMarksField];
+  $fields = [$_courseOwnerField, $_courseCodeField, $_courseNameField, $_courseTypeField, $_courseTheoryMarksField, $_coursePracticalMarksField, $_courseCreditMarksField];
 
   $courseOwner = mysqli_real_escape_string($conn, $ary[1] ?? '');
   $courseCode = mysqli_real_escape_string($conn, $ary[2] ?? '');
@@ -198,10 +198,11 @@ function GetAndSaveDataFromFile($ary)
 
 
 
-  $coi = returnCourseOwnerId($conn, $courseOwnerTable, $courseOwnerNameField, $courseOwner, $courseOwnerIdField);
+  $coi = returnCourseOwnerId($conn, $_courseOwnerTable, $_courseOwnerNameField, $courseOwner, $_courseOwnerIdField);
+
   $data = [$coi, $courseCode, $courseName, $courseType, $theoryMarks, $practicalMarks, $creditMarks];
-  $whereData = $courseCodeField . " = '" . $courseCode . "' and " . $courseNameField . " = '" . $courseName . "'";
-  FieldStringSetter($conn, $coursesTable, $fields, $data, $whereData);
+  $whereData = $_courseCodeField . " = '" . $courseCode . "' and " . $_courseNameField . " = '" . $courseName . "'";
+  FieldStringSetter($conn, $_coursesTable, $fields, $data, $whereData);
 }
 
 
@@ -215,21 +216,17 @@ function returnCourseOwnerName($conn, $table, $idField, $idValue, $nameField)
 function returnCourseOwnerId($conn, $table, $nameField, $nameValue, $idField)
 {
   $selectOwner = "SELECT * FROM $table WHERE $nameField='$nameValue'";
+  // echo "$selectOwner<br>";
   $res = mysqli_query($conn, $selectOwner);
   $row = mysqli_fetch_assoc($res);
-  // echo $selectOwner . "<br>";
-  // echo $idField;
-  // echo "<pre>";
-  // print_r($row);
-
   // exit;
   return $row[$idField] ?? null;
 }
 
 
-function fetchCourseOwners($conn, $courseOwnerTable, $_id, $nameField, $id)
+function fetchCourseOwners($conn, $_courseOwnerTable, $_id, $nameField, $id)
 {
-  $responseOwners = mysqli_query($conn, "SELECT * FROM $courseOwnerTable WHERE $_id = '$id'");
+  $responseOwners = mysqli_query($conn, "SELECT * FROM $_courseOwnerTable WHERE $_id = '$id'");
 
   // print("<pre>");
   // echo("$selectOwners ifcvdixnvjinvndn nnd n ");
@@ -240,7 +237,7 @@ function fetchCourseOwners($conn, $courseOwnerTable, $_id, $nameField, $id)
 }
 
 // print("<pre>");
-// echo(fetchCourseOwners($conn, $courseOwnerTable, $courseOwnerIdField, $courseOwnerNameField, 1));
+// echo(fetchCourseOwners($conn, $_courseOwnerTable, $_courseOwnerIdField, $_courseOwnerNameField, 1));
 // exit;
 
 
@@ -309,10 +306,10 @@ $totalRows = mysqli_num_rows($response1);
             <?php
             mysqli_data_seek($responseOwners, 0);
             while ($row = mysqli_fetch_assoc($responseOwners)) {
-              $selected = ($filterOwner == $row[$courseOwnerIdField]) ? 'selected' : '';
+              $selected = ($filterOwner == $row[$_courseOwnerIdField]) ? 'selected' : '';
             ?>
-              <option value="<?php echo $row[$courseOwnerIdField]; ?>" <?php echo $selected; ?>>
-                <?php echo $row[$courseOwnerNameField]; ?>
+              <option value="<?php echo $row[$_courseOwnerIdField]; ?>" <?php echo $selected; ?>>
+                <?php echo $row[$_courseOwnerNameField]; ?>
               </option>
             <?php } ?>
           </select>
