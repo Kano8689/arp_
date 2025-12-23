@@ -1,6 +1,4 @@
 => Admin:
-   - add file testing
-   - mapping module code changedl
 
 
 => CEO:

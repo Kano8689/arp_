@@ -201,7 +201,11 @@ if (isset($_POST['addFile'])) {
         case 'csv':
             $handle = fopen($_FILES['file']['tmp_name'], "r");
 
+            $rowIndex = 0;
             while ($row = fgetcsv($handle)) {
+                if ($rowIndex == 0)
+                    continue;
+                $rowIndex++;
                 GetAndSaveDataFromFile($row);
             }
 
@@ -213,6 +217,8 @@ if (isset($_POST['addFile'])) {
             $sheetData = $spreadsheet->getActiveSheet()->toArray();
 
             foreach ($sheetData as $index => $row) {
+                if ($index == 0)
+                    continue;
                 GetAndSaveDataFromFile($row);
             }
 
@@ -239,36 +245,24 @@ if (isset($_POST['addFile'])) {
 function GetAndSaveDataFromFile($ary)
 {
     global $conn, $_mappingStudentTable, $defaultLoginExtension;
-    global $_mappingStudentId, $_facId, $_mappingStudentCourseId, $_mappingStudentSlotId, $_mappingStudentSemesterYear, $_mappingStudentSemesterType;
+    global $_mappingStudentId, $_mappingStudentCourseId, $_mappingStudentSlotId, $_mappingStudentRegistrationType, $_mappingStudentSemesterYear, $_mappingStudentSemesterType;
     global $_loginTable, $_loginUsername, $_loginPassword, $_loginUserType;
 
-    $fields = [$_mappingStudentId, $_facId, $_mappingStudentCourseId, $_mappingStudentSlotId, $_mappingStudentSemesterYear, $_mappingStudentSemesterType];
+    $fields = [$_mappingStudentId, $_mappingStudentCourseId, $_mappingStudentSlotId, $_mappingStudentRegistrationType, $_mappingStudentSemesterYear, $_mappingStudentSemesterType];
 
     // From student table
-    $mappingStuEnNo = mysqli_real_escape_string($conn, $ary[1] ?? '');
     $mappingStuName = mysqli_real_escape_string($conn, $ary[2] ?? '');
-    $mappingAdtYr = mysqli_real_escape_string($conn, $ary[3] ?? '');
-    // From student to program table
-    $mappingProgram = mysqli_real_escape_string($conn, $ary[4] ?? '');
-    // From facultuy table
-    $mappingFacName = mysqli_real_escape_string($conn, $ary[5] ?? '');
     // From course table
-    $mappingCourseCode = mysqli_real_escape_string($conn, $ary[6] ?? '');
-    $mappingCourseName = mysqli_real_escape_string($conn, $ary[7] ?? '');
-    $mappingCourseType = mysqli_real_escape_string($conn, $ary[8] ?? '');
-    $mappingCourseTheory = mysqli_real_escape_string($conn, $ary[9] ?? '');
-    $mappingCoursePracticle = mysqli_real_escape_string($conn, $ary[10] ?? '');
-    $mappingCourseCredits = mysqli_real_escape_string($conn, $ary[11] ?? '');
+    $mappingCourseName = mysqli_real_escape_string($conn, $ary[4] ?? '');
     // From slot table
-    $mappingSlotName = mysqli_real_escape_string($conn, $ary[12] ?? '');
+    $mappingSlotName = mysqli_real_escape_string($conn, $ary[5] ?? '');
     // From direct table
-    $mappingSlotYear = mysqli_real_escape_string($conn, $ary[13] ?? '');
-    $mappingSemType = mysqli_real_escape_string($conn, $ary[14] ?? '');
+    $mappingRegistrationType = mysqli_real_escape_string($conn, $ary[6] ?? '');
+    $mappingSlotYear = mysqli_real_escape_string($conn, $ary[7] ?? '');
+    $mappingSemType = mysqli_real_escape_string($conn, $ary[8] ?? '');
 
-    // $stuId, $facId, $crseId, $sltId, $sltYr, $semTyp;
 
     $stuId = GetStudentNameId($mappingStuName, false);
-    $facId = GetFacultyNameId($mappingFacName, false);
     $crseId = GetCourseNameId($mappingCourseName, false);
     $sltId = GetSlotNameId($mappingSlotName, false);
 
@@ -276,29 +270,31 @@ function GetAndSaveDataFromFile($ary)
 
 
 
-    $data = [$stuId, $facId, $crseId, $sltId, $mappingSlotYear, $semesterType];
+    $data = [$stuId, $crseId, $sltId, $mappingRegistrationType, $mappingSlotYear, $semesterType];
 
-    // echo $crseId."<br>";
-    // echo $mappingCourseName."<br>";
-    // exit;
     $whereData = $_mappingStudentId . " = '" . $stuId . "' and " . $_mappingStudentSlotId . " = '" . $sltId . "' and " . $_mappingStudentSemesterYear . " = '" . $mappingSlotYear . "' and " . $_mappingStudentSemesterType . " = '" . $semesterType . "'";
 
-    // echo $semesterType."<br>";
-    // echo $whereData."<br>";
+    // echo "";
+    // print("<pre>");
+    // echo "$_mappingStudentTable<br>";
+    // print_r($fields);
+    // print_r($data);
+    // echo "$whereData<br>";
     // exit;
 
-    FacultyUniqueForFreeze($facId, $crseId, $mappingSlotYear, $semesterType);
+    // FacultyUniqueForFreeze($stuId, $crseId, $mappingRegistrationType, $mappingSlotYear, $semesterType);
 
     FieldStringSetter($conn, $_mappingStudentTable, $fields, $data, $whereData);
 }
 
-function FacultyUniqueForFreeze($fac, $crse, $year, $sem ){
+function FacultyUniqueForFreeze($fac, $crse, $year, $sem)
+{
     global $conn, $freezePushPermissionTable, $freezePushPermissionAcademicYear;
     global $freezePushPermissionFacId, $freezePushPermissionCourseId, $freezePushPermissionAcademicYear, $freezePushPermissionAcademicSem;
 
     $where = "$freezePushPermissionFacId='$fac' AND $freezePushPermissionCourseId='$crse' AND $freezePushPermissionAcademicYear='$year' AND $freezePushPermissionAcademicSem='$sem'";
 
-    if(isUniqueOrNot($conn, $freezePushPermissionTable, $where)){
+    if (isUniqueOrNot($conn, $freezePushPermissionTable, $where)) {
         // echo "HEllo...<br>";
         $InsertingFacPer = "INSERT INTO $freezePushPermissionTable ($freezePushPermissionFacId, $freezePushPermissionCourseId, $freezePushPermissionAcademicYear, $freezePushPermissionAcademicSem) VALUES ('$fac', '$crse', $year, '$sem')";
         // echo "$InsertingFacPer";
@@ -518,7 +514,7 @@ $totalRows = mysqli_num_rows($mappingRes1);
                         }
                         ?>
                     </select>
-                    
+
                     <select name="filter_academic_year" style="flex:1; padding:10px;">
                         <option value="">-- Select Year --</option>
                         <?php
@@ -558,7 +554,7 @@ $totalRows = mysqli_num_rows($mappingRes1);
                         }
                         ?>
                     </select>
-                    
+
                 </div>
 
                 <div style="margin-top:10px;">
@@ -595,20 +591,20 @@ $totalRows = mysqli_num_rows($mappingRes1);
                         $course_typ = $type == 1 ? "T" : ($type == 2 ? "P" : ($type == 3 ? "TEL" : "None"));
                         ?>
                         <td style="text-align: center;"><?php echo $num++; ?></td>
-                         <td style="text-align: start;"><?php echo GetStudentDetails($_studentCode, $row[$_mappingStudentId])." - ".GetStudentDetails($_studentName, $row[$_mappingStudentId]); ?></td>
-                         <td style="text-align: center;"><?php echo GetSlotNameId($row[$_mappingStudentSlotId]); ?></td>
-                         <td style="text-align: center;"><?php echo $row[$_mappingStudentSemesterYear]; ?></td>
-                         <td style="text-align: center;"><?php echo $sem_typ; ?></td>
-                         <td style="text-align: center;"><?php echo $row[$_mappingStudentRegistrationType]; ?></td>
+                        <td style="text-align: start;"><?php echo GetStudentDetails($_studentCode, $row[$_mappingStudentId]) . " - " . GetStudentDetails($_studentName, $row[$_mappingStudentId]); ?></td>
+                        <td style="text-align: center;"><?php echo GetSlotNameId($row[$_mappingStudentSlotId]); ?></td>
+                        <td style="text-align: center;"><?php echo $row[$_mappingStudentSemesterYear]; ?></td>
+                        <td style="text-align: center;"><?php echo $sem_typ; ?></td>
+                        <td style="text-align: center;"><?php echo $row[$_mappingStudentRegistrationType]; ?></td>
                         <td style="text-align: center;">
                             <?php echo GetProgramNameId(GetStudentDetails($_studentProgram, $row[$_mappingStudentId])); ?>
                         </td>
-                        <td style="text-align: start;"><?php echo GetCourseDetails($_courseCodeField, $row[$_mappingStudentCourseId])." - ".GetCourseDetails($_courseNameField, $row[$_mappingStudentCourseId]); ?></td>
+                        <td style="text-align: start;"><?php echo GetCourseDetails($_courseCodeField, $row[$_mappingStudentCourseId]) . " - " . GetCourseDetails($_courseNameField, $row[$_mappingStudentCourseId]); ?></td>
 
                         <td style="text-align: center; padding: 5px 0;">
                             <form method="POST">
                                 <!-- Update button -->
-                                 <!-- <a onclick="editMapping('<?php echo $row[$_mappingStudentTblId]; ?>',
+                                <!-- <a onclick="editMapping('<?php echo $row[$_mappingStudentTblId]; ?>',
                                                 '<?php echo GetStudentDetails($_studentName, $row[$_mappingStudentId]); ?>',
                                                 '<?php echo GetFacultyNameId($row[$_facId]); ?>',
                                                 '<?php echo GetCourseDetails($_courseNameField, $row[$_mappingStudentCourseId]); ?>',
@@ -761,7 +757,7 @@ $totalRows = mysqli_num_rows($mappingRes1);
                         <option value="">Select Student</option>
                         <?php mysqli_data_seek($studentsRes, 0);
                         while ($row = mysqli_fetch_assoc($studentsRes)) { ?>
-                            <option value="<?php echo $row[$_studentName]; ?>"><?php echo $row[$_studentCode]." - ".$row[$_studentName]; ?></option>
+                            <option value="<?php echo $row[$_studentName]; ?>"><?php echo $row[$_studentCode] . " - " . $row[$_studentName]; ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -874,7 +870,7 @@ $totalRows = mysqli_num_rows($mappingRes1);
                         <option value="">Select Student</option>
                         <?php mysqli_data_seek($studentsRes, 0);
                         while ($row = mysqli_fetch_assoc($studentsRes)) { ?>
-                            <option value="<?php echo $row[$_studentName]; ?>"><?php echo $row[$_studentCode]." - ".$row[$_studentName]; ?></option>
+                            <option value="<?php echo $row[$_studentName]; ?>"><?php echo $row[$_studentCode] . " - " . $row[$_studentName]; ?></option>
                         <?php } ?>
                     </select>
                 </div>
