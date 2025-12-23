@@ -128,9 +128,9 @@ if (isset($_POST['addProgram'])) {
 
 
 if (isset($_POST['addFile'])) {
-  session_start(); // Start session at the top
+  // session_start(); // Start session at the top
   $ext = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
-  $fields = [$programNameField, $programSemField, $programDeptField];
+  $fields = [$_programNameField, $_programSemField, $_programDeptField, $_graduationTypeField];
 
   // Summary Counters
   $total = 0;
@@ -141,10 +141,16 @@ if (isset($_POST['addFile'])) {
   // 🔧 Insert or Update helper
   function insertOrUpdateProgram($conn, $table, $fields, $values, $uniqueField)
   {
+    // echo "";
+    // exit;
     $programName = $values[0];
     $programSem = $values[1];
     $programDept = $values[2];
     $graduationType = $values[3];
+    // print("<pre>");
+    // print_r($fields);
+    // echo "";
+    // exit;
 
     // Check if record exists
     $checkSql = "SELECT * FROM $table WHERE $uniqueField = '$programName' LIMIT 1";
@@ -185,11 +191,12 @@ if (isset($_POST['addFile'])) {
       fclose($handle);
     }
   } elseif (in_array($ext, ['xlsx', 'xls'])) {
+    // echo "done";
     $spreadsheet = IOFactory::load($_FILES['file']['tmp_name']);
     $sheetData = $spreadsheet->getActiveSheet()->toArray();
     foreach ($sheetData as $index => $row) {
       if ($index == 0)
-        continue; // skip header
+        continue; // skip header  
       $rows[] = $row;
     }
   } elseif ($ext === 'sql') {
@@ -215,13 +222,13 @@ if (isset($_POST['addFile'])) {
     $programSem = trim($row[2] ?? '');
     $programDept = trim($row[3] ?? '');
     $graduationType = trim($row[4] ?? '');
-
+    
     // Skip if any field is empty
     if ($programName === '' || $programSem === '' || $programDept === '' || $graduationType === '') {
       $failed++;
       continue;
     }
-
+    
     // Convert department name to ID
     $programDeptId = GetDepartmentNameId($programDept, false);
     $graduationType = strtoupper(trim($graduationType, " ")) == "UG" ? 1 : (strtoupper(trim($graduationType, " ")) == "PG" ? 2 : 0);
@@ -244,7 +251,7 @@ if (isset($_POST['addFile'])) {
       $_programTableName,
       $fields,
       [$programName, $programSem, $programDeptId, $graduationType],
-      $programNameField
+      $_programNameField
     );
 
     switch ($result) {
@@ -271,6 +278,7 @@ if (isset($_POST['addFile'])) {
   $display = "flex";
   // $_SESSION['display'] = "flex";
   // Redirect after processing
+
   header("Location: $redirectUrl$filterQuery");
   exit;
 }
@@ -306,6 +314,9 @@ function GetDepartmentNameId($_value, $_isGetName = true)
   $select = "SELECT * FROM $_departmentTable WHERE $field = '$_value'";
   $res = mysqli_query($conn, $select);
   $row = mysqli_fetch_assoc($res);
+
+  // echo "$select";
+  // exit;
 
   if ($_isGetName)
     return $row[$_departmentName] ?? null;

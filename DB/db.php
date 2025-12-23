@@ -4,6 +4,36 @@ include_once("password.php");
 session_start();
 
 
+enum SemesterType: int{
+    case Fall = 1;
+    case Winter = 2;
+    case Summer = 3;
+
+    public function label(): string {
+        return match($this) {
+            SemesterType::Fall => 'Fall',
+            SemesterType::Winter => 'Winter', 
+            SemesterType::Summer => 'Summer'
+        };
+    }
+
+    public function GetSemesterName($value){
+        return match($value){
+            1 => 'Fall',
+            2 => 'Winter', 
+            3 => 'Summer',
+            default => "None"
+        };
+    }
+}
+
+// echo SemesterType::Fall->value;
+// $semester ??= SemesterType::Fall;
+// echo $semester->label();
+
+// exit;
+
+
 class DatabaseConfiguration {
     public $host = "localhost";
     public $user = "root";
