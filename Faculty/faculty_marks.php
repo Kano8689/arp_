@@ -125,15 +125,25 @@ if (isset($_POST['freeze_me'])) {
   $fac = GetFacultyDetailCellData($_facultyId);
   $crse = $_SESSION['course'];
   $examName = $_SESSION["courseOpenBtn1"] ?? 0;
-  // echo "$examName<br>";
-  $examName = $examName == 1 ? "$_freezePushPermissionFreezeCa1" : ($examName == 2 ? "$_freezePushPermissionFreezeCa2" : ($examName == 3 ? "$_freezePushPermissionFreezeCa3" : ($examName == 4 ? "$_freezePushPermissionFreezeLab" : ($examName == 5 ? "$_freezePushPermissionFreezeInternal" : ""))));
 
+  // echo "fcsavev<br>";
+  // echo "facid = $fac<br>";
+  // echo "course id = $crse<br>";
+  // echo "exam id = $examName<br>";
+
+  $examName = $examName == 1 ? "$_freezePushPermissionFreezeCa1" : ($examName == 2 ? "$_freezePushPermissionFreezeCa2" : ($examName == 3 ? "$_freezePushPermissionFreezeCa3" : ($examName == 4 ? "$_freezePushPermissionFreezeInternal" : ($examName == 5 ? "$_freezePushPermissionFreezeLab" : ""))));
+
+  
   // echo "$examName";
   // exit;
-
+  
   $status = 0;
   $sql = "UPDATE $_freezePushPermissionTable SET $examName = '0' WHERE $_freezePushPermissionFacId='$fac' AND $_freezePushPermissionCourseId='$crse'";
-  // echo "$sql";
+
+  // echo "exam name = $examName<br>";
+  // echo "$sql<br>";
+  // exit;
+
   // exit;
   mysqli_query($conn, $sql);
   header("location: faculty_marks.php");
@@ -212,6 +222,7 @@ if (isset($_SESSION['courseOpenBtn'])) {
   $freezeCourseRes = mysqli_fetch_assoc($freezeCourseRes);
   $f = str_replace("_", "", $selectFromResultTableField);
   $f = str_replace("practicalmarks", "lab", $f);
+  $f = str_replace("labmarks", "lab", $f);
   $f = str_replace("internalmarks", "internal", $f);
   $f = $f . "_freeze";
   $isUnFreeze = $freezeCourseRes[$f];
@@ -406,36 +417,23 @@ include_once("../header.php");
             <input type="hidden" name="isType" value="<?php echo $ctype; ?>" />
 
             <?php 
-            // generate button
-            ?>
+              $isFieldShowBool = [$isCa1, $isCa2, $isCa3, $isInternal, $isLab];
+              $isFieldFreezeBool = [$isCa1Freze, $isCa2Freeze, $isCa3Freeze, $isInternalFreeze, $isLabFreeze];
+              $htmlNameAry = ["isCa1", "isCa2", "isCa3", "isInternal", "isLab"];
+              $htmlFieldAry = ["CA1", "CA2", "CA3", "Internal", "Lab"];
+              
+              for ($i=0; $i <5 ; $i++) { 
+                if($isFieldShowBool[$i]){ ?>  
+                <button <?= !$isFieldFreezeBool[$i] ? 'disabled' : ''; ?> class="btn" name="<?php echo $btnfldbtnfld[$i]; ?>" style="margin-left:16px;"><?php echo $htmlFieldAry[$i]; ?></button>
 
+                <input type="hidden" readonly name="<?php echo $htmlNameAry[$i]; ?>" value="<?php echo $isFieldShowBool[$i]."-".$isFieldFreezeBool[$i]; ?>" />
+            <?php } } ?>
 
-
-            <?php if ($isCa1) { ?>
-              <button <?= !$isCa1Freze ? 'disabled' : ''; ?> class="btn" name="<?php echo $btnfldbtnfld[0]; ?>" style="margin-left:16px;">CA1</button>
-              <input type="hidden" name="isCa1" value="<?php echo $isCa1; ?>" />
-            <?php } ?>
-
-            <?php if ($isCa2) { ?>
+            <!-- <?php if ($isCa2) { ?>
               <button <?= !$isCa2Freeze ? 'disabled' : ''; ?> class="btn" name="<?php echo $btnfldbtnfld[1]; ?>" style="margin-left:16px;">CA2</button>
               <input type="hidden" name="isCa2" value="<?php echo $isCa2; ?>" />
-            <?php } ?>
+            <?php } ?> -->
 
-            <?php if ($isCa3) { ?>
-              <button <?= !$isCa3Freeze ? 'disabled' : ''; ?> class="btn" name="<?php echo $btnfldbtnfld[2]; ?>" style="margin-left:16px;">CA3</button>
-              <input type="hidden" name="isCa3" value="<?php echo $isCa3; ?>" />
-            <?php } ?>
-
-            <?php if ($isInternal) { ?>
-              <button <?= !$isInternalFreeze ? 'disabled' : ''; ?> class="btn" name="<?php echo $btnfldbtnfld[3]; ?>" style="margin-left:16px;">Internal</button>
-              <input type="hidden" name="isInternal" value="<?php echo $isInternal; ?>" />
-            <?php } ?>
-
-            <?php if ($isLab) { ?>
-              <button <?= !$isLabFreeze ? 'disabled' : ''; ?> class="btn" name="<?php echo $btnfldbtnfld[4]; ?>" style="margin-left:16px;">Lab</button>
-              <input type="hidden" name="isLab" value="<?php echo $isLab; ?>" />
-            <?php } ?>
-            <?php ?>
           </div>
         </form>
       </div>
