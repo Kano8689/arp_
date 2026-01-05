@@ -20,7 +20,6 @@ $redirectUrl = "add_faculty.php?page=$currentPage&limit=$currentLimit";
 $filterDept = isset($_GET['filterDept_faculty']) ? mysqli_real_escape_string($conn, $_GET['filterDept_faculty']) : '';
 $filterCode = isset($_GET['filterCode_faculty']) ? mysqli_real_escape_string($conn, $_GET['filterCode_faculty']) : '';
 $filterName = isset($_GET['filterName_faculty']) ? mysqli_real_escape_string($conn, $_GET['filterName_faculty']) : '';
-$filterEmail = isset($_GET['filterEmail_faculty']) ? mysqli_real_escape_string($conn, $_GET['filterEmail_faculty']) : '';
 
 $whereClause = [];
 
@@ -34,9 +33,6 @@ if ($filterCode !== '') {
 }
 if ($filterName !== '') {
   $whereClause[] = "$_facultyName LIKE '%$filterName%'";
-}
-if ($filterEmail !== '') {
-  $whereClause[] = "$_facultyEmail LIKE '%$filterEmail%'";
 }
 
 $whereSQL = '';
@@ -52,8 +48,6 @@ if ($filterCode !== '')
   $filterQuery .= '&filterCode_faculty=' . urlencode($filterCode);
 if ($filterName !== '')
   $filterQuery .= '&filterName_faculty=' . urlencode($filterName);
-if ($filterEmail !== '')
-  $filterQuery .= '&filterEmail_faculty=' . urlencode($filterEmail);
 
 
 // Delete Faculty
@@ -81,14 +75,12 @@ if (isset($_POST['editFaculty'])) {
   $facultyCode = $_POST['f_id1'];
   $facultyName = $_POST['f_name1'];
   $facultyDept = $_POST['f_dept1'];
-  $facultyEmail = $_POST['f_email1'];
-  $facultyJoinDate = $_POST['f_joinDate1'];
 
   $facultyDept = GetDepartmentNameId($facultyDept, false);
 
-  $where = "$_facultyName = '$facultyName' AND $_facultyEmail='$facultyEmail' AND $_facultyDepartment = '$facultyDept' AND $_facultyJoinDate = '$facultyJoinDate'";
+  $where = "$_facultyCode = '$facultyCode' AND $_facultyDepartment = '$facultyDept'";
   if (isUniqueOrNot($conn, $_facultyTable, $where)) {
-    $UpdateFaculty = "UPDATE $_facultyTable  SET $_facultyCode = '$facultyCode', $_facultyName = '$facultyName', $_facultyDepartment = '$facultyDept', $_facultyEmail = '$facultyEmail', $_facultyJoinDate = '$facultyJoinDate' WHERE $_facultyId = '$facultyId'";
+    $UpdateFaculty = "UPDATE $_facultyTable  SET $_facultyCode = '$facultyCode', $_facultyName = '$facultyName', $_facultyDepartment = '$facultyDept' WHERE $_facultyId = '$facultyId'";
     mysqli_query($conn, $UpdateFaculty);
 
     $page = isset($_POST['page']) ? intval($_POST['page']) : $currentPage;
@@ -106,8 +98,6 @@ if (isset($_POST['addFaculty'])) {
   $facultyCode = $_POST['f_id'];
   $facultyName = $_POST['f_name'];
   $facultyDept = $_POST['f_dept'];
-  $facultyEmail = $_POST['f_email'];
-  $facultyJoinDate = $_POST['f_joinDate'];
   $facultyPassword = $_POST['f_password'];
   $facultyConfirmPassword = $_POST['f_cpassword'];
 
@@ -120,7 +110,7 @@ if (isset($_POST['addFaculty'])) {
 
     $where = "$_facultyCode='$facultyCode'";
     if (isUniqueOrNot($conn, $_facultyTable, $where)) {
-      $AddFaculty = "INSERT INTO $_facultyTable ($_facultyCode,$_facultyName,$_facultyDepartment,$_facultyEmail,$_facultyJoinDate) VALUES ('$facultyCode','$facultyName','$facultyDept','$facultyEmail','$facultyJoinDate')";
+      $AddFaculty = "INSERT INTO $_facultyTable ($_facultyCode,$_facultyName,$_facultyDepartment) VALUES ('$facultyCode','$facultyName','$facultyDept')";
       mysqli_query($conn, $AddFaculty);
 
       $un = $facultyCode . $defaultLoginExtension;
@@ -192,26 +182,20 @@ if (isset($_POST['addFile'])) {
 function GetAndSaveDataFromFile($ary)
 {
   global $conn, $_facultyTable, $defaultLoginExtension;
-  global $_facultyCode, $_facultyName, $_facultyDepartment, $_facultyEmail, $_facultyJoinDate;
+  global $_facultyCode, $_facultyName, $_facultyDepartment;
   global $_loginTable, $_loginUsername, $_loginPassword, $_loginUserType;
 
-  $fields = [$_facultyCode, $_facultyName, $_facultyDepartment, $_facultyEmail, $_facultyJoinDate];
+  $fields = [$_facultyCode, $_facultyName, $_facultyDepartment];
 
   $facultyCode = mysqli_real_escape_string($conn, $ary[1] ?? '');
   $facultyName = mysqli_real_escape_string($conn, $ary[2] ?? '');
   $facultyDepartment = mysqli_real_escape_string($conn, $ary[3] ?? '');
-  $facultyEmail = mysqli_real_escape_string($conn, $ary[4] ?? '');
-  $facultyJoinDate = mysqli_real_escape_string($conn, $ary[5] ?? '');
-  $pacultyPassowrd = mysqli_real_escape_string($conn, $ary[6] ?? '');
-
-  if ($facultyJoinDate) {
-    $facultyJoinDate = date("Y-m-d", strtotime($facultyJoinDate));
-  }
+  $pacultyPassowrd = mysqli_real_escape_string($conn, $ary[4] ?? '');
 
   $facultyDepartment = GetDepartmentNameId($facultyDepartment, false);
   $encPass = Encrypt($pacultyPassowrd);
 
-  $data = [$facultyCode, $facultyName, $facultyDepartment, $facultyEmail, $facultyJoinDate, $encPass];
+  $data = [$facultyCode, $facultyName, $facultyDepartment, $encPass];
   $whereData = $_facultyCode . " = '" . $facultyCode . "' and " . $_facultyName . " = '" . $facultyName . "'";
 
   $selectTemp = "SELECT * FROM $_facultyTable WHERE $_facultyCode='$facultyCode'";
@@ -299,7 +283,7 @@ $totalRows = mysqli_num_rows($response1);
 
 
     <div id="filterBox"
-      style="display:<?php echo ($filterDept || $filterCode || $filterName || $filterEmail) ? 'block' : 'none'; ?>; margin-top:10px; background:#f8f8f8; padding:15px; border-radius:8px;">
+      style="display:<?php echo ($filterDept || $filterCode || $filterName) ? 'block' : 'none'; ?>; margin-top:10px; background:#f8f8f8; padding:15px; border-radius:8px;">
       <form method="GET">
         <div style="display:flex; flex-wrap:wrap; gap:10px;">
           <select name="filterDept_faculty" style="flex:1; padding:10px;">
@@ -317,8 +301,6 @@ $totalRows = mysqli_num_rows($response1);
             placeholder="Faculty ID" style="flex:1; padding:10px;">
           <input type="text" name="filterName_faculty" value="<?php echo htmlspecialchars($filterName); ?>"
             placeholder="Faculty Name" style="flex:1; padding:10px;">
-          <input type="text" name="filterEmail_faculty" value="<?php echo htmlspecialchars($filterEmail); ?>"
-            placeholder="Email" style="flex:1; padding:10px;">
         </div>
         <div style="margin-top:10px;">
           <button class="btn" type="submit">Apply Filter</button>
@@ -336,8 +318,6 @@ $totalRows = mysqli_num_rows($response1);
             <th style="text-align: center;">Faculty ID</th>
             <th style="text-align: center;">Name</th>
             <th style="text-align: center;">Department</th>
-            <th style="text-align: center;">Email</th>
-            <th style="text-align: center;">Joining Date</th>
             <th style="text-align: center;">Actions</th>
           </tr>
         </thead>
@@ -350,24 +330,17 @@ $totalRows = mysqli_num_rows($response1);
                                           '<?php echo $row[$_facultyCode]; ?>',
                                           '<?php echo $row[$_facultyName]; ?>',
                                           '<?php echo GetDepartmentNameId($row[$_facultyDepartment]); ?>',
-                                          '<?php echo $row[$_facultyEmail]; ?>',
-                                          '<?php echo $row[$_facultyJoinDate]; ?>',
                                           '<?php echo $currentPage; ?>',
                                           '<?php echo $currentLimit; ?>',
                                           '<?php echo htmlspecialchars($filterName); ?>',
                                           '<?php echo htmlspecialchars($filterCode); ?>',
-                                          '<?php echo htmlspecialchars($filterDept); ?>',
-                                          '<?php echo htmlspecialchars($filterEmail); ?>'
+                                          '<?php echo htmlspecialchars($filterDept); ?>'
                                           )">
               <td style="text-align: center; padding: 5px 0;"><?php echo $num++ ?></td>
               <td style="text-align: center; padding: 5px 0;"><?php echo $row[$_facultyCode]; ?></td>
               <td style="text-align: center; padding: 5px 0;"><?php echo $row[$_facultyName]; ?></td>
               <td style="text-align: center; padding: 5px 0;">
                 <?php echo GetDepartmentNameId($row[$_facultyDepartment]); ?>
-              </td>
-              <td style="text-align: center; padding: 5px 0;"><?php echo $row[$_facultyEmail]; ?></td>
-              <td style="text-align: center; padding: 5px 0;">
-                <?php echo date("d-m-Y", strtotime($row[$_facultyJoinDate])); ?>
               </td>
               <td style="text-align: center; padding: 5px 0;">
                 <form method="POST">
@@ -376,15 +349,11 @@ $totalRows = mysqli_num_rows($response1);
                                           '<?php echo $row[$_facultyCode]; ?>',
                                           '<?php echo $row[$_facultyName]; ?>',
                                           '<?php echo GetDepartmentNameId($row[$_facultyDepartment]); ?>',
-                                          '<?php echo $row[$_facultyEmail]; ?>',
-                                          '<?php echo $row[$_facultyJoinDate]; ?>',
                                           '<?php echo $currentPage; ?>',
                                           '<?php echo $currentLimit; ?>',
                                           '<?php echo htmlspecialchars($filterName); ?>',
                                           '<?php echo htmlspecialchars($filterCode); ?>',
-                                          '<?php echo htmlspecialchars($filterDept); ?>',
-                                          '<?php echo htmlspecialchars($filterEmail); ?>'
-                                          )" class="btn btn-light" style="display:inline-block; margin-right:5px;">
+                                          '<?php echo htmlspecialchars($filterDept); ?>')" class="btn btn-light" style="display:inline-block; margin-right:5px;">
                     ✏️ Edit
                   </a>
 
@@ -437,12 +406,6 @@ $totalRows = mysqli_num_rows($response1);
         <?php } ?>
       </select>
 
-      <label class="fw-bold">Email :</label>
-      <input type="text" name="f_email" id="fEmail" placeholder="Email">
-
-      <label class="fw-bold">Join Date :</label>
-      <input type="date" name="f_joinDate" id="fJoinDate" placeholder="Join Date"><br></br>
-
       <label class="fw-bold">Password :</label>
       <input type="password" name="f_password" id="fPass" placeholder="Set Password">
 
@@ -472,7 +435,6 @@ $totalRows = mysqli_num_rows($response1);
       <input type="hidden" name="filterDept_faculty" id="edit_filterDept_faculty">
       <input type="hidden" name="filterCode_faculty" id="edit_filterCode_faculty">
       <input type="hidden" name="filterName_faculty" id="edit_filterName_faculty">
-      <input type="hidden" name="filterEmail_faculty" id="edit_filterEmail_faculty">
 
       <label class="fw-bold">Faculty ID :</label>
       <input type="text" name="f_id1" id="fId1" placeholder="Faculty ID">
@@ -488,12 +450,6 @@ $totalRows = mysqli_num_rows($response1);
           <option value="<?php echo $row[$_departmentName]; ?>"><?php echo $row[$_departmentName]; ?></option>
         <?php } ?>
       </select>
-
-      <label class="fw-bold">Email :</label>
-      <input type="text" name="f_email1" id="fEmail1" placeholder="Email">
-
-      <label class="fw-bold">Join Date :</label>
-      <input type="date" name="f_joinDate1" id="fJoinDate1" placeholder="Join Date">
 
       <div class="modal-actions">
         <button class="btn" name="editFaculty">Edit Faculty</button>

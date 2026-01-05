@@ -16,6 +16,7 @@ $currentPage = basename($_SERVER['PHP_SELF']); // gets current file name
     <!-- <link rel="stylesheet" href="css_js/style.css"> -->
     <link rel="stylesheet" href="../css_js/style.css">
     <link rel="stylesheet" href="../Admin/css_js/styles.css">
+    <!-- <link rel="stylesheet" href="../CEO/css_js/styles.css"> -->
     <link rel="stylesheet" href="../Faculty/css_js/styles.css">
     <link rel="stylesheet" href="../Students/css_js/styles.css">
     <link rel="stylesheet" href="css_js/styles.css">

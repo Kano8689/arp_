@@ -79,8 +79,6 @@ class FacultiesDetails  {
     public $_faculty_code = "faculty_code";
     public $_faculty_name = "faculty_name";
     public $_faculty_department = "facultie_department";
-    public $_faculty_email = "faculty_email";
-    public $_faculty_joinDate = "faculty_join_date";
     public $_created_at = "created_at";
     public $_updated_at = "updated_at";
 }
@@ -226,7 +224,7 @@ $conn = mysqli_connect($_dbConfiguration->host, $_dbConfiguration->user, $_dbCon
 $_session_login_type = "loginType";
 $_session_login_name = "loginName";
 $_session_login_id = "loginName";
-$_main_directory = "arp_";
+$_main_directory = "ARP";
 $defaultLoginExtension = "@amity.blr.edu";
 
 $_sem_count = "SEM_COUNT";
@@ -273,8 +271,6 @@ $_sem_count = "SEM_COUNT";
     $_facultyCode = $_facultiesDetailsObject->_faculty_code;
     $_facultyName = $_facultiesDetailsObject->_faculty_name;
     $_facultyDepartment = $_facultiesDetailsObject->_faculty_department;
-    $_facultyEmail = $_facultiesDetailsObject->_faculty_email;
-    $_facultyJoinDate = $_facultiesDetailsObject->_faculty_joinDate;
     $_facultyCreatedAt = $_facultiesDetailsObject->_created_at;
     $_facultyUpdatedAt = $_facultiesDetailsObject->_updated_at;
 }

@@ -83,6 +83,8 @@ function ResultValidationSelect() {}
 
 include_once("../header.php");
 ?>
+
+
 <div class="container">
     <!-- Title + Breadcrumb -->
     <div class="page-header">
@@ -95,7 +97,7 @@ include_once("../header.php");
     </div>
 
     <div class="card" style="display: <?php echo $display == "none" ? "block" : "none"; ?>;">
-        <form method="POST">
+        <form method="POST" class="student_form" style="margin: 0; padding: 0;">
             <select name="yearSelect" id="yearSelect">
                 <option name="" value="">Result Year</option>
                 <?php $currentYear = date('Y');
@@ -125,6 +127,7 @@ include_once("../header.php");
         </form>
     </div>
 
+
     <div class="card" style="display: <?php echo $display; ?>;">
         <?php $currentStudents = StudentGetFromIds($Ids);
         if (mysqli_num_rows($currentStudents) > 0) {
@@ -135,8 +138,8 @@ include_once("../header.php");
             }
             $IDs = "(" . implode(",", $stuIds) . ")";
         ?>
-            <form id="" method="POST" action="student_result_pdf.php" target="_blank">
-                <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+            <form id="" method="POST" action="student_result_pdf.php" target="_blank" style="margin: 0; padding: 0;">
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem; margin-right: 30px;">
                     <input type="hidden" id="stdId" name="stdId" value="<?php echo $IDs; ?>">
                     <input type="hidden" id="yr" name="yr" value="<?php echo $selectedYear; ?>">
                     <input type="hidden" id="sem" name="sem" value="<?php echo $selectedSem; ?>">
@@ -147,12 +150,12 @@ include_once("../header.php");
                 </div>
             </form>
 
+            
             <table class="table">
-                <thead id="">
-                    <td style="text-align: center;">Enrollment No.</td>
-                    <td style="text-align: center;">Name</td>
-                    <td style="text-align: center;">Action</td>
-                    </tr>
+                <thead id="" style="font-weight: bolder;">
+                    <th style="text-align: center;">Enrollment No.</th>
+                    <th style="text-align: center;">Name</th>
+                    <th style="text-align: center;">Action</th>
                 </thead>
 
                 <tbody id="">
@@ -161,12 +164,11 @@ include_once("../header.php");
 
                     while ($stuData = mysqli_fetch_assoc($currentStudents)) { ?>
                         <tr>
-
                             <td style="text-align: center;" class="enNo" name="enNo"><?php echo StudentFieldFetch($stuData, $_studentCode); ?></td>
                             <td style="text-align: center;" class="stdName" name="stdName"><?php echo StudentFieldFetch($stuData, $_studentName); ?></td>
 
                             <td style="text-align: center;">
-                                <form id="studentForm" method="POST" action="student_result_pdf.php" target="_blank">
+                                <form id="studentForm" method="POST" action="student_result_pdf.php" target="_blank" style="margin: 0; padding: 0;">
                                     <input type="hidden" id="stdId" name="stdId" value="<?php echo StudentFieldFetch($stuData, $_studentId); ?>">
                                     <input type="hidden" id="yr" name="yr" value="<?php echo $selectedYear; ?>">
                                     <input type="hidden" id="sem" name="sem" value="<?php echo $selectedSem; ?>">

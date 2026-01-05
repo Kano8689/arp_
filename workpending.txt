@@ -1,4 +1,5 @@
 => Admin:
+  - from faculty options remove email and joindate
 
 
 => CEO:

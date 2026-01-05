@@ -404,6 +404,13 @@ include_once("../header.php");
             <input type="hidden" name="hiddenMappingId" value="<?php echo $TempCoursePrintingIdsUnique[$num++]; ?>" id="">
             <input type="hidden" name="isUG" value="<?php echo $isUG; ?>" />
             <input type="hidden" name="isType" value="<?php echo $ctype; ?>" />
+
+            <?php 
+            // generate button
+            ?>
+
+
+
             <?php if ($isCa1) { ?>
               <button <?= !$isCa1Freze ? 'disabled' : ''; ?> class="btn" name="<?php echo $btnfldbtnfld[0]; ?>" style="margin-left:16px;">CA1</button>
               <input type="hidden" name="isCa1" value="<?php echo $isCa1; ?>" />
@@ -569,18 +576,6 @@ include_once("../header.php");
 
 <script>
   function SaveResult(trElem) {
-    const marksInput = trElem.querySelector('input[name="marks"]');
-    const maxVal = parseInt(marksInput.getAttribute('max')) || 0;
-    const marksVal = parseInt(marksInput.value) || 0;
-    
-    // Validate marks before saving
-    if (marksVal > maxVal) {
-        alert(`Marks cannot exceed ${maxVal}`);
-        marksInput.focus();
-        marksInput.select();
-        return;
-    }
-    
     const data = {
       // id: trElem.querySelector('input[name="id"]')?.value || 0,
       stdDtlId: trElem.querySelector('input[name="stdDtlId"]')?.value || 0,
@@ -691,35 +686,6 @@ include_once("../header.php");
         });
     };
   });
-</script>
-
-<script>
-  // Add input validation for marks
-document.addEventListener('DOMContentLoaded', function() {
-    // Validate single marks input
-    document.querySelectorAll('.marks').forEach(function(input) {
-        input.addEventListener('input', function(e) {
-            const maxVal = parseInt(this.getAttribute('max')) || 0;
-            const val = parseInt(this.value) || 0;
-            
-            if (val > maxVal) {
-                this.value = maxVal;
-            }
-            
-            // Optional: Visual feedback
-            if (val > maxVal) {
-                this.style.borderColor = '#ff4444';
-            } else {
-                this.style.borderColor = '';
-            }
-        });
-        
-        // Prevent paste of invalid values
-        input.addEventListener('paste', function(e) {
-            e.preventDefault();
-        });
-    });
-});
 </script>
 
 

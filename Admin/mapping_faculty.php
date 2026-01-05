@@ -688,17 +688,6 @@ $totalRows = mysqli_num_rows($mappingRes1);
                     </select>
                 </div>
 
-                <!-- <div>
-                    <label class="fw-bold">Registration Type</label>
-                    <select name="academic_year" id="academicYear" required>
-                        <option value="">Select Registration Type</option>
-                        <option value="Fresh">Fresh</option>
-                        <option value="Backlog">Backlog</option>
-                        <option value="Withdrawl">Withdrawl</option>
-                        <option value="Improvement">Improvement</option>
-                    </select>
-                </div> -->
-
             </div>
 
             <div class="row">
@@ -800,17 +789,6 @@ $totalRows = mysqli_num_rows($mappingRes1);
                         <?php } ?>
                     </select>
                 </div>
-
-                <!-- <div>
-                    <label class="fw-bold">Registration Type</label>
-                    <select name="academic_year" id="academicYear" required>
-                        <option value="">Select Registration Type</option>
-                        <option value="Fresh">Fresh</option>
-                        <option value="Backlog">Backlog</option>
-                        <option value="Withdrawl">Withdrawl</option>
-                        <option value="Improvement">Improvement</option>
-                    </select>
-                </div> -->
 
             </div>
 

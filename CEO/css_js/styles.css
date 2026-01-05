@@ -4,9 +4,10 @@ form {
     padding: 2.5rem 2rem;
     border-radius: 1rem;
     /* box-shadow: 0 8px 24px rgba(21, 66, 138, 0.15); */
-    max-width: 900px;
+    /* max-width: 900px; */
     margin: 2rem auto;
   }
+
   .form-floating > input,
   .form-floating > select {
     border-radius: 0.75rem;

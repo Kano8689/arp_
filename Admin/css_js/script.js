@@ -264,14 +264,12 @@ function close3Modal(id) {
     }, 300); // same as CSS transition duration
 }
 
-function editFaculty(id, code, name, dept, email, date, page, limit, filterName_faculty, filterCode_faculty, filterDept_faculty, filterEmail_faculty) {
+function editFaculty(id, code, name, dept, page, limit, filterName_faculty, filterCode_faculty, filterDept_faculty) {
     open3Modal('editfacultyModal');
     document.getElementById('edit_id').value = id;
     document.getElementById('fId1').value = code;
     document.getElementById('fName1').value = name;
     document.getElementById('programDept1').value = dept;
-    document.getElementById('fEmail1').value = email;
-    document.getElementById('fJoinDate1').value = date;
 
     document.getElementById('edit_page').value = page;
     document.getElementById('edit_limit').value = limit;
@@ -280,7 +278,6 @@ function editFaculty(id, code, name, dept, email, date, page, limit, filterName_
     document.getElementById('edit_filterDept_faculty').value = filterDept_faculty;
     document.getElementById('edit_filterCode_faculty').value = filterCode_faculty;
     document.getElementById('edit_filterName_faculty').value = filterName_faculty;
-    document.getElementById('edit_filterEmail_faculty').value = filterEmail_faculty;
     // console.log(email);
 }
 // -------------------------------------------------------------------------------------------------------------------------

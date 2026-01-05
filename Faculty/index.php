@@ -57,8 +57,6 @@ include_once("../header.php");
       <p><b>Faculty Name</b> : <?php echo GetFacultyDetailCellData($_facultyName); ?></p>
       <p><b>Faculty Code</b> : <?php echo GetFacultyDetailCellData($_facultyCode); ?></p>
       <p><b>Faculty Department</b> : <?php echo GetDepartmentDetailCellData(GetFacultyDetailCellData($_facultyDepartment)); ?></p>
-      <p><b>Faculty Email</b> : <?php echo GetFacultyDetailCellData($_facultyEmail); ?></p>
-      <p><b>Faculty Join Date</b> : <?php echo date("d-m-Y", strtotime(GetFacultyDetailCellData($_facultyJoinDate))); ?></p>
     </div>
   </div>
 
