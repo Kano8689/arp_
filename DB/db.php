@@ -224,7 +224,7 @@ $conn = mysqli_connect($_dbConfiguration->host, $_dbConfiguration->user, $_dbCon
 $_session_login_type = "loginType";
 $_session_login_name = "loginName";
 $_session_login_id = "loginName";
-$_main_directory = "ARP";
+$_main_directory = "arp_";
 $defaultLoginExtension = "@amity.blr.edu";
 
 $_sem_count = "SEM_COUNT";
