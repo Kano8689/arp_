@@ -266,6 +266,10 @@ function GetAndSaveDataFromFile($ary)
     $mappingSlotYear = mysqli_real_escape_string($conn, $ary[6] ?? '');
     $mappingSemType = mysqli_real_escape_string($conn, $ary[7] ?? '');
 
+    // echo "Before: $mappingSlotName<br>";
+    $mappingSlotName = str_replace(" ","", $mappingSlotName);
+    // echo "After: $mappingSlotName<br>";
+
 
     // $stuId = GetStudentNameId($mappingStuName, false);
     $facId = GetFacultyNameId($mappingFacName, false);
@@ -275,7 +279,8 @@ function GetAndSaveDataFromFile($ary)
 
     $data = [$facId, $crseId, $sltId, $mappingSlotYear, $semesterType];
 
-    // echo $crseId."<br>";
+    echo $crseId."<br> ######### <br>";
+    echo $crseId."crseId:: <br>";
     // echo $mappingCourseName."<br>";
     // exit;
     $whereData = $_mappingFacultySlotId . " = '" . $sltId . "' and " . $_mappingFacultySemesterYear . " = '" . $mappingSlotYear . "' and " . $_mappingFacultySemesterType . " = '" . $semesterType . "'";
@@ -291,13 +296,16 @@ function GetAndSaveDataFromFile($ary)
 
 function FacultyUniqueForFreeze($fac, $crse, $year, $sem)
 {
+    echo $crse."v,ldv<br>";
     global $conn, $_freezePushPermissionTable, $_freezePushPermissionAcademicYear;
     global $_freezePushPermissionFacId, $_freezePushPermissionCourseId, $_freezePushPermissionAcademicYear, $_freezePushPermissionAcademicSem;
-
+    
+    echo $crse."HEllo...11=<br>";
     $where = "$_freezePushPermissionFacId='$fac' AND $_freezePushPermissionCourseId='$crse' AND $_freezePushPermissionAcademicYear='$year' AND $_freezePushPermissionAcademicSem='$sem'";
 
     if (isUniqueOrNot($conn, $_freezePushPermissionTable, $where)) {
         echo "HEllo...$crse<br>";
+        echo "$where<br>";
         $InsertingFacPer = "INSERT INTO $_freezePushPermissionTable ($_freezePushPermissionFacId, $_freezePushPermissionCourseId, $_freezePushPermissionAcademicYear, $_freezePushPermissionAcademicSem) VALUES ('$fac', '$crse', $year, '$sem')";
         echo "$InsertingFacPer<br>";
         mysqli_query($conn, $InsertingFacPer);
@@ -355,9 +363,9 @@ function GetCourseNameId($val, $isGetName = true)
 
     $field = $isGetName ? $_courseId : $_courseNameField;
     $slct = "SELECT * FROM $_coursesTable WHERE $field = '$val'";
+    // echo "$slct";
     $res = mysqli_query($conn, $slct);
     $row = mysqli_fetch_assoc($res);
-
     if ($isGetName)
         return $row[$_courseNameField] ?? null;
     else
@@ -574,6 +582,7 @@ $totalRows = mysqli_num_rows($mappingRes1);
                 </thead>
                 <tbody id="mappingTbody"></tbody>
                 <?php $num = 1;
+                $num = (($currentPage - 1) * $currentLimit + 1);
                 mysqli_data_seek($mappingRes, 0);
                 while ($row = mysqli_fetch_assoc($mappingRes)) { ?>
                     <tr>

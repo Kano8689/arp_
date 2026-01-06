@@ -153,6 +153,7 @@ include_once("../header.php");
             
             <table class="table">
                 <thead id="" style="font-weight: bolder;">
+                    <th style="text-align: center;">No.</th>
                     <th style="text-align: center;">Enrollment No.</th>
                     <th style="text-align: center;">Name</th>
                     <th style="text-align: center;">Action</th>
@@ -161,9 +162,10 @@ include_once("../header.php");
                 <tbody id="">
                     <?php
                     $currentStudents = StudentGetFromIds($Ids);
-
+                    $num = 1;
                     while ($stuData = mysqli_fetch_assoc($currentStudents)) { ?>
                         <tr>
+                            <td style="text-align: center;" class="enNo" name="enNo"><?php echo $num++; ?></td>
                             <td style="text-align: center;" class="enNo" name="enNo"><?php echo StudentFieldFetch($stuData, $_studentCode); ?></td>
                             <td style="text-align: center;" class="stdName" name="stdName"><?php echo StudentFieldFetch($stuData, $_studentName); ?></td>
 

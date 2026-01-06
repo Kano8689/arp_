@@ -261,6 +261,7 @@ function GetAndSaveDataFromFile($ary)
     $mappingSlotYear = mysqli_real_escape_string($conn, $ary[7] ?? '');
     $mappingSemType = mysqli_real_escape_string($conn, $ary[8] ?? '');
 
+    $mappingSlotName = str_replace(" ","", $mappingSlotName);
 
     $stuId = GetStudentNameId($mappingStuName, false);
     $crseId = GetCourseNameId($mappingCourseName, false);
@@ -581,7 +582,7 @@ $totalRows = mysqli_num_rows($mappingRes1);
                     </tr>
                 </thead>
                 <tbody id="mappingTbody"></tbody>
-                <?php $num = 1;
+                <?php $num = 1; $num = (($currentPage - 1) * $currentLimit + 1);
                 mysqli_data_seek($mappingRes, 0);
                 while ($row = mysqli_fetch_assoc($mappingRes)) { ?>
                     <tr>

@@ -324,7 +324,7 @@ $totalRows = mysqli_num_rows($response1);
         <tbody id="facultyTable">
           <?php
           // $num = $totalRows - $offset;
-          $num = 1;
+          $num = 1; $num = (($currentPage - 1) * $currentLimit + 1);
           while ($row = mysqli_fetch_assoc($response)) { ?>
             <tr ondblclick="editFaculty('<?php echo $row[$_facultyId]; ?>',
                                           '<?php echo $row[$_facultyCode]; ?>',

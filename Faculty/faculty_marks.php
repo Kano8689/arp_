@@ -457,6 +457,7 @@ include_once("../header.php");
         <table class="table">
           <thead id="marksHeader">
             <tr>
+              <td style="text-align: center;">No.</td>
               <td style="text-align: center;">Enrollment No.</td>
               <td style="text-align: center;">Name</td>
 
@@ -490,7 +491,7 @@ include_once("../header.php");
             mysqli_data_seek($selectCourseStudent, 0);
 
             if (mysqli_num_rows($selectCourseStudent) > 0) {
-
+              $num = 1;
               while ($selectCourseStudentData = mysqli_fetch_assoc($selectCourseStudent)) :
                 $crs = $selectCourseStudentData[$_mappingFacultyCourseId]; // find course id from mapping table
                 $yr = $selectCourseStudentData[$_mappingFacultySemesterYear]; // find year from mapping table
@@ -525,6 +526,7 @@ include_once("../header.php");
                   <input type="hidden" class="semYear" name="semYear" value="<?= $yr; ?>">
                   <input type="hidden" class="semType" name="semType" value="<?= $typ; ?>">
 
+                  <td style="text-align: center;" class="enNo" name="enNo"><?php echo $num++; ?></td>
                   <td style="text-align: center;" class="enNo" name="enNo"><?= htmlspecialchars($ENNO); ?></td>
                   <td style="text-align: start;" class="stdName" name="stdName"><?= htmlspecialchars($NAME); ?></td>
 

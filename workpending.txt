@@ -1,15 +1,25 @@
 => Admin:
-  - from faculty options remove email and joindate
+   - Admin/Program -> index 1, 2, 3...n
+   - Admin/Courses -> index 1, 2, 3...n
+   - Admin/Mapping (Faculty) Student -> index 1, 2, 3...n
+   - Admin/Mapping (Student) -> index 1, 2, 3...n
+   - Admin/Faculty -> index 1, 2, 3...n
+   - Admin/Student -> index 1, 2, 3...n
 
 
 => CEO:
-   - result students ui
    - result students download
-   - freeze/unfreeze - select year and sem
+   - CEO/Student Credit Report -> don't show same course again
 
 
 => Faculty:
-   - max marks is set but when we enter then it can be entered.
+   - Faculty/Marks -> students show 2 times due to mapping
 
 
 => Student:
+   - Student/Credit Report -> don't show same course again
+
+
+
+
+

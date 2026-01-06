@@ -363,7 +363,7 @@ $totalRows = mysqli_num_rows($response1);
           <?php
           if ($totalRows > 0) {
             // $num = $totalRows - $offset;
-            $num = 1;
+            $num = 1; $num = (($currentPage - 1) * $currentLimit + 1);
             while ($row = mysqli_fetch_assoc($response)) { ?>
               <tr style="cursor:pointer;"
                 ondblclick="editCourse('<?php echo $row[$_courseId]; ?>',
