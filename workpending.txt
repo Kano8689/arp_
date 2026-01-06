@@ -1,11 +1,4 @@
 => Admin:
-   - Admin/Program -> index 1, 2, 3...n
-   - Admin/Courses -> index 1, 2, 3...n
-   - Admin/Mapping (Faculty) Student -> index 1, 2, 3...n
-   - Admin/Mapping (Student) -> index 1, 2, 3...n
-   - Admin/Faculty -> index 1, 2, 3...n
-   - Admin/Student -> index 1, 2, 3...n
-
 
 => CEO:
    - result students download

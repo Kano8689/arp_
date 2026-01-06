@@ -117,16 +117,6 @@ include_once("../header.php");
                   <span class="crumb-link crumb-disabled">Credit Report</span>
             </div>
       </div>
-      <!-- After the breadcrumb section, add: -->
-      <!-- <div style="margin-bottom: 20px; margin-top: 20px;">
-            <form action="../DB/credit_report_download.php" method="GET" style="display: inline;">
-                  <input type="hidden" name="action" value="download">
-                  <button type="submit" class="btn btn-success" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                        📥 Download as Excel (.xlsx)
-                  </button>
-            </form>
-      </div> -->
-
 
       <!-- Enter Enrollment Number -->
       <div>
@@ -158,6 +148,13 @@ include_once("../header.php");
 
 
             ?>
+                  <div style="display: flex; justify-content: flex-end;">
+                        <div class="card-right-details">
+                              <p><b>Student Name</b> : <?php echo ""; ?></p>
+                              <p><b>Student Code</b> : <?php echo ""; ?></p>
+                              <p><b>Student Program</b> : <?php echo ""; ?></p>
+                        </div>
+                  </div>
 
                   <div class="card" style="display: block;">
                         <div id="marksWrap" style="margin-top:18px; display:block;">
@@ -180,25 +177,25 @@ include_once("../header.php");
                                           if (mysqli_num_rows($SemCourse) > 0) {
                                                 $totalRegistered = 0;
                                                 $totalObtained = 0;
+                                                $courseCodeList = array();
                                                 while ($course = mysqli_fetch_assoc($SemCourse)) {
+
+                                                      if (in_array($course[$_courseCodeField], $courseCodeList))
+                                                            continue;
+
+                                                      $courseCodeList[] = $course[$_courseCodeField];
 
                                                       $totalRegistered += $course[$_courseCreditMarksField];
                                                       $TotalRegistered += $course[$_courseCreditMarksField];
-                                                      // exit;
-
 
                                                       $returnResultData = GetResultData($stuId, $course[$_courseId], $course[$_courseCodeField], $semYr, $semTyp, $course[$_courseTypeField]);
 
-                                                      $isPass = $course[$_courseCreditMarksField] == $returnResultData[0]; // here get only _resultObtainedCredit from GetResultData() //remove another code for func..
-                                                      // $isPass = GetResultData($stuId, $course[$_courseId], $course[$_courseCodeField], $semYr, $semTyp, $course[$_courseTypeField]);
-
+                                                      $isPass = $course[$_courseCreditMarksField] == $returnResultData[0];
 
                                                       if ($isPass) {
                                                             $totalObtained += $course[$_courseCreditMarksField];
                                                             $TotalObtained += $course[$_courseCreditMarksField];
                                                       }
-
-
                                           ?>
                                                       <tr>
                                                             <td style="text-align: center;"><?php echo $course[$_courseCodeField]; ?></td>

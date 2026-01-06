@@ -492,14 +492,14 @@ include_once("../header.php");
 
             if (mysqli_num_rows($selectCourseStudent) > 0) {
               $num = 1;
+              $studentEnrollmentNoList = array();
               while ($selectCourseStudentData = mysqli_fetch_assoc($selectCourseStudent)) :
                 $crs = $selectCourseStudentData[$_mappingFacultyCourseId]; // find course id from mapping table
                 $yr = $selectCourseStudentData[$_mappingFacultySemesterYear]; // find year from mapping table
                 $typ = $selectCourseStudentData[$_mappingFacultySemesterType]; // find semester type from mapping table
 
                 $resultQuery = GetStudentResult($selectCourseStudentData[$_mappingStudentId]); // get student data object from student id which is find from mapping table
-
-
+                
                 if ($resultQuery === false) {
                   error_log("Query failed for student ID: " . $_studentId);
                   $result = null;
@@ -518,6 +518,10 @@ include_once("../header.php");
 
                 $MARKS = $result[$selectFromResultTableField] ?? 0;
                 $REMARKS = $result[$_resultResultRemarks] ?? "";
+
+                if (in_array(htmlspecialchars($ENNO), $studentEnrollmentNoList))
+                  continue;
+                $studentEnrollmentNoList[] = htmlspecialchars($ENNO);
             ?>
                 <tr>
                   <input type="hidden" class="stdDtlId" name="stdDtlId" value="<?= $STDDTLID; ?>">

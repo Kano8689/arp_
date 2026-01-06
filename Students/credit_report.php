@@ -173,29 +173,27 @@ include_once("../header.php");
                                     if (mysqli_num_rows($SemCourse) > 0) {
                                           $totalRegistered = 0;
                                           $totalObtained = 0;
+                                          $courseCodeList = array();
                                           while ($course = mysqli_fetch_assoc($SemCourse)) {
 
+                                                if (in_array($course[$_courseCodeField], $courseCodeList))
+                                                      continue;
+
+                                                $courseCodeList[] = $course[$_courseCodeField];
+
+
                                                 $totalRegistered += $course[$_courseCreditMarksField];
-
-
-                                                
                                                 $returnResultData = GetResultData($stuId, $course[$_courseId], $course[$_courseCodeField], $semYr, $semTyp, $course[$_courseTypeField]);
-                                                
-                                                $isPass = $course[$_courseCreditMarksField] == $returnResultData[0]; // here get only _resultObtainedCredit from GetResultData() //remove another code for func..
-                                                // $isPass = GetResultData($stuId, $course[$_courseId], $course[$_courseCodeField], $semYr, $semTyp, $course[$_courseTypeField]);
-                                                
-                                                
-                                                if($course[$_mappingStudentRegistrationType] == "Fresh"){
+                                                $isPass = $course[$_courseCreditMarksField] == $returnResultData[0];
+
+                                                if ($course[$_mappingStudentRegistrationType] == "Fresh") {
                                                       $TotalRegistered += $course[$_courseCreditMarksField];
                                                 }
-
 
                                                 if ($isPass) {
                                                       $totalObtained += $course[$_courseCreditMarksField];
                                                       $TotalObtained += $course[$_courseCreditMarksField];
                                                 }
-
-
                                     ?>
                                                 <tr>
                                                       <td style="text-align: center;"><?php echo $course[$_courseCodeField]; ?></td>
